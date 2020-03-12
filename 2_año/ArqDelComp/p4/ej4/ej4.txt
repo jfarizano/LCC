@@ -1,0 +1,30 @@
+-) j etiq:
+jal zero, etiq # no necesitamos guardar la direccion de 
+               # retorno, por lo tanto va al registro zero
+
+
+
+-)  call func:
+ipc ra, func
+jalr ra, ra, func
+
+
+
+-) ret:
+jalr zero, ra, 0 # no necesitamos guardar la direccion de retorno
+                 # el desplazamiento es cero.
+
+
+
+-) mv rd, rs:
+addi rd, rs, 0 # rd = rs + 0 = rs 
+
+
+-) fmv.s rd, rs:
+fsgnj.s rd, rs, rs
+
+
+-) fabs.d rd, rs:
+fsgnjx.s rd, rs, rs # inyectar signo haciendo rs xor rs, 
+                    # asi el signo siempre es 0 y queda
+                    # rd = abs(rs)      

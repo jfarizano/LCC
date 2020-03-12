@@ -1,0 +1,38 @@
+Sumar N = 1.75 * 2^(-79) con M = 0|00110000|10100000000000000000000
+
+Primero convertimos N a IEEE-754 (simple presición):
+
+1) Convertimos la parte entera y decimal a binario:
+
+Parte entera: 
+
+En decimal: 1 --> En binario: 1
+
+Parte decimal:
+
+0.75 * 2 = 1.5 --> b^(-1) = 1
+0.5 * 2 = 1.0 --> b^(-2) = 1
+fin
+
+La parte decimal en binario queda:
+
+1100000000000000000000
+
+2) Le sumamos el sesgo (127) al exponente y lo convertimos a binario:
+
+Exp = -79 + 127 = 48
+
+En binario: 00110000
+
+3) Los exponentes de ambos números ya están igualados, realizamos la suma bit a
+bit y obtenemos:
+
+N + M = 11.0110000000000000000000
+
+No está normalizado, por lo tanto desplazamos la coma un lugar y corregimos el
+exponente.
+
+El resultado final es:
+
+0|00110001|10110000000000000000000
+
