@@ -1,0 +1,6 @@
+Abre temporalmente
+el archivo como
+si fuera una variable
+y se cierra solito
+solo solo
+solo
