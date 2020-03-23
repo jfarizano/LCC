@@ -23,12 +23,21 @@ tablaCruzada <- function(Signo, Sexo){
 leer <- function() {
   datos <- read.table(file = "anorexia.data", header = TRUE, sep = "", col.names = c("Signo", "Sexo", "Edad", "NVisitas"))
   attach(datos)
-  tabla1t <<- tablaVisitas(NVisitas)
+  tabla1 <<- tablaVisitas(NVisitas)
   tabla2 <<- tablaEdades(Edad)
   tabla3 <<- tablaCruzada(Signo, Sexo)
+  print("Tabla de visitas")
   print(tabla1)
+  print("Tabla de edades")
   print(tabla2)
+  print("Tabla Cruzada")
   print(tabla3)
+  
+  # Pie chart
+  frec <<- table(Signo)
+  porcentajes <<- round((frec / 59) * 100)
+  lbls <<- c("Uso de ropa holgada\n", "Uso de laxantes\n", "Hiperactividad\n", "Dieta severa\n")
+  lbls <<- paste(lbls, porcentajes)
+  lbls <<- paste(lbls, "%", sep = "")
+  pie(frec, labels = lbls, col = c("red", "orange", "blue", "green"))
 }
-
-
