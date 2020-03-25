@@ -1,5 +1,3 @@
-# setwd("~/LCC/3_año/PyE/p0")
-
 tablaVisitas <- function(NVisitas) {
   frecAbs <- table(NVisitas)
   frecRel <- round(frecAbs/length(NVisitas), digits = 4)
@@ -42,7 +40,7 @@ barrasSigno <- function(Signo) {
   bot <- "Fuente: Asociación de Lucha contra la Bulimia y la Anorexia."
   barplot(frec, names.arg = lbls, horiz = TRUE, main = top, sub = bot, 
           xlab = "Número de pacientes", ylab="Signo", axisnames = TRUE, 
-          xlim = c(0, 20), col = "cyan", col.axis = "blue")
+          xlim = c(0, 20), col = "cyan", font.lab = 2)
 }
 
 barrasCruzadasSigno <- function(Signo, Sexo) {
@@ -52,7 +50,7 @@ barrasCruzadasSigno <- function(Signo, Sexo) {
   bot <- "Fuente: Asociación de Lucha contra la Bulimia y la Anorexia."
   barplot(frec, names.arg = lbls, main = top, sub = bot,
           horiz = TRUE, beside = TRUE, xlab = "Numero de pacientes",
-          col = c("cyan", "purple"), legend.text = c("F", "M"))
+          col = c("cyan", "purple"), legend.text = c("F", "M"), font.lab = 2)
 }
 
 bastonesVisitas <- function(NVisitas) {
@@ -60,12 +58,12 @@ bastonesVisitas <- function(NVisitas) {
   bot <- "Fuente: Asociación de Lucha contra la Bulimia y la Anorexia"
   frecAbs <- c(0, table(NVisitas), 0)
   names(frecAbs) <- c(0:6)
-  plot(frecAbs, type = "h", main = top, sub = bot, xlab = "Número de visitas", ylab = "Frecuencia absoluta", ylim = c(0, 25), xaxt = "n")
+  plot(frecAbs, type = "h", main = top, sub = bot, xlab = "Número de visitas", ylab = "Frecuencia absoluta", ylim = c(0, 25), xaxt = "n", font.lab = 2)
   axis(side = 1, at = (1:7), labels = (0:6))
 
   frecacum <- round(cumsum(frecAbs/length(NVisitas)), digits = 1)
   names(frecacum) <- c(0:6)
-  plot(frecacum, type = "s", main = top, sub = bot, xlab = "Número de visitas", ylab = "Frecuencia relativa acumulada", ylim = c(0, 1), xaxt = "n")
+  plot(frecacum, type = "s", main = top, sub = bot, xlab = "Número de visitas", ylab = "Frecuencia relativa acumulada", ylim = c(0, 1), xaxt = "n", font.lab = 2)
   axis(side = 1, at = (1:7), labels = (0:6))
   abline(h = c(0, frecacum), lty = 3)
 }
@@ -76,7 +74,7 @@ histogramaEdades <- function(Edad){
   b <- seq(11, 35, 3)
   hist(Edad, main = tit, xlab = "Edades", ylab = "Frecuencia absoluta", 
        xlim = c(11, 35), ylim = c(0, 20), sub = bot, col = "green", 
-       breaks = b, xaxt = "n", yaxt = "n", right = FALSE)
+       breaks = b, xaxt = "n", yaxt = "n", right = FALSE, font.lab = 2)
   axis(side = 1, at = b)
   axis(side = 2, at = seq(0, 20, 5))
   
@@ -84,12 +82,19 @@ histogramaEdades <- function(Edad){
   frecRel <- round(frecAbs/length(Edad), digits = 2)
   frecRelAcum = round(cumsum(frecAbs/length(Edad)), digits = 2)
   
-  plot(frecRel, type = "l", main = tit, sub = bot, xlab = "Edad", ylab = "Frecuencia relativa", xaxt = "n")
+  plot(frecRel, type = "l", main = tit, sub = bot, xlab = "Edad", ylab = "Frecuencia relativa", xaxt = "n", font.lab = 2)
   axis(side = 1, at = (1:9), labels = seq(11, 35, 3))
   abline(h = seq(0, 0.35, 0.05), lty = 3)
-  plot(frecRelAcum, type = "l", main = tit, sub = bot, xlab = "Edad", ylab = "Frecuencia relativa acumulada", xaxt = "n")
+  plot(frecRelAcum, type = "l", main = tit, sub = bot, xlab = "Edad", ylab = "Frecuencia relativa acumulada", xaxt = "n", font.lab = 2)
   axis(side = 1, at = (1:9), labels = seq(11, 35, 3))
   abline(h = seq(0, 1, 0.2), lty = 3)
+}
+
+cajaEdad <- function(Edad) {
+  top <- "EDADES DE LOS PACIENTES CON ANOREXIA\nARGENTINA, OCTUBRE 2012"
+  bot <- "Fuente: Asociación de Lucha contra la Bulimia y la Anorexia"
+  boxplot(Edad, horizontal = TRUE, main = top, sub = bot, col = "pink", xlab = "Edad", ylim = c(10,35))
+  boxplot(Edad ~ Sexo, main = top, sub = bot, col = "pink", ylim = c(10, 35))
 }
 
 leer <- function() {
@@ -105,6 +110,7 @@ leer <- function() {
   barrasCruzadasSigno(Signo, Sexo)
   bastonesVisitas(NVisitas)
   histogramaEdades(Edad)
+  cajaEdad(Edad)
   print("Tabla de visitas")
   print(tabla1)
   print("Tabla de edades")
@@ -112,4 +118,3 @@ leer <- function() {
   print("Tabla Cruzada")
   print(tabla3)
 }
-
