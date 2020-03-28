@@ -16,10 +16,11 @@ vacia = ([], 0)
 
 moverIzq :: Linea -> Linea
 moverIzq (s, n) | n == 0 = (s, 0)
-                | otherwise = (s, n-1)
+                | otherwise = (s, n - 1)
+                
 moverDer :: Linea -> Linea
 moverDer(s, n) | n == length s = (s, n)
-                | otherwise = (s, n+1)
+                | otherwise = (s, n + 1)
 
 moverIni :: Linea -> Linea
 moverIni (s, n) = (s, 0)
@@ -29,4 +30,113 @@ moverFin (s, n) = (s, length s)
 
 insertar :: Char -> Linea -> Linea
 insertar c (s, 0) = (c:s, 1)
-insertar c (s:ss, n) = (s : snd snd ((insertar c (ss, n-1))), 1)
+insertar c (s:ss, n) = (s : fst (insertar c (ss, n - 1)), n + 1)
+
+borrar :: Linea -> Linea
+borrar (s, 0) = (s, 0)
+borrar (s:ss, 1) = (ss, 0)
+borrar (s:ss, n) = (s : fst (borrar (ss, n - 1)), n - 1)
+
+-- ----------------------------------------------------------------------------
+
+-- Ej 3:
+
+data CList a = EmptyCL | CUnit a | Consnoc a (CList a) a deriving Show
+
+-- a)
+
+consCL :: a -> CList a -> CList a
+consCL x EmptyCL = CUnit x
+consCL x (CUnit y) = Consnoc x EmptyCL y
+consCL x (Consnoc y z w) = Consnoc x (consCL y z) w
+
+snocCL :: a -> CList a -> CList a
+snocCL x EmptyCL = CUnit x
+snocCL y (CUnit x) = Consnoc x EmptyCL y
+snocCL z (Consnoc x xs y)= Consnoc x (snocCL y xs) z
+
+isEmptyCL :: CList a -> Bool
+isEmptyCL EmptyCL = True
+isEmptyCL _ = False
+
+isCUnit :: CList a -> Bool
+isCUnit (CUnit _) = True
+isCUnit _ = False
+
+headCL :: CList a -> a
+headCL (CUnit x) = x
+headCL (Consnoc x _ _) = x
+
+lastCL :: CList a -> a
+lastCL (CUnit x) = x
+lastCL (Consnoc _ _ z) = z
+
+tailCL :: CList a -> CList a
+tailCL (CUnit _) = EmptyCL
+tailCL (Consnoc _ y z) = case y of
+                         EmptyCL -> CUnit z
+                         CUnit y' -> Consnoc y' EmptyCL z
+                         otherwise -> Consnoc (headCL y) (tailCL y) z
+
+delHeadCL :: CList a -> CList a
+delHeadCL (CUnit _) = EmptyCL
+delHeadCL (Consnoc x y z) = case y of 
+                            EmptyCL -> CUnit z
+                            CUnit y' -> Consnoc y' EmptyCL z
+                            otherwise -> Consnoc (headCL y) (tailCL y) z
+
+delLastCL :: CList a -> CList a
+delLastCL (CUnit _) = EmptyCL
+delLastCL (Consnoc x y z) = case y of
+                            EmptyCL -> CUnit x
+                            CUnit y' -> Consnoc x EmptyCL y' 
+                            otherwise -> Consnoc x (delLastCL y) (lastCL y)
+
+-- b)
+
+reverseCL :: CList a -> CList a
+reverseCL (Consnoc x y z) = Consnoc z (reverseCL y) x
+reverseCL x = x
+
+-- c)
+
+inits :: CList a -> CList (CList a)
+inits EmptyCL   = CUnit EmptyCL
+inits (CUnit x) = Consnoc EmptyCL EmptyCL (CUnit x)
+inits (Consnoc x EmptyCL y) = Consnoc EmptyCL (CUnit (CUnit x)) (Consnoc x EmptyCL y)
+inits x = snocCL x (inits (delLastCL x))
+
+-- d)
+
+lasts :: CList a -> CList (CList a)
+lasts EmptyCL   = CUnit EmptyCL
+lasts (CUnit x) = Consnoc (CUnit x) EmptyCL EmptyCL
+lasts (Consnoc x EmptyCL y) = Consnoc (Consnoc x EmptyCL y) (CUnit (CUnit y)) EmptyCL
+lasts x = consCL x (lasts (delHeadCL x))
+
+-- e)
+
+(+++) :: CList a -> CList a -> CList a
+(+++) EmptyCL y = y
+(+++) x EmptyCL = x
+(+++) (CUnit x) y = Consnoc x (delLastCL y) (lastCL y)
+(+++) x y = Consnoc (headCL x) (tailCL x +++ delLastCL y) (lastCL y)
+
+concatCL :: CList (CList a) -> CList a
+concatCL EmptyCL         = EmptyCL
+concatCL (CUnit x)       = x
+concatCL (Consnoc x y z) = x +++ (concatCL y) +++ z
+
+-- ----------------------------------------------------------------------------
+
+-- Ej 4:
+
+data Aexp = Num Int | Prod Aexp Aexp | Div Aexp Aexp
+
+-- a)
+
+eval :: Aexp -> Int
+eval (Num x) = x
+eval (Prod x y) = (eval x) * (eval y)
+eval (Div x y) = div (eval x) (eval y)
+
