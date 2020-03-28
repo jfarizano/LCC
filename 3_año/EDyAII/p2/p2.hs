@@ -251,12 +251,7 @@ zip3 (x:xs) (y:ys) (z:zs) = (x, y, z) : (Main.zip3 xs ys zs)
 
 -- Definición utilizando zip
 zip3' :: [a] -> [b] -> [c] -> [(a, b, c)]
-zip3' xs ys zs = zip3'aux (zip xs ys) zs
-
-zip3'aux :: [(a, b)] -> [c] -> [(a, b, c)]
-zip3'aux [] _ = []
-zip3'aux _ [] = []
-zip3'aux ((x, y):xs) (z:zs) = (x, y, z) : (zip3'aux xs zs)
+zip3' xs ys zs = [(x,y,z) | ((x,y),z) <- zip (zip xs ys) zs]
 
 -- ----------------------------------------------------------------------------
 
