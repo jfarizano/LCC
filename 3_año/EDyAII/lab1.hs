@@ -111,11 +111,12 @@ de cuatro. (Diccionario de la Real Academia Espaola, 22ª ed.)
 
 ¿Cuál es el tipo de la función definida?
 -}
-
 esBisiesto :: (Integral a) => a -> Bool
 esBisiesto n | mod n 400 == 0 = True
              | mod n 4 == 0 && mod n 100 /= 0 = True
              | otherwise = False
+
+-- ----------------------------------------------------------------------------
 
 {-
 4)
@@ -131,7 +132,6 @@ n. Por ejemplo,
 El operador *$ debe definirse de manera que la siguiente
 expresión sea válida:
 -}
-
 (*$) :: (Num a) => [a] -> a -> [a]
 (*$) xs y = [x*y | x <- xs] 
 
@@ -160,7 +160,6 @@ cuadrupla n = [(a, b, c, d) | a <- [1..n], b <- [1..n], c <- [1..n], d <- [1..n]
 
 -- d) 'unique', que dada una lista 'xs' de enteros, devuelve la lista
 -- 'xs' sin elementos repetidos
-
 unique :: [Int] -> [Int]
 unique xs = [x | (x,i) <- zip xs [0..], not (elem x (take i xs))]
 
@@ -174,7 +173,6 @@ devuelva el producto escalar de dos listas.
 
 Sugerencia: Usar las funciones 'zip' y 'sum'. 
 -}
-
 scalarProduct :: [Int] -> [Int] -> Int
 scalarProduct xs ys = sum [x*y | (x, y) <- zip xs ys]
 
