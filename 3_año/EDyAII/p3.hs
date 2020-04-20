@@ -131,12 +131,35 @@ concatCL (Consnoc x y z) = x +++ (concatCL y) +++ z
 
 -- Ej 4:
 
-data Aexp = Num Int | Prod Aexp Aexp | Div Aexp Aexp
+-- data Aexp = Num Int | Prod Aexp Aexp | Div Aexp Aexp
 
 -- a)
 
-eval :: Aexp -> Int
-eval (Num x) = x
-eval (Prod x y) = (eval x) * (eval y)
-eval (Div x y) = div (eval x) (eval y)
+-- eval :: Aexp -> Int
+-- eval (Num x) = x
+-- eval (Prod x y) = (eval x) * (eval y)
+-- eval (Div x y) = div (eval x) (eval y)
 
+-- ----------------------------------------------------------------------------
+
+--Ej 5:
+
+-- ----------------------------------------------------------------------------
+
+-- Ej 6:
+
+data GenTree a = EmptyG | NodeG a [GenTree a] deriving Show
+data BinTree a = EmptyB | NodeB (BinTree a) a (BinTree a) deriving Show
+
+-- Primera recursión de la raíz que no tiene hermanos
+g2bt :: GenTree a -> BinTree a
+g2bt EmptyG = EmptyB
+g2bt (NodeG a []) = NodeB EmptyB a EmptyB
+g2bt (NodeG a (x:xs)) = NodeB (g2bt' x xs) a EmptyB
+
+-- Recursiones restante con hermanos
+g2bt' :: GenTree a -> [GenTree a] -> BinTree a
+g2bt' (NodeG a []) [] = NodeB EmptyB a EmptyB
+g2bt' (NodeG a (x:xs)) [] = NodeB (g2bt' x xs) a EmptyB
+g2bt' (NodeG a []) (y:ys) = NodeB EmptyB a (g2bt' y ys)
+g2bt' (NodeG a (x:xs)) (y:ys) = NodeB (g2bt' x xs) a (g2bt' y ys)

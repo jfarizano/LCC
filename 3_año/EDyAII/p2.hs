@@ -287,7 +287,7 @@ add1 (x:xs) = if x then False : add1 xs else True : xs
 
 sumaBin :: NumBin -> NumBin -> NumBin
 sumaBin xs [] = xs
-sumaBin [] y = y
+sumaBin [] ys = ys
 sumaBin (x:xs) (y:ys) = if x && y then False : add1(sumaBin xs ys) else (x || y) : (sumaBin xs ys)
 
 -- b) Producto binaro
@@ -305,9 +305,9 @@ cocienteX2 [] = [False]
 cocienteX2 (_:[]) = [False]
 cocienteX2 (_:xs) = xs
 
-restoX2 :: NumBin -> NumBin
-restoX2 [] = [False]
-restoX2 (x:_) = [x]
+modBin :: NumBin -> NumBin
+modBin [] = [False]
+modBin (x:_) = [x]
 
 -- ----------------------------------------------------------------------------
 
