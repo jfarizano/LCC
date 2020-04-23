@@ -1,0 +1,348 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper, margin=2.54cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish, mexico]{babel}
+\usepackage[spanish]{layout}
+\usepackage[article]{ragged2e}
+\usepackage{textcomp}
+\usepackage{amsmath}
+
+% ============================================================================
+% ============================================================================
+% ============================================================================
+
+\title{
+  Trabajo Práctico: Unidad 3
+}
+\author{
+  Farizano, Juan Ignacio\\
+  \and
+  Mellino, Natalia
+}
+\date{}
+
+% ============================================================================
+% ============================================================================
+% ============================================================================
+
+\begin{document}
+
+\maketitle
+\noindent\rule{\textwidth}{1pt}
+
+% ============================================================================
+% ============================================================================
+% ============================================================================
+
+\begin{justify}
+  \textbf{Ejercicio 1:} \\
+  Definimos el experimento $\epsilon$: probar un programa \\
+  Con los siguientes sucesos:
+  \begin{itemize}
+    \item $A_1$: Encontrar errores importantes al correr por primera vez el programa.
+    \item $B_1$: Encontrar errores menores al  correr por primera vez el programa.
+    \item $C_1$: No encontrar errores al correr por primera vez el programa.
+ 
+    \item $A_2$: Encontrar errores importantes al correr el programa por segunda vez.
+    \item $B_2$: Encontrar errores menores al correr el programa por segunda vez.
+    \item $C_2$: No encontrar errores al correr el programa por segunda vez.
+  \end{itemize}
+    Dados los sucesos definidos y tomando los datos que se presentan en el 
+    enunciado podemos decir que :
+  \begin{equation*}
+  P(A_1) = 0.6,\; P(B_1) = 0.3,\; P(C_1) = 0.1 \\
+  \end{equation*}
+\end{justify}
+
+% ============================================================================
+
+\begin{justify}
+  \textbf{Apartado a):} \\
+  Para hallar las intersecciones de los sucesos pedidas, realizaremos los 
+  siguientes cálculos, con la información provista de la tabla presente en el
+  enunciado y utilizando la fórmula de probabilidad condicional.
+\end{justify}
+
+\begin{align*}
+    &P(A_1 \cap A_2) = P(A_2/A_1) * P(A_1) = 0.3 * 0.6 = 0.18 \\
+    &P(A_1 \cap B_2) = P(B_2/A_1) * P(A_1) = 0.5 * 0.6 = 0.3 \\
+    &P(A_1 \cap C_2) = P(C_2/A_1) * P(A_1) = 0.2 * 0.6 = 0.12 \\
+    &P(B_1 \cap A_2) = P(A_2/B_1) * P(B_1) = 0.1 * 0.3 = 0.03 \\
+    &P(B_1 \cap B_2) = P(B_2/B_1) * P(B_1) = 0.3 * 0.3 = 0.09 \\
+    &P(B_1 \cap C_2) = P(C_2/B_1) * P(B_1) = 0.6 * 0.3 = 0.18 \\
+    &P(C_1 \cap A_2) = P(A_2/C_1) * P(C_1) = 0 * 0.1 = 0 \\
+    &P(C_1 \cap B_2) = P(B_2/C_1) * P(C_1) = 0.2 * 0.1 = 0.02 \\
+    &P(C_1 \cap C_2) = P(C_2/C_1) * P(C_1) = 0.8 * 0.1 = 0.08 \\
+\end{align*}
+
+\begin{justify}
+  Entonces la tabla nos queda de la siguiente manera:
+\end{justify}
+
+\begin{center}
+  \begin{tabular}{| c | r | r | r |}
+    \hline
+    & $A_2$ & $B_2$ & $C_2$ \\ \hline
+    $A_1$ & 0.18 & 0.30 & 0.12 \\ \hline
+    $B_1$ & 0.03 & 0.09 & 0.18 \\ \hline
+    $C_1$ & 0.00 & 0.02 & 0.08 \\ \hline
+  \end{tabular}
+\end{center}
+
+% ============================================================================
+
+\begin{justify}
+  \textbf{Apartado b):} \\
+  Observemos que los sucesos $A_1$, $B_1$ y $C_1$ son mutuamente excluyentes
+  entre sí y además conforman una partición del espacio muestral A ya que:
+  \begin{itemize}
+    \item Todas sus intersecciones son vacías dos a dos
+    ($A_1 \cap B_1 = \emptyset,\;A_1 \cap C_1 = \emptyset,\;B_1 \cap C_1 = \emptyset$)
+    \item $P(A_1) + P(B_1) + P(C_1) = 0.6 + 0.3 + 0.1 = 1$
+    \item Las probabilidades de todos los sucesos son mayores a 0.
+  \end{itemize}
+  Luego podemos describir al suceso $A_2$ como la unión de sucesos mutuamente
+  excluyentes:
+\end{justify}
+\begin{equation*}
+  A_2 = (A_2 \cap A1) \cup (A_2 \cap B_1) \cup (A_2 \cap C_1)
+\end{equation*}
+\begin{justify}
+  Y por lo tanto:
+\end{justify}
+\begin{align*}
+  P(A_2) &= P(A_2 \cap A_1) + P(A_2 \cap B_1) + P(A_2 \cap C_1) 
+  = 0.18 + 0.03 + 0 = 0.21
+\end{align*}
+
+% ============================================================================
+
+\begin{justify}
+  \textbf{Apartado c):} \\
+  Utilizando la fórmula de probabilidad condicional basta plantear:
+\end{justify}
+\begin{equation*}
+  P(B_1/A_2) = P(B_1 \cap A_2) / P(A_2) = 0.03 / 0.21 = 1/7
+\end{equation*}
+\begin{justify}
+  Por lo tanto, la probabilidad de encontrar un error menor en la primera
+  prueba sabiendo que el de la segunda fue importante es de 1/7.
+\end{justify}
+
+% ============================================================================
+
+\begin{justify}
+  \textbf{Apartado d):} \\
+  Sabemos que dos sucesos son independientes sí y sólo sí:
+\end{justify}
+\begin{equation*}
+  P(A \cap B) = P(A) * P(B)
+\end{equation*}
+\begin{justify}
+  Por lo tanto basta plantear las siguientes igualdades:
+\end{justify}
+\begin{align*}
+  &P(A_1 \cap A_2) = 0.18 \\
+  &P(A_1) * P(A_2) = 0.6 * 0.21 = 0.126
+\end{align*}
+\begin{justify}
+  $0.18 \neq 0.126$ por lo tanto $A_1$ y $A_2$ no son independientes.
+\end{justify}
+
+\begin{equation*}
+  P(A_1 \cap B_2) = 0.03
+\end{equation*}
+\begin{justify}
+  Necesitamos hallar $P(B_2)$, procedemos de la misma forma que en el apartado b)
+\end{justify}
+\begin{align*}
+  &P(B_2) = P(B2 \cap A1) + P(B_2 \cap B_1) + P(B_2 \cap C_1) = 0.03 + 0.09 + 0.18 = 0.41 \\
+  &P(A_1) * P(B_2) = 0.6 * 0.41 = 0.246
+\end{align*}
+\begin{justify}
+  $0.03 \neq 0.246$ por lo tanto $A_1$ y $B_2$ no son independientes.
+\end{justify}
+
+\begin{align*}
+  &P(A_1 \cap C_2) = 0.12\\
+  &P(C_2) = P(C_2 \cap A_1) + P(C_2 \cap B_1) + P(C_2 \cap C_1) = 0.12 + 0.18 + 0.08 = 0.38 \\
+  &P(A_1) * P(C_2) = 0.6 * 0.38 = 0.228
+\end{align*}
+\begin{justify}
+  $0.12 \neq 0.228$ por lo tanto $A_1$ y $C_2$ no son independientes.
+\end{justify}
+
+\begin{align*}
+  &P(B_1 \cap A_2) = 0.03 \\
+  &P(B_1) * P(A_2) = 0.3 * 0.21 = 0.063
+\end{align*}
+\begin{justify}
+  $0.03 \neq 0.063$ por lo tanto $B_1$ y $A_2$ no son independientes.
+\end{justify}
+
+\begin{align*}
+  &P(B_1 \cap B2) = 0.09 \\
+  &P(B_1) * P(B_2) = 0.3 * 0.41 = 0.123
+\end{align*}
+\begin{justify}
+  $0.09 \neq 0.123$ por lo tanto $B_1$ y $B_2$ no son independientes.
+\end{justify}
+
+\begin{align*}
+  &P(B1 \cap C2) = 0.18 \\
+  &P(B_1) * P(C_2) = 0.3 * 0.38 = 0.114
+\end{align*}
+\begin{justify}
+  $0.18 \neq 0.114$ por lo tanto $B_1$ y $C_2$ no son independientes.
+\end{justify}
+
+\begin{align*}
+  &P(C_1 \cap A_2) = 0 \\
+  &P(C_1) * P(A_2) = 0.1 * 0.21 = 0.021
+\end{align*}
+\begin{justify}
+  $0 \neq 0.021$ por lo tanto $C_1$ y $A_2$ no son independientes.
+\end{justify}
+
+\begin{align*}
+  &P(C_1 \cap B_2) = 0.02 \\
+  &P(C_1) * P(B_2) = 0.1 * 0.41 = 0.041
+\end{align*}
+\begin{justify}
+  $0.02 \neq 0.041$ por lo tanto $C_1$ y $B_2$ no son independientes.
+\end{justify}
+
+\begin{align*}
+  &P(C_1 \cap C_2) = 0.08 \\
+  &P(C_1) * P(C_2) = 0.1 * 0.38 = 0.038
+\end{align*}
+\begin{justify}
+  $0.08 \neq 0.038$ por lo tanto $C_1$ y $C_2$ no son independientes.
+\end{justify}
+
+\begin{justify}
+  En conclusión: los resultados de la primera prueba, no son independientes con
+    los resultados de la segunda.
+\end{justify}
+
+% ============================================================================
+% ============================================================================
+% ============================================================================
+
+\begin{justify}
+  \textbf{Ejercicio 2:} \\
+  Definimos el experimento $\epsilon:$ se realiza una transmisión. \\
+  Con los siguientes sucesos: \\
+  $A_i:$ Recibir $i,\;i=0,1$ \\
+  $B_i:$ Enviar $i,\;i=0,1$ \\
+  Sabemos que tenemos la misma probabilidad de enviar un 0 que de enviar un 1, 
+  observemos que los sucesos $B_0$ y $B_1$ conforman una partición del espacio
+  muestral asociado a $\epsilon$. Por lo tanto: $P(B_0) + P(B_1) = 1$
+  y como ambos sucesos tienen la misma probabilidad se deduce que $P(B_i) = 0.5$. 
+  $i,\;i=0,1$\\
+  Ahora, queremos hallar la probabilidad de cometer un error en la transmisión.
+  Por lo tanto este suceso lo podemos describir como:
+
+  $(A_0 \cap B1)\,\cup\,(A_1 \cap B_0) \rightarrow$ Observemos que estos sucesos
+  $((A_0 \cap B_1) \;\text{y}\; (A_1 \cap B_0))$ son mutuamente excluyentes
+  y por lo tanto su intersección es vacía. Entonces la probabilidad la podemos
+  expresar como:
+\end{justify}
+\begin{equation*}
+  P(A_0 \cap B_1) + P(A_1 \cap B_0) = P(A_0/B_1)P(B_1) + P(A_1/B_0)P(B_0)
+\end{equation*}
+\begin{justify}
+  Ahora supongamos que las probabilidades $P(A_0/B_1)$ y $P(A_1/B_0$) son
+  $\epsilon_1$ y $\epsilon_2$ respectivamente, para algún $0 \leq \epsilon_i
+  \leq 1, i = 1,2$.\\
+  Entonces la probabilidad de cometer un error en la transmisión es:
+\end{justify}
+\begin{equation*}
+  \epsilon_1 * 0.5 + \epsilon_2 * 0.5 = 0.5 * (\epsilon_1 + \epsilon_2)
+\end{equation*}
+
+% ============================================================================
+% ============================================================================
+% ============================================================================
+
+\begin{justify}
+  \textbf{Ejercicio 3:} \\
+  Definimos el experimento $\epsilon:$ se realiza una transmisión. \\
+  Con los siguientes sucesos: \\
+  $A_i:$ La entrada fue $i,\;i=0,1$ \\
+  $B_i:$ La salida fue $i,\;i=0,1$ \\
+  Sabemos que $P(A_0) = (1-p)$ y $P(A_1) = p$
+\end{justify}
+
+\begin{justify}
+  \textbf{Apartado a):} \\
+  Dado que la probabilidad de tomar decisiones erróneas es $\epsilon$,
+  podemos deducir que la probabilidad de tomar una desición correcta es
+  $1 - \epsilon$. Entonces utilizando la fórmula de probabilidad condicional
+  nos queda:
+  \begin{align*}
+    &P(A_0 \cap B_0) = P(B_0/A_0)P(A_0) = (1 - \epsilon) * (1-p) \\
+    &P(A_0 \cap B_1) = P(B_1/A_0)P(A_0) = \epsilon * (1-p) \\
+    &P(A_1 \cap B_0) = P(B_0/A_1)P(A_1) = \epsilon * p \\
+    &P(A_1 \cap B_1) = P(B_1/A_1)P(A_1) = (1 - \epsilon) * p
+  \end{align*}
+\end{justify}
+
+% ============================================================================
+
+\begin{justify}
+  \textbf{Apartado b):} \\
+  De las igualdades obtenidas en el apartado anterior podemos deducir lo siguiente:
+  \begin{align*}
+    &P(A_0 \cap B_0) = P(B_0)P(A_0) = (1 - \epsilon) * (1-p) \\
+    &P(A_1 \cap B_1) = P(B_1)P(A_1) = (1 - \epsilon) * p \\
+    &P(A_0 \cap B_1) = P(B_1)P(A_0) = \epsilon * (1-p) 
+    \Rightarrow P(B_1)*(1-p) = \epsilon*(1-p) \Rightarrow P(B_1) = \epsilon \\
+    &P(A_1 \cap B_0) = P(B_0)P(A_1) = \epsilon * p
+    \Rightarrow P(B_O)*p = \epsilon*p \Rightarrow P(B_0) = \epsilon
+  \end{align*}
+  Luego:
+  \begin{equation*}
+    P(B_0) + P(B_1) = \epsilon + \epsilon = 2*\epsilon
+  \end{equation*}
+  Como $B_0$ y $B_1$ conforman una partición del espacio muestral asociado al
+  experimento deben ser mutuamente excluyentes
+  y $P(B_0) + P(B_1) = 1 = 2*\epsilon \Rightarrow \epsilon = \frac{1}{2}$
+\end{justify}
+
+% ============================================================================
+
+\begin{justify}
+  \textbf{Apartado c):} \\
+  Los sucesos que resultan ser mutuamente excluyentes son los sucesos $A_0$ y
+  $A_1$, y $B_0$ y $B_1$, pues observemos que es imposible que ambos puedan
+  suceder al mismo tiempo.
+\end{justify}
+
+% ============================================================================
+
+\begin{justify}
+  \textbf{Apartado d):} \\
+  Utilizando el Teorema de Bayes calculamos las probabilidades condicionales:
+  \begin{equation*}
+    P(A_0/B_1) = \frac{P(B_1 \cap A_0)}{P(B_1/A_0)P(A_0) + P(B_1/A_1)P(A_1)}
+    = \frac{\epsilon * (1-p)}{\epsilon * (1-p) + (1-e) * p} =
+    \frac{\epsilon - p * \epsilon}{\epsilon + p - 2 * \epsilon * p}
+  \end{equation*}
+  \begin{equation*}
+    P(A_1/B_1) = \frac{P(B_1 \cap A_1)}{P(B_1/A_0)P(A_0) + P(B_1/A_1)P(A_1)}
+    = \frac{(1 - \epsilon) * p}{\epsilon * (1-p) + (1-e) * p} =
+    \frac{p - p * \epsilon}{\epsilon + p - 2 * \epsilon * p}
+  \end{equation*}
+  Luego, observemos que: 
+  \begin{equation*}
+    P(A_0/B_1) < P(A_1/B_1) \iff 
+    \frac{\epsilon - p * \epsilon}{\epsilon + p - 2 * \epsilon * p} <
+    \frac{p - p * \epsilon}{\epsilon + p - 2 * \epsilon * p} \iff 
+    \epsilon - p * \epsilon < p - p * \epsilon \iff \epsilon < p
+  \end{equation*}
+  Entonces si $\epsilon < p$ la entrada más probable va a ser 1.
+  Análogamente, si $\epsilon > p$ la entrada más probable va a ser 0.
+\end{justify}
+
+\end{document}
