@@ -1,0 +1,165 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper, margin=2.54cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish, mexico]{babel}
+\usepackage[spanish]{layout}
+\usepackage[article]{ragged2e}
+\usepackage{textcomp}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+
+\setlength{\parindent}{0pt}
+
+\title{Trabajo Práctico: Unidad 4}
+\author{Mellino, Natalia \and Farizano, Juan Ignacio}
+\date{}
+
+
+
+\begin{document}
+
+\maketitle
+
+\section*{Ejercicio 1}
+
+\textbf{Apartado a)} \\
+
+Sea $ X $ la variable aleatoria:
+
+\begin{center}
+  $ X $: "Número de interrupciones diarias"
+\end{center}
+
+Sabemos que $ F(4) = 0.97 $, entonces se tiene que:
+
+% Alinear las ecuaciones después
+
+\begin{align*}
+  P(X = 0) + P(X = 1) + P(X = 2) + P(X = 3) + a & =  0.97 \\
+  0.32 + 0.35 + 0.18 + 0.08 + a                 & =  0.97 \\
+  a                                             & =  0.04
+\end{align*}
+
+Entonces podemos deducir que:
+
+\begin{align*}
+  b & =  1 - (P(X = 0) + P(X = 1) + P(X = 2) + P(X = 3) + P(X = 4) + P(X = 6)) \\
+  b & =  1 - (0.32 + 0.35 + 0.18 + 0.08 + 0.04 + 0.01)                         \\
+  b & =  0.02
+\end{align*}
+
+\textbf{Apartado b)} \\
+
+\textbf{I)} Queremos hallar la probabilidad de que $ P(X \leq 4) $:
+
+\[ P(X \leq 4) = \sum_{i=0}^{4}P(X = i) = 0.97 \]
+
+Por lo tanto, la probabilidad de que haya a lo sumo 4 interrupciones es de 0.97.\\
+
+\textbf{II)} Queremos hallar la probabilidad de que $ P(X \geq 5) $, esto es:
+
+\begin{center}
+  $ P(X = 5) + P(X = 6) = 0.02 + 0.01 = 0.03$
+\end{center}
+
+Por lo tanto, la probabilidad de que haya por lo menos 5 interrupciones es de 0.03. \\
+
+\textbf{Apartado c)} \\
+
+Primero debemos calcular la esperanza matemática $ (E(X)) $:
+
+\[ E(X) = \sum_{i=0}^{6} i \cdot P(X = i) \]
+
+$ E(X) = 0.35 + 2 \cdot 0.18 + 3 \cdot 0.08 + 4 \cdot 0.04 + 5 \cdot 0.02 + 6 \cdot 0.01 $ \\
+$ E(X) = 1.27 $ \\
+
+Ahora calculamos la varianza $ (V(X)) $ para luego poder calcular la desviación estándar:
+
+\[  V(X) = E(X^{2}) - E(X)^{2} \]
+
+$ E(X^{2}) = 1^2 \cdot 0.35 + 2^2 \cdot 0.18 + 3^2 \cdot 0.08 + 4^2 \cdot 0.04 + 5^2 \cdot 0.02 + 6^2 \cdot 0.01 $ \\
+$ E(X)^2 = 3.29 $ \\
+
+Luego $ V(X) = 3.29 - (1.27)^2 = 1.6771 $ \\
+
+Entonces para calcular la desviación estándar $ (\sigma) $ simplemente hacemos:
+
+\begin{center}
+  $ \sigma = \sqrt{V(X)} = \sqrt{1.6771} \simeq 1.295 $
+\end{center}
+
+De los resultados obtenidos interpretamos que el número promedio de interrupciones
+por día es de 3.29, con una desviación de aproximadamente 1.295. Este último resultado
+nos brinda información acerca de qué tan alejados están los datos con respecto al
+promedio. \\
+
+\textbf{Apartado d)} \\
+
+Los resultados hallados en c) representan \textbf{parámetros} porque son calculados con respecto
+a la \textbf{población}, si fueran estadísticos estos hubieran sido
+calculados a partir de una \textbf{muestra}.
+
+\section*{Ejercicio 2}
+
+Definimos el experimento $E:$ se realiza una transmisión. \\
+
+\textbf{Probabilidad de cometer un error sin el sistema corrector-error:}
+
+Sean los sucesos: \\
+$A_i:$ Se transmite $i,\;i=0,1$ \\
+$B_i:$ Se interpreta $i,\;i=0,1$ \\
+Sabemos que $P(A_0) = p$ y $P(A_1) = (1-p)$
+
+La probabilidad de interpretar un bit erróneamente es de $\epsilon$, por lo tanto:
+\begin{equation*}
+  P(B_1/A_0) = P(B_0/A_1) = \epsilon
+\end{equation*}
+
+Se quiere calcular la probabilidad de tomar una decisión errónea:
+\begin{align*}
+  &P(A_0 \cap B_1) = P(B_1/A_0)P(A_0) = \epsilon \cdot p \\
+  &P(A_1 \cap B_0) = P(B_0/A_1)P(A_1) = \epsilon \cdot (1-p)
+\end{align*}
+Sumando las dos ecuaciones anteriores, se obtiene la probabilidad deseada.
+\begin{equation*}
+  P(A_0 \cap B_1) + P(A_1 \cap B_0) = \epsilon \cdot p + \epsilon \cdot (1-p) =
+  \epsilon \cdot p + \epsilon - p \cdot \epsilon = \epsilon
+\end{equation*}
+
+\textbf{Probabilidad de cometer un error con el sistema corrector-error:}
+
+Definimos el suceso $A$: "se interpreta un bit erróneamente". La probabilidad de 
+dicho suceso es $ P(A) = \epsilon, \; P(\overline{A}) = 1 - \epsilon $, dada
+por el apartado anterior. 
+
+Sea la variable aleatoria, $X$:"número de veces que ocurrió el suceso $A$
+en las $n$ repeticiones del experimento $E$".
+
+Sabemos que un error se cometió en la decisión si 2 o más de los bits son erróneos.
+Entonces, nuestra v.a. $X$ presenta una \textbf{distribución binomial} de parámetros
+$ n = 3, \; p = \epsilon $. \\
+$ X \sim B(3, \epsilon) $
+\begin{align*}
+  P(X \geq 2) = P(X = 2) + P(X = 3) & = \binom{3}{2} \cdot  \epsilon^2 \cdot(1 - \epsilon)^1 + \binom{3}{3} \cdot \epsilon^3 \cdot (1 - \epsilon)^0 \\
+                                    & = 3 \cdot \epsilon^2 \cdot (1 - \epsilon) + \epsilon^3
+\end{align*}
+
+Por lo tanto, la probabilidad de cometer un error con el sistema corrector-error
+es de \newline $ 3 \cdot \epsilon^2 \cdot (1 - \epsilon) + \epsilon^3 $. \\
+
+\textbf{Conclusiones:} 
+
+A costo de un mayor tiempo $T$ para transmitir la misma información, se puede 
+obtener una menor probabilidad de error con el sistema corrector-error si y solo si:
+\begin{align*}
+  & 3\cdot\epsilon^2(1-\epsilon) + \epsilon^3 < \epsilon \iff 3\cdot\epsilon^2 -
+  2\cdot\epsilon^3 + \epsilon^3 < \epsilon \iff 3\cdot\epsilon^2 - 
+  2\cdot\epsilon^3 < \epsilon \iff \epsilon\cdot(3\cdot\epsilon-2\cdot\epsilon^2) <
+  \epsilon \iff \\
+  & 3\cdot\epsilon-2\cdot\epsilon^2 < 1 \iff \epsilon < \frac{1}{2} \;\lor\; \epsilon > 1
+  \underset{\epsilon \leq 1}{\iff} \epsilon < \frac{1}{2}
+\end{align*}
+Por lo tanto, el sistema corrector-error resulta más eficiente si la probabilidad
+de tomar una decisión errónea es menor a $\frac{1}{2}$.
+
+\end{document}

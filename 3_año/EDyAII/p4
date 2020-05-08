@@ -1,0 +1,154 @@
+-- Ej 1:
+tad Lista (a : Set) where
+  import bool
+  nil :: Lista a
+  cons :: a -> Lista a -> Lista a
+  null :: Lista a -> Bool
+  head :: Lista a -> a
+  tail :: Lista a -> Lista a
+
+-- a)
+null nil = True
+null (cons x l) = False
+head (cons x l) = x
+tail (cons x l) = l
+
+-- b)
+null <x_1,...,x_n> = True si n = 0
+null <x_1,...,x_n> = False en otro caso
+head <x_1,...,x_n> = x_1
+tail <x_1,x_2,...,x_n> = <x_2,...x_n>
+
+-- c)
+inL :: Lista a -> a -> Bool
+inL nil x = False
+inL (cons x xs) y = if x == y then True else inL xs y
+
+-- d)
+del :: Lista a -> a -> Lista a
+del nil x = nil
+del (cons x xs) y = if x == y then del xs y else cons x (del xs y)
+
+-- ----------------------------------------------------------------------------
+
+-- Ej 2:
+tad Pila (a : Set) where
+  import Bool
+  empty :: Pila a
+  push :: a -> Pila a -> Pila a
+  isEmpty :: Pila a -> Bool
+  top :: Pila a -> a
+  pop :: Pila a -> Pila a
+
+-- Especificación algebraica:
+isEmpty empty = True
+isEmpty (push x s) = False
+top (push x s) = x
+pop (push x s) = s
+
+-- Especificación tomando como modelo las secuencias:
+isEmpty <x_1,...,x_n> = True si n = 0
+isEmpty <x_1,...,x_n> = False en otro caso
+top <x_1,...,x_n> = x_1
+pop <x_1,x_2,...,x_n> = <x_2,...,x_n>
+
+-- ----------------------------------------------------------------------------
+
+-- Ej 3:
+tad Conjunto (a : Set) where
+  import Bool
+  vacio :: Conjunto a
+  insertar :: a -> Conjunto a -> Conjunto a
+  borrar :: a -> Conjunto a -> Conjunto a
+  esVacio :: Conjunto a -> Bool
+  union :: Conjunto a -> Conjunto a -> Conjunto a
+  enConj :: a -> Conjunto a -> Bool
+  intersección :: Conjunto a -> Conjunto a -> Conjunto a
+  resta :: Conjunto a -> Conjunto a -> Conjunto a
+
+-- Especificación algebraica:
+insertar x (insertar x c) = insertar x c
+insertar x (insertar y c) = insertar y (insertar x c)
+
+borrar x vacio = vacio
+borrar x (insertar y c) = if x == y then c else insertar y (borrar x c)
+
+esVacio vacio = True
+esVacio (insertar x c) = False
+
+union c vacio = c
+union c (insertar x c') = union (insertar x c) c'
+
+enConj x vacio = False
+enConj x (insertar y c) = if x == y then True else enConj x c
+
+interseccion c vacio = c
+interseccion c (insertar x c') = if enConj x c 
+                                  then interseccion (insertar x c) c'
+                                  else interseccion c c'
+
+resta c vacio = c
+resta c (insertar x c') = if enConj x c 
+                          then interseccion (borrar x c) c'
+                          else interseccion c c'
+
+----------------------------------------------------------------------------
+
+-- Ej 4:
+tad PriorityQ (a : Set) where
+  import Bool
+  vacia :: PriorityQ a
+  poner :: a -> N -> PriorityQ a -> PriorityQ a
+  primero :: PriorityQ a -> a
+  sacar :: PriorityQ a -> PriorityQ a
+  esVacia :: PriorityQ a -> Bool
+  union :: PriorityQ a -> PriorityQ a -> PriorityQ a
+
+-- Especificación algebraica:
+poner x p (poner y p c) = poner x p c
+poner x p (poner y q c) = poner y q (poner x p c)
+
+primero (poner x p vacia) = x
+primero (poner x p (poner y q c)) = if x > y then primero (poner x p c)
+                                             else primero (poner y q c)
+
+sacar (poner x p vacia) = vacia
+sacar (poner x p (poner y q c)) = if p > q then poner y q (sacar (poner x p c))
+                                           else poner x p (sacar (poner y q c))
+
+esVacia vacia = True
+esVacia (poner x p q) = False
+
+union c vacia = c
+union c (poner x p q) = union (poner x p c) q
+
+-- Especificación tomando como modelo los conjuntos:
+primero {(x_1,p_1),...,(x_n,p_n)} = (x_i,p_i) tal que p_i = max{p_1,...,p_n}
+sacar A = A - {(x_i, p_i) e A / p_i = max{p_1,...,p_n}}
+esVacia {(x_1,p_1),...,(x_n,p_n)} = True si n = 0
+esVacia {(x_1,p_1),...,(x_n,p_n)} = False en otro caso
+union A B = A U {(x_i,p_i) / x_i e B y x_i /e A, i = 1,..,#B}
+
+----------------------------------------------------------------------------
+
+-- Ej 5:
+tad BalT (a : Ordered Set) where
+  import Maybe
+  empty :: Balt a
+  join :: BalT a -> Maybe a -> BalT a -> BalT a
+  size :: BalT a -> N
+  expose :: BalT a -> Maybe (BalT a, a, BalT a)
+
+size empty = 0
+size (join l x r) = 1 + size l + size r
+
+expose empty = Nothing
+expose (join l x r) = undefined
+
+----------------------------------------------------------------------------
+
+-- Ej 6:
+
+
+
+
