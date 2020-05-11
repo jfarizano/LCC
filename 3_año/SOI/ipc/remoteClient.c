@@ -1,7 +1,3 @@
-/* RemoteClient.c
-   Se introducen las primitivas necesarias para establecer una conexión simple
-   dentro del lenguaje C utilizando sockets.
-*/
 /* Cabeceras de Sockets */
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -12,15 +8,11 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <string.h>
+#include<signal.h> 
 /**********/
 /* Threads! */
 #include <pthread.h>
-
-/*
-  El archivo describe un sencillo cliente que se conecta al servidor establecido
-  en el archivo RemoteServer.c. Se utiliza de la siguiente manera:
-  $cliente IP port
- */
+pthread_t threads[2];
 
 void error(char *msg){
   exit((perror(msg), 1));
@@ -33,13 +25,19 @@ void *receiver(void *arg) {
 
   while (1) {
     recv(socket, buf, sizeof(buf), 0);
+
+    if (strncmp(buf, "\\exit", 5) == 0) {
+      printf("El servidor terminó la conexión, cerrando cliente.\n");
+      pthread_cancel(threads[1]);
+      pthread_exit(NULL);
+    }
+
     if (strlen(buf) != 0) {
-      printf("%s", buf);
+      printf("[SERVER] %s", buf);
       bzero(buf, 1024);
     } 
   }
 
-  free((int*) arg);
   return NULL;   
 }
 
@@ -50,25 +48,30 @@ void *sender(void *arg) {
 
   while (1) {
     fgets(buf, 1024, stdin);
+
     if (strlen(buf) != 0) {
       send(socket, buf, sizeof(buf), 0);
+
+      if (strncmp(buf, "\\exit", 5) == 0) {
+        printf("Cerrando conexión.\n");
+        pthread_cancel(threads[0]);
+        pthread_exit(NULL);
+      }
+
       bzero(buf, 1024);
     }    
   }
 
-  free((int*) arg);
   return NULL;
 }
 
 int main(int argc, char **argv){
   int sock;
-  char buf[1024];
   struct addrinfo *resultado;
-  pthread_t threads[2];
 
   /*Chequeamos mínimamente que los argumentos fueron pasados*/
   if(argc != 3){
-    fprintf(stderr,"El uso es \'%s IP port\'", argv[0]);
+    fprintf(stderr,"El uso es \'%s IP port\' \n", argv[0]);
     exit(1);
   }
 
@@ -85,6 +88,8 @@ int main(int argc, char **argv){
   if(connect(sock, (struct sockaddr *) resultado->ai_addr, resultado->ai_addrlen) != 0)
     /* if(connect(sock, (struct sockaddr *) &servidor, sizeof(servidor)) != 0) */
     error("No se pudo conectar :(. ");
+
+  printf("Conexión exitosa, comunicando con el servidor...\n");
 
   pthread_create(&threads[0], NULL , receiver, (void *) &sock);
   pthread_create(&threads[1], NULL , sender, (void *) &sock);
