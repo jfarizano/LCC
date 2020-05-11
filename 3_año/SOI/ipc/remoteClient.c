@@ -8,11 +8,21 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <string.h>
-#include<signal.h> 
+#include <signal.h> 
 /**********/
 /* Threads! */
 #include <pthread.h>
+
 pthread_t threads[2];
+int sock;
+
+void siginit_handler(int sig) {
+  printf("\nSe captó la señal %d, cerrando conexión...\n", sig);
+  send(sock, "\\exit", 5, 0);
+  pthread_cancel(threads[0]);
+  pthread_cancel(threads[1]);
+  return;
+}
 
 void error(char *msg){
   exit((perror(msg), 1));
@@ -66,7 +76,6 @@ void *sender(void *arg) {
 }
 
 int main(int argc, char **argv){
-  int sock;
   struct addrinfo *resultado;
 
   /*Chequeamos mínimamente que los argumentos fueron pasados*/
@@ -91,13 +100,14 @@ int main(int argc, char **argv){
 
   printf("Conexión exitosa, comunicando con el servidor...\n");
 
+  signal(SIGINT, siginit_handler);
+
   pthread_create(&threads[0], NULL , receiver, (void *) &sock);
   pthread_create(&threads[1], NULL , sender, (void *) &sock);
 
   pthread_join(threads[0], NULL);
   pthread_join(threads[1], NULL);
 
-  /* Cerramos :D!*/
   freeaddrinfo(resultado);
   close(sock);
 

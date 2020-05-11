@@ -14,6 +14,15 @@
 #include <pthread.h>
 
 pthread_t threads[2];
+int soclient;
+
+void siginit_handler(int sig) {
+  printf("\nSe captó la señal %d, cerrando conexión...\n", sig);
+  send(soclient, "\\exit", 5, 0);
+  pthread_cancel(threads[0]);
+  pthread_cancel(threads[1]);
+  return;
+}
 
 void error(char *msg){
   exit((perror(msg), 1));
@@ -62,7 +71,7 @@ void *sender(void *arg) {
 }
 
 int main(int argc, char **argv){
-  int sock, soclient;
+  int sock;
   struct sockaddr_in servidor, clientedir;
   socklen_t clientelen;
 
@@ -96,6 +105,8 @@ int main(int argc, char **argv){
 
   printf("Conexión exitosa, comunicando con el cliente...\n");
 
+  signal(SIGINT, siginit_handler);
+
   /* Le enviamos el socket al hijo*/
   pthread_create(&threads[0], NULL , receiver, (void *) &soclient);
   pthread_create(&threads[1], NULL , sender, (void *) &soclient);
@@ -103,7 +114,6 @@ int main(int argc, char **argv){
   pthread_join(threads[0], NULL);
   pthread_join(threads[1], NULL);
 
-  /* Código muerto */
   close(sock);
 
   return 0;
