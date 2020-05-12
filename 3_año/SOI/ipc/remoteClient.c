@@ -10,9 +10,12 @@
 #include <string.h>
 #include <signal.h> 
 /**********/
-/* Threads! */
+/* Threads */
 #include <pthread.h>
 
+/* Los hilos y el socket están como variables globales para que el signal
+handler pueda matar los hilos y avisar al otro lado de la comunicación que 
+terminó */
 pthread_t threads[2];
 int sock;
 
@@ -34,14 +37,15 @@ void *receiver(void *arg) {
   bzero(buf, 1024);
 
   while (1) {
+    /* Recibimos el mensaje y lo guardamos en el buffer*/
     recv(socket, buf, sizeof(buf), 0);
-
+    /* Si el mensajes recibido es un "\exit" se terminan los hilos */
     if (strncmp(buf, "\\exit", 5) == 0) {
       printf("El servidor terminó la conexión, cerrando cliente.\n");
       pthread_cancel(threads[1]);
       pthread_exit(NULL);
     }
-
+    /* Si el mensaje es no vacío se imprime y se limpia el buffer */
     if (strlen(buf) != 0) {
       printf("[SERVER] %s", buf);
       bzero(buf, 1024);
@@ -57,17 +61,16 @@ void *sender(void *arg) {
   bzero(buf, 1024);
 
   while (1) {
+    /* Se recibe el mensaje a enviar por entrada estandar y se guarda en el buffer */
     fgets(buf, 1024, stdin);
-
     if (strlen(buf) != 0) {
       send(socket, buf, sizeof(buf), 0);
-
+      /* Si el mensaje enviado es un "\exit" se terminan los hilos */
       if (strncmp(buf, "\\exit", 5) == 0) {
         printf("Cerrando conexión.\n");
         pthread_cancel(threads[0]);
         pthread_exit(NULL);
       }
-
       bzero(buf, 1024);
     }    
   }
@@ -100,16 +103,20 @@ int main(int argc, char **argv){
 
   printf("Conexión exitosa, comunicando con el servidor...\n");
 
+  /* Llamamos al manejador de la señal SIGINT (CTRL+C) */
   signal(SIGINT, siginit_handler);
 
+  /* Le enviamos el socket a los hilos*/
   pthread_create(&threads[0], NULL , receiver, (void *) &sock);
   pthread_create(&threads[1], NULL , sender, (void *) &sock);
 
+  /* Se utiliza join para que main cierre el socket una vez que terminen los hilos*/
   pthread_join(threads[0], NULL);
   pthread_join(threads[1], NULL);
 
-  freeaddrinfo(resultado);
+  /* Una vez finalizada la comunicación se cierra el socket */
   close(sock);
+  freeaddrinfo(resultado);
 
   return 0;
 }

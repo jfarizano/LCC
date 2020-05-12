@@ -10,9 +10,12 @@
 #include <string.h>
 #include <signal.h>
 /**********/
-/* Threads! */
+/* Threads */
 #include <pthread.h>
 
+/* Los hilos y el socket están como variables globales para que el signal
+handler pueda matar los hilos y avisar al otro lado de la comunicación que 
+terminó */
 pthread_t threads[2];
 int soclient;
 
@@ -20,7 +23,7 @@ void siginit_handler(int sig) {
   printf("\nSe captó la señal %d, cerrando conexión...\n", sig);
   send(soclient, "\\exit", 5, 0);
   pthread_cancel(threads[0]);
-  pthread_cancel(threads[1]);
+  pthread_cancel(threads[1]); 
   return;
 }
 
@@ -34,12 +37,15 @@ void *receiver(void *arg) {
   bzero(buf, 1024);
 
   while (1) {
+    /* Recibimos el mensaje y lo guardamos en el buffer*/
     recv(socket, buf, sizeof(buf), 0);
+    /* Si el mensaje recibido es un "\exit" se terminan los hilos */
     if (strncmp(buf, "\\exit", 5) == 0) {
       printf("El cliente terminó la conexión, cerrando servidor.\n");
       pthread_cancel(threads[1]);
       pthread_exit(NULL);
     }
+    /* Si el mensaje es no vacío se imprime y se limpia el buffer */
     if (strlen(buf) != 0) {
       printf("[CLIENT] %s", buf);
       bzero(buf, 1024);
@@ -55,9 +61,11 @@ void *sender(void *arg) {
   bzero(buf, 1024);
 
   while (1) {
+    /* Se recibe el mensaje a enviar por entrada estandar y se guarda en el buffer */
     fgets(buf, 1024, stdin);
     if (strlen(buf) != 0) {
       send(socket, buf, sizeof(buf), 0);
+      /* Si el mensaje enviado es un "\exit" se terminan los hilos */
       if (strncmp(buf, "\\exit", 5) == 0) {
         printf("Cerrando conexión.\n");
         pthread_cancel(threads[0]);
@@ -96,7 +104,6 @@ int main(int argc, char **argv){
   if(listen(sock, 1) == -1)
     error(" Listen error ");
 
-  /* Now we can accept connections as they come*/
   clientelen = sizeof(clientedir);
   if ((soclient = accept(sock
                         , (struct sockaddr *) &clientedir
@@ -105,15 +112,18 @@ int main(int argc, char **argv){
 
   printf("Conexión exitosa, comunicando con el cliente...\n");
 
+  /* Llamamos al manejador de la señal SIGINT (CTRL+C) */
   signal(SIGINT, siginit_handler);
 
-  /* Le enviamos el socket al hijo*/
+  /* Le enviamos el socket a los hilos*/
   pthread_create(&threads[0], NULL , receiver, (void *) &soclient);
   pthread_create(&threads[1], NULL , sender, (void *) &soclient);
 
+  /* Se utiliza join para que main cierre el socket una vez que terminen los hilos*/
   pthread_join(threads[0], NULL);
   pthread_join(threads[1], NULL);
 
+  /* Una vez finalizada la comunicación se cierra el socket */
   close(sock);
 
   return 0;
