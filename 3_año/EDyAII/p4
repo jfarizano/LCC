@@ -148,7 +148,158 @@ expose (join l x r) = undefined
 ----------------------------------------------------------------------------
 
 -- Ej 6:
+Demostrar (uncurry zip) . unzip = id
+
+uncurry :: (a -> b -> c) -> ((a, b) -> c)
+
+zip :: [a] -> [b] -> [(a, b)]
+zip [] ys = []
+zip (x:xs) [] = []
+zip (x:xs) (y:ys) = (x, y) : zip xs ys
+
+uncurry zip :: ([a], [b]) -> [(a, b)]
+uncurry zip ([], ys) = []
+uncurry zip ((x:xs), []) = []
+uncurry zip ((x:xs), (y:ys)) = (x, y) : uncurry zip (xs, ys)
+
+unzip :: [(a,b)] -> ([a], [b])
+unzip [] = ([], [])
+unzip ((x, y) : ps) = (x : xs, y : ys) where (xs, ys) = unzip ps
+
+Tipo de datos de listas definido en el preludio:
+data [] a = [] | a : [a]
+
+Voy a demostrar por inducción estructural sobre listas, defino el principio:
+Dada una propiedad P sobre [], para probar ∀ xs :: []. P(xs):
+
+- Probamos P([])
+- Probamos que si P(xs) entonces P(x : xs)
+
+Y sea la propiedad P(l): (uncurry zip) . unzip = id
+
+- Caso base, xs = []
+(uncurry zip) . unzip [] =_{unzip.1} (uncurry zip) ([], []) =_{uncurry zip.1} = []
+
+- Supongo que vale P(ps), quiero ver que vale para x:ps donde x = (a, b)
+HI: (uncurry zip) . unzip ps = ps
+
+(uncurry zip) . unzip (x : ps) = (uncurry zip) . unzip (a, b) : ps =
+(uncurry zip) (a : xs, b : ys) where (xs, ys) = unzip ps
+=  (a, b) : uncurry zip (xs, ys) where (xs, ys) = unzip ps
+= (a, b) : uncurry zip . unzip ps = (a, b) : ps
+
+----------------------------------------------------------------------------
+
+-- Ej 7:
+Tipo de datos de listas definido en el preludio:
+data [] a = [] | a : [a]
+
+Principio de inducción estructural sobre listas:
+Dada una propiedad P sobre [], para probar ∀ xs :: []. P(xs):
+
+- Probamos P([])
+- Probamos que si P(xs) entonces P(x : xs)
+
+maxl [] = 0
+maxl (x:xs) = x `max` maxl xs
+
+sum [] = 0
+sum (x:xs) = x + sum xs
+
+Sea la propiedad P(xs): sum xs <= length xs * maxl xs
+
+- Caso base, xs = []
+sum xs = 0 <= 0 = maxl [] * length xs
+
+- Supongo que vale P(xs), quiero ver que vale para x : xs.
+HI: sum xs <= length xs * maxl xs
+
+Quiero ver sum (x:xs) <= length (x:xs) * maxl (x:xs)
+
+sum (x : xs) = x + sum xs <= x + length xs * maxl xs
+<= x 'max' maxl xs + length xs * x 'max' maxl xs
+= (1 + length xs) * x 'max' maxl xs = length (x:xs) * maxl (x:xs)
+
+----------------------------------------------------------------------------
+
+-- Ej 8:
+
+data Arbol a = Hoja a | Nodo a (Arbol a) (Arbol a)
+
+-- a)
+size :: Arbol a -> Int
+size (Hoja x) = 1
+size (Nodo x l r) = 1 + size l + size r
+
+-- b)
+Principio de inducción estructural sobre árboles binarios:
+
+- Probamos P(Hoja x)
+- Probamos que si P(l) y P(r) entonces P(Nodo x l r)
+
+Sea la propiedad P(t) = existe k e N / size t = 2k + 1
+
+- Caso base, t = Hoja x
+size (Hoja x) = {size.1}
+1 = 2.0 + 1 -> k = 0
+
+- Caso inductivo, t  = (Nodo x l r)
+HI1: size l = 2m + 1
+HI2: size r = 2n + 1
+
+size (Nodo x l r) = {size.2}
+1 + size l + size r = {HI1 y HI2}
+1 + (2m + 1) + (2n + 1) =
+3 + 2m +2n =
+2 * (m + n +1) + 1 -> k = m+n+1
+
+-- c)
+mirror :: Arbol a -> Arbol a
+mirror (Hoja x) = Hoja x
+mirror (Nodo x l r) = Nodo x (mirror r) (mirror l)
+
+-- d)
+Sea la propiedad P(t): mirror . mirror t = t
+
+- Caso base, t = Hoja x
+mirror . mirror (Hoja x) = {mirror.1}
+mirror . Hoja x = {mirror.1}
+Hoja x
+
+- Caso inductivo, t = (Nodo x l r)
+H1: mirror . mirror l = l
+H2: mirror . mirror r = r
+
+mirror . mirror (Nodo x l r) = {mirror.2}
+mirror Nodo x (mirror r) (mirror l) = {mirror.2}
+Nodo x (mirror . mirror l) (mirror . mirror r) = {H1 y H2}
+Nodo x l r
 
 
+-- e)
+hojas :: Arbol a -> Int
+hojas (Hoja x) = 1
+hojas (Nodo x l r) = hojas l + hojas r
 
+altura :: Arbol a -> Int
+altura (Hoja x) = 1
+altura (Nodo x l r) = 1 + (altura l `max` altura r)
 
+Sea P la propiedad P(t): hojas t < 2^(altura t)
+
+- Caso base, t = Hoja x
+hojas (Hoja x) = {hojas.1}
+1 = {altura.1}
+altura (Hoja x)
+
+- Caso inductivo, t = (Nodo x l r)
+HI1: hojas l < 2^(altura l)
+HI2: hojas r < 2^(altura r)
+
+hojas (Nodo x l r) = {hojas.2}
+hojas l + hojas r < {H1 y H2}
+2^(altura l) +  2^(altura r) <=
+2^(altura l `max` altura r) +  2^(altura l `max` altura r) =
+2 * 2^(altura l `max` altura r) =
+2^(1 + altura l `max` altura r) = {altura.2}
+2^(altura (Nodo x l r))
