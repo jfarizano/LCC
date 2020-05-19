@@ -1,9 +1,7 @@
-%% Entrega semanal Farizano, Juan Ignacio
-
 -module(broadcast).
--export([inicializar/0, broadcaster/1, subscribir/2, enviar/2, destruir/1]).
+-export([inicializar/0, broadcaster/1, subscribir/1, enviar/1, destruir/0]).
 %% Ejemplo
--export([finalizar/1, echo/0,start/0]).
+-export([finalizar/1, echo/0, start/0, registrar/1]).
 
 %% Función de inicialización `inicializar/0` que devuelve el Pid del
 %% proceso encargado de repartir los mensajes.
@@ -14,15 +12,15 @@ inicializar() ->
 %% Función de subscripción `subscribir/2` que tome el Pid de un proceso
 %% que subscribiese al servicio de repartición de mensajes y el
 %% PId del proceso encargado de repartir los mensajes.
-subscribir(Pid, Broad) -> Broad ! {subs, Pid}.
+subscribir(Pid) -> broadcaster ! {subs, Pid}.
 
 %% Función de envío de un mensaje a *todos* los subscriptores `enviar/2`, que
 %% toma un mensaje y el Pid del proceso encargado de repartir el mensaje.
-enviar(Msj, Broad) -> Broad ! {env, Msj}.
+enviar(Msj) -> broadcaster ! {env, Msj}.
 
 %% Función de eliminación del servicio de repartición de mensajes `destruir/1`
 %% que toma el PId de un proceso y le indica que ya no se necesitarán sus servicios.
-destruir(Broad) -> Broad ! dest.
+destruir() -> broadcaster ! dest.
 
 %% Función de eliminación de los suscriptores del servicio de repartición de 
 %% mensajes, que toma la lista de PID de los procesos y les indica que se terminó
@@ -50,6 +48,7 @@ broadcaster(Ps) ->
             broadcast(Msj, Ps),
             broadcaster(Ps);
         dest ->
+            unregister(broadcaster),
             finalizar(Ps)
     end.
 
@@ -62,18 +61,20 @@ echo() ->
                echo()
     end.
 
+registrar(Pid) -> register(broadcaster, Pid).
 
 start() ->
     Gen1 = spawn(?MODULE, echo, []),
     Gen2 = spawn(?MODULE, echo, []),
     Gen3 = spawn(?MODULE, echo, []),
     BCaster = inicializar(),
-    subscribir(Gen1,BCaster),
-    subscribir(Gen2,BCaster),
-    subscribir(Gen3,BCaster),
-    enviar("Holis!", BCaster),
-    enviar("Hola de nuevo!", BCaster),
-    enviar("Espero que esto funcione!", BCaster),
-    destruir(BCaster),
+    registrar(BCaster),
+    subscribir(Gen1),
+    subscribir(Gen2),
+    subscribir(Gen3),
+    enviar("Holis!"),
+    enviar("Hola de nuevo!"),
+    enviar("Espero que esto funcione!"),
+    destruir(),
     ok.
 
