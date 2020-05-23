@@ -11,7 +11,7 @@
 % enviandole el mismo mensaje.
 recv(Msj)->
   receive
-      {Msj, PID}-> io:format("1: ~p ~n", [Msj]),
+      {Msj, PID}-> io:format("[REC]: ~p ~n", [Msj]),
                    PID ! Msj,
       recv(Msj)
   end.
@@ -22,7 +22,7 @@ sender(0, _, _)-> io:format("Fin de la comunicación~n");
 sender(M, Msj, PID)-> 
   PID ! {Msj, self()},
   receive
-    Msj-> io:format("2: ~p ~n", [Msj]),
+    Msj-> io:format("[SEND]: ~p ~n", [Msj]),
     sender(M-1, Msj, PID)
   end.
 
@@ -40,3 +40,16 @@ start(M, Msj)->
 % Escribir una función startAnillo/3 que tome dos entero M,N y un mensaje Msj, 
 % genere N procesos en forma de anillo, y haga circular el mensaje Msj unas M 
 % veces. Todos los procesos deberán terminar correctamente.
+
+% eslabon() ->
+  
+
+% spawner(0) -> [spawn(?MODULE, eslabon, [])];
+% spawner(N) -> 
+%   Pid = spawn(?MODULE, eslabon, []),
+%   [Pid] ++ spawner(N - 1).
+
+% startAnillo(M, N, Msj) -> 
+%   [First | Tl] = spawner(N),
+%   First ! {Msj, M, Tl}.
+  

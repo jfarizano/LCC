@@ -1,0 +1,113 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper, margin=2.54cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish, mexico]{babel}
+\usepackage[spanish]{layout}
+\usepackage[article]{ragged2e}
+\usepackage{textcomp}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{mathtools}
+
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+\setlength{\parindent}{5pt}
+\renewcommand{\baselinestretch}{1.5}
+
+% ============================================================================
+% ============================================================================
+% ============================================================================
+
+\title{Entrega Práctica 5 EDyA II}
+\author{Farizano, Juan Ignacio}
+\date{}
+
+% ============================================================================
+% ============================================================================
+% ============================================================================
+
+\begin{document}
+\maketitle
+
+\section*{Análisis de costos}
+\subsection*{Función cons:}
+
+Sea $h$ la altura del árbol, las recurrencias del trabajo y la profundidad
+para la función cons son:
+\begin{equation*}
+  W_{cons}(h) = W_{cons}(h - 1) + 1 = (W_{cons}(h - 2) + 1) + 1 = ... =
+  W_{cons}(1) + 1 + ... + 1 = \sum_{i=1}^{h} i
+\end{equation*}
+\begin{equation*}
+  S_{cons}(h) = S_{cons}(h - 1) + 1
+\end{equation*}
+
+\noindent Supongo que $W_{cons}(h) \in O(h)$ y demuestro por el método de
+substitución, luego: 
+\begin{equation*}
+  W_{cons}(h) = W_{cons}(h - 1) + 1 \underset{\text{HI}}{\leq} c \cdot (h-1) + 1
+  = c \cdot h - c + 1 \underset{c \geq 1}{\leq} c \cdot h - c + c = c \cdot h
+\end{equation*}
+  
+Por lo tanto $ W_{cons}(h) \in O(h) $ (análogo para $S_{cons}(h) \in O(h)$)
+
+% ============================================================================
+
+\subsection*{Función tabulate:}
+Sea $n$ el tamaño del árbol y $f$ la función dada como argumento,
+supongo que la complejidad de esta función es una constante $ k_f$.
+La recurrencia del trabajo de la función tabulate es:
+\begin{equation*}
+  W_{tabulate}(n) = W_{tabulate}(\floor*{\frac{n}{2}}) + k_f + 
+  W_{tabulate}(\floor*{\frac{n}{2}}) = 2 \cdot W_{tabulate}(\floor*{\frac{n}{2}})
+  + k_f 
+\end{equation*}
+
+\noindent Supongo que $ W_{tabulate}(n) \in O(n) $ y demuestro por método
+de substitución, luego: 
+\begin{equation*}
+  W_{tabulate}(n) = 2 \cdot W_{tabulate}(\floor*{\frac{n}{2}}) + k_f
+  \underset{\text{HI}}{\leq} 2 \cdot c \cdot \floor*{\frac{n}{2}} + k_f \leq 
+  2 \cdot c \cdot \frac{n}{2} + k_f \leq c \cdot n
+\end{equation*}
+
+Por lo tanto $ W_{tabulate}(n) \in O(n) $
+
+La recurrencia de la profundidad de la función tabulate es:
+\begin{equation*}
+  S_{tabulate}(n) = max(S_{tabulate}(\floor*{\frac{n}{2}}),
+  S_{tabulate}(\floor*{\frac{n}{2}})) + k_f  = S_{tabulate}(\floor*{\frac{n}{2}})
+  + k_f
+\end{equation*}
+
+\noindent Supongo que $ S_{tabulate}(n) \in O(lg \; n) $ y demuestro por método
+de substitución, luego:
+\begin{align*}
+  S_{tabulate}(n) &= S_{tabulate}(\floor*{\frac{n}{2}}) + k_f 
+  \underset{\text{HI}}{\leq} c \; \cdot lg(\floor*{\frac{n}{2}}) + k_f
+  \leq c \; \cdot lg(\frac{n}{2}) + k_f = c \; \cdot lg \; n +
+  c \; \cdot lg \; 2 + k_f \\
+  & = c \; \cdot lg \; n - c + k_f \leq c \cdot lg \; n
+\end{align*}
+
+Por lo tanto $ S_{tabulate}(n) \in O(lg \; n) $
+
+% ============================================================================
+
+\subsection*{Función take:}
+Sea $h$ la altura del árbol.
+\begin{equation*}
+  W_{take}(h) = W_{take}(h - 1) + 1 = (W_{take}(h - 2) + 1) + 1 = ... =
+  W_{take}(1) + 1 + ... + 1 = \sum_{i=1}^{h} i 
+\end{equation*}
+\begin{equation*}
+  S_{take}(h) = S_{take}(h - 1) + 1
+\end{equation*}
+
+La demostración del costo de la función take es análoga a la de la función cons,
+por lo tanto $ W_{take}(h) \in O(h) $ y $ S_{take}(h) \in O(h) $
+
+
+
+\end{document}
