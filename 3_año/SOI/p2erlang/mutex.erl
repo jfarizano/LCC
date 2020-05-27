@@ -42,7 +42,7 @@ locker(locked) ->
 
 testLock () ->
   L = crear(),
-  W=spawn(?MODULE,waiter,[L,3]),
+  W = spawn(?MODULE,waiter,[L,3]),
   spawn(?MODULE,f,[L,W]),
   spawn(?MODULE,f,[L,W]),
   spawn(?MODULE,f,[L,W]),
@@ -57,7 +57,7 @@ f (L,W) ->
   io:format("cuatro ~p~n",[self()]),
   %
   soltar(L),
-  W!finished.
+  W ! finished.
           
 waiter (L,0) -> borrar(L);
 waiter (L,N) -> receive finished -> waiter(L,N-1) end.
