@@ -1,0 +1,293 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper, margin=2.54cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish, mexico]{babel}
+\usepackage[spanish]{layout}
+\usepackage[article]{ragged2e}
+\usepackage{textcomp}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{yhmath}
+
+\setlength{\parindent}{0pt}
+
+\title{Trabajo Práctico: Unidad 5}
+\author{Mellino, Natalia \and Farizano, Juan Ignacio}
+\date{}
+
+
+
+\begin{document}
+\maketitle
+
+%===============================================================================
+\section*{Ejercicio 1:}
+
+\textbf{\underline{Apartado a):}} \\
+
+Sabemos que como $ f $ es una función de densidad de probabilidad se debe cumplir
+la siguiente condición:
+
+\begin{equation*}
+  \int_{-\infty}^{+\infty} f(x) \cdot dx = 1
+\end{equation*}
+
+Es decir, debemos ver que:
+
+\begin{align*}
+  \int_{-2}^{2} k(2 - x)dx                                  & = 1           \\
+  k \cdot \int_{-2}^{2} 2dx - k \cdot \int_{-2}^{2} x \cdot & = 1           \\
+  8k - k \Big(\frac{(2)^2}{2} - \frac{(-2)^2}{2} \; \Big)   & = 1           \\
+  8k                                                        & = 1           \\
+  k                                                         & = \frac{1}{8}
+\end{align*}
+
+Por lo tanto, nuestra función nos queda de la siguiente manera:
+
+\[
+  f(x) = \begin{cases}
+    \frac{1}{8}(2 - x) & \text{si }  -2 \leq x \leq 2 \\
+    0                  & \text{en caso contrario }
+  \end{cases}
+\]
+
+\textbf{\underline{Apartado b):}} \\
+
+Función de distribución acumulada:
+
+\begin{equation*}
+  F(X) = P(X \leq x) = \int_{-2}^{x} \frac{1}{8}(2 - x)dx
+\end{equation*}
+
+\begin{align*}
+  \int_{-2}^{x} \frac{1}{8}(2 - x)dx & = \frac{1}{4}(x + 2) - \frac{1}{8} \int_{-2}^{x} tdt            \\
+                                     & = \frac{1}{4}(x + 2) - \frac{1}{8} \Big(\frac{x^2}{2} - 2 \Big) \\
+                                     & = \frac{-x^2}{16} + \frac{1}{4}x + \frac{3}{4}
+\end{align*}
+
+Por lo tanto la Función de Distribución Acumulada es:
+
+\[
+  F(x) = \begin{cases}
+    \frac{-x^2}{16} + \frac{1}{4}x + \frac{3}{4} & \text{si }  -2 \leq x \leq 2 \\
+    0                  & \text{en caso contrario }
+  \end{cases}
+\]
+
+\newpage
+
+\textbf{\underline{Apartado c):}} \\
+
+Queremos hallar $ P(-1 \leq X \leq 1) $, para ello planteamos:
+
+\begin{align*}
+  \int_{-1}^{1} f(x)dx & = \int_{-1}^{1} \frac{1}{8} (2-x) dx                                          \\
+                       & = \frac{1}{4}(2) - \frac{1}{8} \Big( \frac{(1)^2}{2} - \frac{(-1)^2}{2} \Big) \\
+                       & = \frac{1}{2}
+\end{align*}
+
+Por lo tanto, la probabilidad de que el termómetro cometa un error es de $\frac{1}{2}$. \\
+
+\textbf{\underline{Apartado d):}} \\
+
+\begin{align*}
+  P(X > c) & = 1 - P(X \leq c)                                             \\
+           & = 1 - F(c)                                                    \\
+           & = 1 - \Big[\frac{-c^2}{16} + \frac{1}{4}c + \frac{3}{4} \Big]
+\end{align*}
+
+Luego queremos hallar $c$ tal que:
+
+\begin{equation*}
+  \Big[\frac{c^2}{16} - \frac{1}{4}c + \frac{1}{4} \Big] = 0.1
+\end{equation*}
+
+Esto ocurre sí y sólo sí:
+
+\begin{equation*}
+  c \simeq 3.2649 \; \; \text{ó} \; \; c \simeq 0.735
+\end{equation*}
+
+Como se debe cumplir que $-2 \leq c \leq 2$ tomamos $c \simeq 0.735$. \\
+
+Por lo tanto el valor de $c$ para el cual $ P(X > c) = 0.1$ es $c \simeq 0.735$.
+
+\section*{Ejercicio 2:}
+
+Definimos la variable aleatoria:
+\begin{center}
+  $X$: tiempo de vida de un marcapasos.
+\end{center}
+
+Nuestra función $f$ de densidad de probabilidad tiene una distribución exponencial
+con media de 16 años, por lo tanto, nuestro parámetro $\alpha$ viene dado por:
+$\alpha = \frac{1}{16}$. Entonces nuestra función $f$ nos queda:
+
+\[
+  f(x) = \begin{cases}
+    \frac{1}{16}e^{(-1/16)x} - x & \text{si } x > 0          \\
+    0                            & \text{en caso contrario }
+  \end{cases}
+\]
+
+Y nuestra Función de Distribución Acumulada es:
+
+\[
+  F(x) = \begin{cases}
+    1 - e^{(-1/16)x} & \text{si } x > 0          \\
+    0                            & \text{en caso contrario }
+  \end{cases}
+\]
+
+1) ¿Cuál es la probabilidad de que a una persona a la que se le ha implantado el
+marcapasos se le deba reimplantar otro antes de los 20 años? \\
+
+Para esto debemos calcular
+\begin{align*}
+  P(X < 20) & = F(20)             \\
+            & = 1 - e^{(-1/16)20} \\
+            & \simeq 0.7134
+\end{align*}
+
+Por lo tanto, la probabilidad es de 0.7134. \\
+
+2) Si el marcapasos lleva funcionando correctamente 5 años en un paciente, ¿cuál
+es la probabilidad de que haya que cambiarlo antes de 25 años? \\
+
+Queremos hallar $P(X \leq 25 | X \geq 5) = \frac{P(5 \leq X \leq 25)}{P(X \geq 5)}$:
+\begin{align*}
+  P(5 \leq X \leq 25) & = F(25) - F(5)                             \\
+                      & = (1 - e^{(-1/16)25}) - (1 - e^{(-1/16)5}) \\
+                      & \simeq 0.522
+\end{align*}
+
+\begin{align*}
+  P(X \geq 5) &= 1 - P(X < 5) \\
+              &= 1 - F(5) \\
+              &= 1 - (1- e^{(-1/16)5}) \\
+              &\simeq 0.7316
+\end{align*}
+
+Luego:
+
+\begin{equation*}
+  P(X \leq 25 | X \geq 5) = \frac{P(5 \leq X \leq 25)}{P(X \geq 5)} 
+                          \simeq \frac{0.522}{0.7316} 
+                          \simeq 0.7135
+\end{equation*}
+
+Por lo tanto, la probabilidad de que haya que reemplazarlo antes de los 25 años
+es de 0.7135. 
+
+\section*{Ejercicio 3:}
+\textbf{\underline{Apartado a):}} \\
+
+Definimos la variable aleatoria: \\
+
+$X:$ duración en horas de un láser \\
+
+$ X $ tiene una \textbf{distribución normal} con parámetros $ \mu = 7000 $ y 
+$ \sigma = 600 $. Queremos hallar $ P(X < 5000) $, para ello debemos convertir 
+esta variable $ X $ que tiene una distribución normal, en una nueva variable $ Z $
+con distribución normal \textbf{estandarizada}:
+
+\begin{align*}
+  P(X < 5000) &= P(\frac{X - \mu}{\sigma} < \frac{5000 - \mu}{\sigma}) \\
+              &= P(\frac{X - 7000}{600} < \frac{5000 - 7000}{600})     \\
+              &= P(Z < -3.\wideparen{3}) \rightarrow (\text{llamamos a Z} = \frac{X - 7000}{600})
+\end{align*}
+
+Ahora, como la variable aleatoria $ Z $ tiene una distribución normal estandarizada,
+observamos la tabla y hallamos que: $ P(Z < -3.\wideparen{3}) = 0.0004 $. \\
+
+Por lo tanto, la probabilidad de que el láser falle antes de las 5000hs es de 0.0004. \\
+
+\textbf{\underline{Apartado b):}} \\
+
+En este caso, queremos hallar el $ k $ para el cual $ P(X > k) = 0.95 $.
+
+\begin{equation*}
+  P(X > k) = 0.95 \iff P(X < k) = 0.05
+\end{equation*}
+
+\begin{align*}
+  P(X < k) &= P(\frac{X - \mu}{\sigma} < \frac{k - \mu}{\sigma}) \\
+           &= P(\frac{X - 7000}{600} < \frac{k - 7000}{600})     \\
+           &= P(Z < \frac{k - 7000}{600})     \\
+           &= 0.05
+\end{align*}
+
+Observando la tabla, vemos que se debe tomar $ z = -1.65 $, y luego:
+
+\begin{align*}
+  -1.65           &= \frac{k - 7000}{600} \\
+  600 \cdot -1.65 &= k - 7000 \\
+  -990            &= k - 7000 \\
+  6010            &= k 
+\end{align*}
+
+\textbf{\underline{Apartado c):}} \\
+
+Definimos una variable aleatoria: \\
+
+$ X': $ n° de láseres que siguen funcionando después de 7000 hs. \\
+
+$X' $ tiene una \textbf{distribución binomial} de parámetros $ n = 3 $ y 
+$ p = P(X \geq 7000) $. Ahora calculamos $ p $:
+
+\begin{align*}
+  P(X \geq 7000) &= 1 - P(X < 7000) \\
+                 &= 1 - P(Z < \frac{7000 - 7000}{600}) \\
+                 &= 1 - P(Z < 0) \\
+                 &= 1 - 0.5 \rightarrow \text{observando la tabla} \\
+                 &= 0.5
+\end{align*}
+
+Luego resulta, $ p = 0.5 $. Ahora queremos hallar: \\
+
+$ P(X' = 3) = \binom{3}{3} \cdot p^3 \cdot (1 - p)^0 = (0.5)^3 = 0.125 $ \\
+
+Por lo tanto, la probabilidad de que los 3 láseres sigan funcionando después de 
+7000 hs es de 0.125. 
+
+\newpage
+
+\section*{Ejercicio 4:}
+
+Sea $ X$: temperatura en celsius. \\
+
+$ X $ tiene una distribución uniforme en el intervalo (15, 21), por lo tanto, su
+su fdp viene dada por: 
+
+\begin{equation*}
+  f_X(x) = \frac{1}{6}
+\end{equation*}
+
+Luego tenemos la variable aleatoria: \\
+
+$Y$: temperatura en farenheit. \\
+
+Y también se tiene que $ H(X) = Y = \frac{9}{5}X + 32 $. Queremos hallar la fdp $f_Y$. \\
+
+Observemos que por teorema tenemos que:
+
+\begin{equation*}
+  f_Y(x) = f_X(x) \cdot \Big|\frac{\partial x}{\partial y}\Big|
+\end{equation*}
+
+Donde $ x = H^{-1}(y) = \frac{5}{9}y - \frac{160}{9} $. Por lo tanto:
+
+\begin{equation*}
+  f_Y(x) = \frac{1}{6} \cdot \frac{5}{9} = \frac{5}{54}
+\end{equation*}
+
+Y observemos que, de hecho, $f_y$ es una fdp ya que:
+
+\begin{itemize}
+  \item $f_Y(x) \geq 0 \; \forall x \; | \; 59 \leq x \leq 69.8 $ (Obs. que si $15 \leq X \leq 21 $ entonces $59 \leq H(X) = Y \leq 69.8$)
+  \item $ \int_{-\infty}^{+\infty} \frac{5}{54} dx =  
+                  \int_{59}^{69.8} \frac{5}{54} dx = 
+                  (69.8 - 59) \cdot \frac{5}{54}   = 1 $
+\end{itemize}
+
+\end{document}

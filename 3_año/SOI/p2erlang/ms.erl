@@ -9,7 +9,7 @@ to_slave(Msj, N) ->
 
 slave() ->
   receive
-    die -> exit(latigazos);
+    die -> exit(die);
     Msj -> io:format("Soy ~p, me llegó ~p ~n", [self(), Msj]),
            slave()
   end.

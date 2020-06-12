@@ -1,0 +1,243 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper, margin=2.54cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish, mexico]{babel}
+\usepackage[spanish]{layout}
+\usepackage[article]{ragged2e}
+\usepackage{textcomp}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{yhmath}
+
+\setlength{\parindent}{0pt}
+
+\title{Trabajo Práctico: Unidad 6}
+\author{Mellino, Natalia \and Farizano, Juan Ignacio}
+\date{}
+
+
+
+\begin{document}
+\maketitle
+
+%==============================================================================
+
+\section*{Ejercicio 1}
+
+Definimos la variable aleatoria: 
+
+\[
+  X_i = \begin{cases}
+            1 & \text{si gano en la tirada i} \\
+            0 & \text{en caso contrario}
+        \end{cases}  
+\]
+
+Para todo $i = 1,...50$. La probabilidad de que nuestro número elegido
+salga en la tirada $i$ es $p = \frac{1}{10}$. Además, observemos que
+para $X_i$ sólo hay dos resultados posibles: $1$ ó $0$ (pues sólo hay
+dos opciones: o sale nuestro numero ó no sale). Por lo tanto, cada v.a.
+$X_i$ es una variable aleatoria con distribución binomial: $X_i \sim B(n = 1, p = \frac{1}{10})$.
+Además, es claro que todas las $X_i$ son independientes entre sí, ninguna depende
+de la otra. \\
+
+El ejercicio nos pide hallar la probabilidad de no haber perdido dinero
+después de 50 tiradas, esto sólo sucede si ganamos al menos 9 tiradas (si ganamos 8 o menos el saldo es negativo), 
+es decir, queremos hallar $P(X_1 + ... + X_{50} \geq 9)$. Ahora, 
+tenemos todas las hipótesis para poder usar el \textbf{Teorema Central del Límite}. Sea $Y$
+la nueva variable aleatoria:
+
+\begin{equation*}    
+    Y = X_1 + ... + X_{50}
+\end{equation*}
+
+Sean $\mu_i = E(X_i) = p = \frac{1}{10}$,  y $\sigma_i^2 = V(X_i) = p(1 - p ) = \frac{9}{100}$, usando
+el Teorema se tiene que $Y$ tiene una distribución aproximadamente normal con parámetros:
+
+\begin{equation*}
+    \mu = \displaystyle\sum_{i=1}^{50} \mu_i = 50 \cdot \frac{1}{10} = 5
+\end{equation*}
+
+\begin{equation*}
+    \sigma = \sqrt{\displaystyle\sum_{i=1}^{50} \sigma_i^2} = \sqrt{50 \cdot \frac{9}{100}} \simeq 2.1213
+\end{equation*}
+
+Luego:
+
+\begin{align*}
+    P(Y \geq 9) & = 1 - P(Y < 9) \\
+                & = 1 - P(Z < \frac{ 9 -\mu}{\sigma}) \rightarrow \text{estandarizamos} \\
+                & = 1 - P(Z < 1.88)  \\
+                & = 1 - 0.9699 \rightarrow \text{usando la tabla} \\
+                & = 0.03
+\end{align*}
+
+Por lo tanto, la probabilidad de no perder dinero después de 50 tiradas, es de
+aproximadamente 0.03.
+
+%==============================================================================
+
+\newpage
+
+\section*{Ejercicio 2}
+
+\subsection*{Apartado a):}
+
+Definimos las siguientes variables aleatorias:
+
+\[
+    X_i = \begin{cases}
+            1 & \text{si el pasajero $i$ decidió viajar} \\
+            0 & \text{en caso contrario}
+          \end{cases}
+\]
+
+Con $i = 1,..., 400$. Ahora, la probabilidad de que un pasajero decida
+viajar es $p = 0.5$, luego, $X_i \sim B(n = 1, p = 0.5)$. Asumiendo que las
+$X_i$ son independientes entre sí (que ningún pasajero dependa de otro para viajar o no), 
+podemos usar el \textbf{Teorema Central del Límite} para calcular:
+
+\begin{equation*}
+    P(X_1 + ... + X_{400} > 230)
+\end{equation*}
+
+Sean $\mu_i = E(X_i) = p = 0.5$ y $\sigma_i^2 = V(X_i) = p(1 - p) = 0.25$, 
+tenemos que $X_1 + ... + X_{400}$ tiene una distribución aproximadamente normal
+con parámetros:
+
+\begin{equation*}
+    \mu = \displaystyle\sum_{i=1}^{400} \mu_i = 400 \cdot 0.5 = 200
+\end{equation*}
+
+\begin{equation*}
+    \sigma = \sqrt{\displaystyle\sum_{i=1}^{400} \sigma_i^2} = \sqrt{400 \cdot 0.25} = 10
+\end{equation*}
+
+Luego definiendo $Y = X_1 + ... + X_{400}$, se tiene que:
+
+\begin{align*}
+    P(Y > 230) & = 1 - P(Y \leq 230) \\
+               & = 1 - P(Z \leq \frac{230 - 200}{10}) \rightarrow \text{estandarizamos} \\
+               & = 1 - P(Z \leq 3) \\
+               & = 1 - 0.9987 \rightarrow \text{usando la tabla} \\
+               & = \frac{13}{10000}
+\end{align*}
+
+Por lo tanto, la probabilidad de obtener un overbooking es de $\frac{13}{10000}$.
+
+\subsection*{Apartado b)}
+
+Definimos una nueva variable aleatoria, $X'$: número de compañías que tuvieron overbooking. \\
+
+Tenemos 10 compañías, todas en las mismas condiciones, entonces la probabilidad de que una
+tenga un overbooking, es la probabilidad hallada en el apartado anterior, $p = \frac{13}{10000}$.
+Luego, es fácil ver que $X' \sim B(10, \frac{13}{10000})$. Nosotros quremos hallar $P(X' > 2)$, entonces:
+
+\begin{align*}
+    P(X' > 2) & = 1 - P(X' < 2) \\
+              & = 1 - (P(X' = 0) + P(X' = 1)) \\
+              & = 1 - \left(\left(\binom{10}{0} \cdot p^0 \cdot (1-p)^{10}\right) + \left(\binom{10}{1} \cdot p^1 \cdot (1-p)^9\right)\right) \\
+              & = 1 - (0.987 + 0.0128) \\
+              & = 0.0002
+\end{align*}
+
+Por lo tanto, la probabilidad de que al menos 2 compañías tengan overbooking es de 
+0.0002.
+
+\section*{Ejercicio 3}
+
+\subsection*{Apartado a):}
+
+De los datos proporcionados, podemos deducir las siguientes cosas: 
+
+\begin{itemize}
+
+\item El $20\%$ de las piezas tienen defectos tipo D2, esto quiere decir que
+      $p_y(2) = 0.2$. 
+
+\item El $15\%$ de las piezas tienen 1 defecto, tipo D1 y ninguno tipo D2, esto es:
+      $P(1, 0) = 0.15$. 
+
+\item $ E(X) = 0 \cdot p_x(0) + 1 \cdot p_x(1) = 0.3 \Rightarrow p_x(1) = 0.3 \Rightarrow p_x(0) = 1 - p_x(1) = 0.7$ 
+
+\item El $50\%$ de las piezas que no tienen defectos tipo D1, tienen un defecto
+      tipo D2, esto nos da una probabilidad condicional: 
+      $P(Y = 1 / X = 0) = \frac{P(0, 1)}{p_x(0)} = 0.5 \Rightarrow \frac{P(0, 1)}{0.7} = 0.5 \Rightarrow P(0, 1)= 0.35 $ 
+
+\item $ E(Y) = 0 \cdot p_y(0) + 1 \cdot p_y(1) + 2 \cdot p_y(2) = 0.8 \Rightarrow p_y(1) + 0.4 = 0.8 \Rightarrow p_y(1) = 0.4 $  
+
+\item Luego como debe ser $p_y(0) + p_y(1) + p_y(2) = 1$, se deduce que $p_y(0) = 0.4$ 
+
+\end{itemize}
+
+Con estos datos tenemos lo suficiente para completar la tabla:
+
+\begin{center}
+    \begin{tabular}{| c | r | r | r | r |}
+    \hline
+    \textbf{X / Y} & \textbf{0} & \textbf{1} & \textbf{2} & $\mathbf{p_x(x)}$ \\ \hline
+    \textbf{0} & 0.25 & 0.35 & 0.10 & 0.70 \\ \hline
+    \textbf{1} & 0.15 & 0.05 & 0.10 & 0.30 \\ \hline
+    $\mathbf{p_y(y)}$ & 0.40 & 0.40 & 0.20 & 1.00 \\ \hline
+    \end{tabular}
+\end{center}
+
+\subsection*{Apartado b):}
+
+$X$ e $Y$ no son independientes, observemos que:
+
+\begin{itemize}
+    \item $ P(0, 0) = 0.25$
+    \item $p_x(0) \cdot p_y(0) = 0.4 \cdot 0.7 = 0.28$
+\end{itemize}
+
+Es decir, no se cumple que $P(x, y) = p_x(x) \cdot p_y(y)$, por lo tanto, 
+las variables no son independientes. 
+Para calcular el coeficiente correlación primero necesitamos el valor de $E(XY)$
+\begin{align*}
+    E(XY) & = \displaystyle\sum_{x = 0}^{1} \displaystyle\sum_{y = 0}^{2} x \cdot y \cdot p(x, y) \\
+          & = 0 \cdot 0 \cdot 0.25 + 0 \cdot 1 \cdot 0.35 + 0 \cdot 2 \cdot 0.10
+              + 1 \cdot 0 \cdot 0.15 + 1 \cdot 1 \cdot 0.05 + 1 \cdot 2 \cdot 0.10 \\
+          & = 1 \cdot 1 \cdot 0.05 + 1 \cdot 2 \cdot 0.10 \\
+          & = 0.25
+\end{align*}
+
+Una vez obtenido este valor, calculamos el coeficiente de correlación:
+\begin{equation*}
+    \rho = \frac{E(XY) - E(X)E(Y)}{\sqrt{V(X)V(Y)}} 
+         = \frac{0.25 - (0.3 \cdot 0.8)}{\sqrt{0.21 \cdot 0.56}} = \frac{0.01}{0.342} = 0.029
+\end{equation*}
+
+
+\subsection*{Apartado c):}
+
+Usamos la fórmula de probabilidad condicional:
+
+\begin{align*}
+    P(Y = 2 / X = 0) & = \frac{p(0, 2)}{p_x(x)} \\
+                     & = \frac{0.1}{0.4} \\
+                     & = 0.25
+\end{align*}
+
+Esto se interpreta como la probabilidad de que una pieza tenga 2 defectos
+del tipo D2 dado que no tiene ningún defecto del tipo D1.
+
+\subsection*{Apartado d):}
+Definimos la variable aleatoria $Z$: ``costo de reparación por pieza", 
+observemos que el costo de reparación se calcula: $Z = 3X + 4Y$, donde
+$X$, e $Y$ son las variables aleatorias que representan la cantidad de 
+defectos del tipo D1 y D2 respectivamente. \\
+
+Para el costo esperado se tiene lo siguiente:
+
+\begin{equation*}
+    E(Z) = 3 \cdot E(X) + 4 \cdot E(Y) = 3 \cdot 0.3 + 4 \cdot 0.8 = 4.1
+\end{equation*}
+
+\begin{align*}
+    V(Z) & = 9 \cdot V(X) + 16 \cdot V(Y) + 2 \cdot 3 \cdot 4 \cdot Cov(X, Y) \\
+         & = 9 \cdot 0.21 + 16 \cdot 0.56 + 24 \cdot 0.01 \\
+         & = 11.09 
+\end{align*}
+
+\end{document}
