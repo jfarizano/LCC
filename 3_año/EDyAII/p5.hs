@@ -54,4 +54,15 @@ drop n (Node s l x r) | n == m = (Node (s-m) Empty x r)
                       | otherwise = drop (n - m - 1) r
                       where m = size l
 
-t = Node 7 (Node 3 (Node 1 Empty 0 Empty) 1 (Node 1 Empty 2 Empty)) 3 (Node 3 (Node 1 Empty 4 Empty) 5 (Node 1 Empty 6 Empty))
+-- ----------------------------------------------------------------------------
+
+-- Ej 2:
+
+data Tree a = E | Leaf a | Join (Tree a) (Tree a)
+
+mapreduce :: (a -> b) -> (b -> b -> b) -> b -> Tree a -> b
+mapreduce f g e = mr
+  where mr E = e
+        mr (Leaf a) = f a
+        mr (Join l r) = let (l', r') = mr l ||| mr r
+                        in g l' r'
