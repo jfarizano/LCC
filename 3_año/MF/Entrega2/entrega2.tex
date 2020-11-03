@@ -82,11 +82,13 @@ Por la segunda ley de Newton tenemos que $\sum F_x = ma$, luego:
 
 Usando la siguiente ecuación de movimiento uniformemente acelerado
 \begin{align*}
-  v^2 &= v^2_0 +2a(x-x_0) \rightarrow \text{buscamos distancia en} \; v = 0 \\
+  v^2 &= v^2_0 +2a(x-x_0) \rightarrow \text{Buscamos distancia en} \; v = 0 \\
       &\Rightarrow 0ft^2/s^2 = 7744ft^2/s^2 - 34.38ft/s^2 \cdot \Delta x \\
       &\Rightarrow 34.38ft/s^2 \cdot \Delta x = 7744ft^2/s^2 \\
       &\Rightarrow \Delta x = 225.25ft
 \end{align*}
+
+Por lo tanto, la distancia recorrida es: $225.25ft$. 
 
 \subsection*{Apartado b)}
 
@@ -123,24 +125,25 @@ del mismo.
 
 \subsection*{Resolución}
 
-Por segunda ley de Newton tenemos que
+Planteando la Segunda Ley de Newton podemos deducir:
 
 \begin{align*}
   \sum F = ma &\Rightarrow P - kv = ma \\
-  &\Rightarrow P - kv = m \frac{dv}{dt} \\ % recordemos que a = dv/dt
+  &\Rightarrow P - kv = m \frac{dv}{dt} \rightarrow \text{Recordemos que $a = \frac{dv}{dt}$} \\
   &\Rightarrow \frac{1}{m}dt = \frac{1}{P - kv}dv \\
-  &\Rightarrow \int_{0}^{t} \frac{1}{m}dt = \int_{0}^{v} \frac{1}{P - kv}dv \\ % despejamos v:
+  &\Rightarrow \int_{0}^{t} \frac{1}{m}dt = \int_{0}^{v} \frac{1}{P - kv}dv \rightarrow \text{Despejamos $v$:} \\
   &\Rightarrow \frac{t}{m} = -\frac{1}{k}(\ln{(P - kv)} - \ln{(P)}) \\
   &\Rightarrow t = -\frac{m}{k} \cdot \ln{\left(\frac{P - kv}{P}\right)} \\
   &\Rightarrow -\frac{k}{m}t = \ln{\left(\frac{P - kv}{P}\right)} \\
   &\Rightarrow \frac{P - kv}{P} = e^{-\frac{k}{m}t} \\
   &\Rightarrow P - kv = P \cdot e^{-\frac{k}{m}t} \\
-  &\Rightarrow v = \frac{P}{k} - \frac{P}{k}e^{-\frac{k}{m}t} = \frac{dx}{dt} \\ %recordemos q v = dx/dt
+  &\Rightarrow v = \frac{P}{k} - \frac{P}{k}e^{-\frac{k}{m}t} = \frac{dx}{dt} \rightarrow \text{Recordemos que $v = \frac{dx}{dt}$} \\
   &\Rightarrow \int_{0}^{x} dx = \int_{0}^{t} \frac{p}{k} - \frac{p}{k} \cdot e^{\frac{-k}{m} t}dt \\
   &\Rightarrow x = \left. \frac{p}{k} \cdot t + \frac{pm}{k^2} \cdot e^{\frac{-k}{m}} \right\vert_0^t \\
-  &\Rightarrow x = \frac{p}{k} \cdot t - m \cdot v % por lo tanto x es lineal
+  &\Rightarrow x = \frac{p}{k} \cdot t - m \cdot v 
 \end{align*}
 
+Por lo tanto, la ecuación que relaciona a $x$, $v$ y $t$ es lineal.
 
 \section*{Ejercicio 12.63}
 
@@ -196,7 +199,7 @@ obtenidos anteriormente.
 \end{equation*}
 
 \begin{align*}
-  y_2 &= \delta = y_1 + v_1 (t_2 - t_1)  \\
+  y_2 &= \delta = y_1 + v_1 (t_2 - t_1) \rightarrow \text{$v_1$ es la velocidad en el tiempo $t_1$} \\
       &= \frac{e v t_1^2}{2 m d} + \frac{e v t_1}{m d} (t_2 - t_1) \\
       &= \frac{e v t_1^2}{2 m d} + \frac{e v t_1 t_2}{m d} - \frac{e v t_1^2}{m d} \\
       &= \frac{e v t_1}{m d} (t_2 - \frac{t_1}{2}) \\
