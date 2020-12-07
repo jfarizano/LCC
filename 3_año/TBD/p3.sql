@@ -1,7 +1,7 @@
-S (S#, SNOMBRE, SITUACIÓN, CIUDAD )
+S (S#, SNOMBRE, SITUACIÓN, CIUDAD)
 P (P#, PNOMBRE, COLOR, PESO, CIUDAD)
 J (J#, JNOMBRE, CIUDAD)
-SPJ (S#, P#, J#, CANT )
+SPJ (S#, P#, J#, CANT)
 
 -- Consultas sencillas
 -- 1 

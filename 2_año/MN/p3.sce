@@ -55,10 +55,10 @@ endfunction
 
 function r = metodoNewton(f, x, eps, maxIter)
     iter = 1
-    x1 = f(x)
+    x1 = x - f(x)/numderivative(f, x)
     while (abs(x1 - x) > eps) && (iter < maxIter)
         x = x1
-        x1 = f(x1)/numderivative(f, x1)
+        x1 = x - f(x)/numderivative(f, x)
     end
     
     if iter == maxIter then
