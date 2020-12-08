@@ -82,12 +82,12 @@ endfunction
 
 function x = nodosChebyshev(n)
     TSombrerito = (1 / (2 ** n)) * polChebyshev(n)
-    x = roots(TSombrerito)
+    x = roots(TSombrerito)'
 endfunction
 
 function x = nodosChebyshevCambio(a, b, n)
     TSombrerito = (1 / (2 ** n)) * polChebyshev(n)
-    x = roots(TSombrerito)
+    x = roots(TSombrerito)'
     
     for i = 1:n
         x(i) = ((b + a) + x(i) * (b - a)) / 2
@@ -101,6 +101,7 @@ function x = nodosChebyshevIter(a, b, n)
     for i = 1:n
         x(i) = (1/2) * (a + b) + (1/2) * (b - a) * cos((((2 * i) - 1)/ (2 * n)) * %pi)
     end
+    x = x'
 endfunction
 
 function ej1()
@@ -182,7 +183,7 @@ function ej8()
     printf("\nPolinomio de grado 2:")
     p2 = minimosCuadradosPoli(x, y, 3)
     disp(p2)
-    printf("\nPolinomio de grado 3:")
+    printf("\nPolinomio de grado 3:\n")
     p3 = minimosCuadradosPoli(x, y, 4)
     disp(p3)
     
@@ -209,14 +210,15 @@ function ej9()
         plot(rango, (y - horner(p, rango)), colores(i))
     end
 
-    a = gca();a.x_location="origin";a_y_location="origin"
+    a = gca();a.x_location="origin";a_y_location="origin";
     hl = legend("n = 2", "n = 4", "n = 6", "n = 10", "n = 14")
 endfunction
 
 function ej10()
     rango = -1:0.1:1
     x = nodosChebyshev(4)
-    p = polInterpolLagrange(x, exp(x))
+    y = exp(x)
+    p = real(polInterpolLagrange(x, y))
     printf("Polinomio de interpolación obtenido:\n")
     disp(p)
     
@@ -227,11 +229,13 @@ endfunction
 function ej11()
     rango = 0:0.1:%pi/2
     x = nodosChebyshevCambio(0, %pi/2, 4)
-    y = cos(y)
-    p = polInterpolLagrange(x, y)
+    y = cos(x)
+    p = real(polInterpolLagrange(x, y))
     printf("Polinomio de interpolación obtenido:\n")
     disp(p)
     
-    plot(rango, cos(rango) - horner(p, rango))
-    a = gca();a.x_location="origin";a_y_location="origin";  
+    plot(rango, cos(rango), "r")
+    plot(rango, horner(p, rango), "b")
+    a = gca();a.x_location="origin";a_y_location="origin";
+    hl = legend("cos(x)", "Aproximación mediante interpolación")
 endfunction

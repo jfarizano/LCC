@@ -40,7 +40,6 @@ function Gers(A)
     end
 endfunction
 
-// Preguntar que el vector da el opuesto
 function [l, v, iters] = metodoPotencias(A, z0, eps)
     [m, n] = size(A)
     w = A * z0
@@ -157,7 +156,7 @@ function ej5()
     printf("\nAutovector asociado:")
     disp(v1)
     printf("\nIteraciones utilizadas: %d \n", iters1)
-    vr1 = max(spec(A1))
+    vr1 = max(abs(spec(A1)))
     ea1 = abs(l1 - vr1)
     er1 = ea1 / abs(vr1)
     printf("Error absoluto del mayor autovalor: %f\n", ea1)
@@ -174,8 +173,8 @@ function ej5()
     disp(l2)
     printf("\nAutovector asociado:")
     disp(v2)
-    printf("\nIteraciones utilizadas: %d", iters2)
-    vr2 = max(spec(A2))
+    printf("\nIteraciones utilizadas: %d\n", iters2)
+    vr2 = max(abs(spec(A2)))
     ea2 = abs(l2 - vr2)
     er2 = ea2 / abs(vr2)
     printf("Error absoluto del mayor autovalor: %f\n", ea2)
