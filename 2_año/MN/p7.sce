@@ -153,6 +153,24 @@ function ej4()
     printf("Valor aproximado de J0(2.35): %f\n", horner(p, 2.35))
 endfunction
 
+function ej6()
+    x = [-1, 1, 2, 4]
+    difDiv = [2, 1, -2, 2]
+    p = difDiv(1)
+    acum = 1
+    
+    // Encuentro el polinomio interpolante
+    for i = 2:4
+        acum = acum * poly([-x(i - 1), 1], "x", "coeff")
+        p = p + acum * difDiv(i)
+    end
+    
+    printf("Encuentro el siguiente polinomio interpolante:")
+    disp(p)
+    
+    printf("\nValor aproximado de f(0): %f\n", horner(p, 0))
+endfunction
+
 function ej7()
     x = [0, 0.15, 0.31, 0.5, 0.6, 0.75]'
     y = [1, 1.004, 1.0031, 1.117, 1.223, 1.422]'
