@@ -142,15 +142,33 @@ function ej1()
     printf("\nEl valor real es: %f \n", exp(1/3)) 
 endfunction
 
+function I = ej4J0(x)
+    deff("y = f(t)", "y = cos(x * sin(t))")
+    I = (1/%pi) * intg(0, %pi, f)
+endfunction
+
 function ej4()
     x = 2.0:0.1:2.5
-    y = [0.2239, 0.1666, 0.1104, 0.5555, 0.0025, -0.0484]
+    y = [0.2239, 0.1666, 0.1104, 0.0555, 0.0025, -0.0484]
     printf("Mediante el método de Newton obtengo el sgt polinomio interpolante:")
     p = polInterpolNewton(x, y)
     disp(p)
     
-    printf("\nValor aproximado de J0(2.15): %f\n", horner(p, 2.15))
-    printf("Valor aproximado de J0(2.35): %f\n", horner(p, 2.35))
+    vr1 = ej4J0(2.15)
+    aprox1 = horner(p, 2.15)
+    ea1 = abs(aprox1 - vr1)
+    er1 = ea1 / abs(vr1)
+    printf("\nValor aproximado de J0(2.15): %f | Valor real: %f \n", aprox1, vr1)
+    printf("Error absoluto: %f | Error relativo: %f \n", ea1, er1)
+    
+    printf("\n---------------------------------------------------\n\n")
+    
+    vr2 = ej4J0(2.35)
+    aprox2 = horner(p, 2.35)
+    ea2 = abs(aprox2 - vr2)
+    er2 = ea2 / abs(vr2)
+    printf("Valor aproximado de J0(2.35): %f | Valor real: %f \n", aprox2, vr2)
+    printf("Error absoluto: %f | Error relativo: %f \n", ea2, er2)
 endfunction
 
 function ej6()
@@ -233,7 +251,7 @@ function ej9()
 endfunction
 
 function ej10()
-    rango = -1:0.1:1
+    rango = -1:0.01:1
     x = nodosChebyshev(4)
     y = exp(x)
     p = real(polInterpolLagrange(x, y))

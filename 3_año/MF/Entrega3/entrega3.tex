@@ -56,12 +56,11 @@ Determinar el período $\tau$ del péndulo para pequeñas oscilaciones, tómese
 Primero, fijamos nuestro sistema de referencia: el eje $x$ es positivo hacia
 la derecha y el eje $y$ es positivo hacia abajo: el origen está situado a
 la altura del centro de la masa $m_0$ y en en el lado izquierdo del gráfico,
-donde la distancia $x$ que se ve en el gráfico, es la distancia en el eje horizontal
+donde la distancia $x$ que se ve en el gráfico es la distancia en el eje horizontal
 desde el origen hacia el centro de la misma masa. \\
 
 Ahora procedemos a plantear la ecuación de posición de la masa $m$, y a partir
 de ella su vector velocidad:
-
 \begin{align*}
   r &= (x + l \sin \theta; l \cos \theta) \\
   \dot{r} &= (\dot{x} + \dot{\theta} l \cos \theta; -l \dot{\theta} \sin \theta)
@@ -75,14 +74,14 @@ Sabemos que la lagrangiana viene dada por:
 
 Donde $T$ es la energía cinética y $V$ es la energía potencial.
 
-Calculamos $T$:
+\newpage
 
+Calculamos $T$:
 \begin{align*}
   T &= \frac{1}{2} m_0 \dot{x}^2 + \frac{1}{2} m \dot{r}^2 \\
 \end{align*}
 
 Donde: 
-
 \begin{align*}
   \dot{r}^2 &= (\dot{x} + \dot{\theta} l \cos \theta)^2 + (-l \dot{\theta} \sin \theta)^2 \\
             &= \dot{x}^2 + 2 \dot{x}  \dot{\theta} l \cos \theta + \dot{\theta}^2 l^2 \cos^2 \theta
@@ -105,9 +104,14 @@ Unimos todo
     + m g l \cos \theta \\
 \end{equation*}
 
+Como en este sistema la única fuerza que actúa es la de la gravedad que es
+conservativa, podemos afirmar:
+
 \begin{equation*}
   \frac{d}{dt} (\frac{\partial L}{\partial \dot{q}}) - \frac{\partial L}{\partial q} = 0
 \end{equation*}
+
+Calculamos para $\theta$:
 
 \begin{align*}
   \frac{\partial L}{\partial \theta} &= -\frac{1}{2}m(2 \dot{x}  \dot{\theta} l \sin \theta)
@@ -137,6 +141,17 @@ Unimos todo
   &\ddot{x} \cos \theta + \ddot{\theta} l + g \sin \theta = 0
 \end{align*}
 
+Cálculo auxiliar:
+\begin{equation}
+  \label{eq:aux}
+  \ddot{x} \cos \theta + \ddot{\theta} l + g \sin \theta = 0
+  \underbrace{\iff}_{\cos \theta \approx 1, \sin \theta \approx \theta}
+  \ddot{x} + \ddot{\theta} l + g \theta = 0
+  \iff \ddot{x} = - \ddot{\theta} l - g \theta
+\end{equation}
+
+Y calculamos para $x$:
+
 \begin{equation*}
   \frac{\partial L}{\partial x} = 0
 \end{equation*}
@@ -152,10 +167,9 @@ Unimos todo
   =\frac{d}{dt} (\frac{\partial L}{\partial \dot{x}}) &= 
     \ddot{x}(m_0 + m) + ml\ddot{\theta} \cos \theta - ml \dot{\theta}^2 \sin \theta \\
     &= \ddot{x}(m_0 + m) + ml (\ddot{\theta} \cos \theta - \dot{\theta}^2 \sin \theta) = 0 \\
-    &\underbrace{\Rightarrow}_{\cos \theta \approx 1, \theta^2 \approx 0}
-    \ddot{x}(m_0 + m) + ml\ddot{\theta} 
-    = 0 \\
-    &\Rightarrow \\
+    &\underbrace{\Rightarrow}_{\cos \theta \approx 1, \theta^2 \approx 0} \\
+    &\ddot{x}(m_0 + m) + ml\ddot{\theta} = 0  \\
+    &\underbrace{\Rightarrow}_{\text{Ecuación (\ref{eq:aux})}} \\
     &(-l\ddot{\theta} - \theta g)(m_0 + m) +ml\ddot{\theta} = 0 \\
     &-l\ddot{\theta}m_0 - l\ddot{\theta}m - \theta g (m_0 + m) + ml\ddot{\theta} = 0 \\
     &l\ddot{\theta}m_0 + \theta g (m_0 + m) = 0 \\
@@ -164,7 +178,9 @@ Unimos todo
     &\ddot{\theta} + \theta \frac{g}{l} \frac{m_0 + m}{m_0} = 0
 \end{align*}
 
-Se trata de la ecuación diferencial de un Movimiento Armónico Simple de frecuencia angular.
+A partir de reemplazar según los datos dados en el enunciado, obtenemos
+una ecuación que se trata de la ecuación diferencial de un
+Movimiento Armónico Simple de frecuencia angular.
 
 \begin{equation*}
   \omega^2 = \frac{g}{l} \frac{m_0 + m}{m_0}
