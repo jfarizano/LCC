@@ -3,17 +3,23 @@ function I = metodoTrapecio(f, a, b)
 endfunction
 
 function I = metodoTrapecioComp(f, a, b, n)
+    // Longitud de los subintervalos
     h = (b - a) / n
+    // Calculo los xi
     x = linspace(a, b, n)
+    // Acumulador
     I = 0
     
     for i = 1:n
+        // Caso x0 y xn
         if (i == 1) || (i == n) then
             I = I + (1/2) * f(x(i))
+        // Caso x1 a x(n-1)
         else
             I = I + f(x(i))
         end
     end
+    // Resultado final
     I = I * h
 endfunction
 
@@ -29,25 +35,34 @@ function I = metodoSimpson(f, a, b)
 endfunction
 
 function I = metodoSimpsonComp(f, a, b, n)  
-    if modulo(n, 2) then
+    // La cantidad de subintervalos debe ser par
+    if modulo(n, 2) <> 0 then
         I = %nan
     else
+        // Longitud de los subintervalos
         h = (b - a) / n
+        // Calculo los xi
         x = linspace(a, b, n)
+        // Acumulador
         I = 0
         
         for i = 1:n
+            // Caso x0 y xn
             if (i == 1) || (i == n) then
                 mul = 1
             else
+            // Caso x1 a x(n-1)
                 if modulo(i, 2) == 0 then
                     mul = 4
                 else
                     mul = 2
                 end
             end
+            // Utilizo mul para representar el valor por el que se multiplica
+            // a f(xi) en Sn(f)
             I = I + mul * f(x(i))
         end
+        // Resultado final
         I = I * (h/3)
     end
 endfunction

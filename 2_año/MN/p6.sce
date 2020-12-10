@@ -1,8 +1,14 @@
 function cotasGers(A)
     [n,m] = size(A)
+    // Calculo los centros de los círculos (cada elemento de la diagonal
+    // de A es el centro de un círculo, es decir, el centro del círculo i
+    // es a(i,i))
     centros = diag(A)
+    // Calculo los radios, donde el radio del círculo i es la suma de la fila i
+    // menos el elem de la diagonal (o a(i,i))
     radios = sum(abs(A),'c') - abs(centros)
     
+    // Imprimo las cotas
     for i = 1:n
         printf("Un autovalor se puede encontrar en el círculo de centro %f y radio %f\n", i, centros(i), radios(i))
     end    
