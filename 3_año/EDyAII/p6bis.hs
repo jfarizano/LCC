@@ -79,6 +79,12 @@ matchParen s = let (s', r) = scanS (+) 0 (mapS f s)
 
 -- Son los padres
 
+-- sccml :: Seq Int -> Int
+-- sccml xs = let ys = mapS (\i->(i,i,1,1)) xs
+--                f (w1,x1,y1,z1) (w2,x2,y2,z2) = if w2 > x1 && z2 == y2 then (w1,x2,y2+y1,z2+z1) else (w1,x2,y2+y1,z2)
+--                zs = scanS f (minBound,minBound,0,0) ys
+--                in mapreduceArr (\(_,_,_,i)->i) max minBound zs
+
 -- ----------------------------------------------------------------------------
 
 -- Ej 6
