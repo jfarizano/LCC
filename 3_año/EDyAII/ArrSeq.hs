@@ -4,7 +4,7 @@ import Seq
 import qualified Arr as A
 import Arr ((!))
 import Par
-import Prelude hiding (map, filter, take, drop, reduce, scan)
+import Prelude hiding (map, filter, take, drop, reduce, scan, reverse)
 
 -- Reemplar ! por nthS
 
@@ -25,6 +25,7 @@ instance Seq A.Arr where
   reduceS = reduce
   scanS = scan
   fromList = A.fromList
+  reverseS = reverse
 
 map :: (a -> b) -> A.Arr a -> A.Arr b
 map f a = tabulateS (f . \i -> (a ! i)) n
@@ -99,3 +100,7 @@ scan f e a = case n of
                     c = expand f a b n
                     in  (c, x)
             where n = lengthS a
+
+reverse s = let
+             n = lengthS s
+            in tabulateS (\i -> s ! (n - i - 1)) n

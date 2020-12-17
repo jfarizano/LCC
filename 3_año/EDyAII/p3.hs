@@ -131,14 +131,27 @@ concatCL (Consnoc x y z) = x +++ (concatCL y) +++ z
 
 -- Ej 4:
 
--- data Aexp = Num Int | Prod Aexp Aexp | Div Aexp Aexp
+data Aexp = Num Int | Prod Aexp Aexp | Div Aexp Aexp
 
 -- a)
 
--- eval :: Aexp -> Int
--- eval (Num x) = x
--- eval (Prod x y) = (eval x) * (eval y)
--- eval (Div x y) = div (eval x) (eval y)
+eval :: Aexp -> Int
+eval (Num x) = x
+eval (Prod x y) = (eval x) * (eval y)
+eval (Div x y) = div (eval x) (eval y)
+
+seval :: Aexp -> Maybe Int
+seval (Num x) = Just x
+seval (Prod x y) = case seval x of
+                    Nothing -> Nothing
+                    Just n -> case seval y of
+                                Nothing -> Nothing
+                                Just m  -> Just (m * n)
+seval (Div x y) = case seval x of
+                    Nothing -> Nothing
+                    Just n -> case seval y of
+                                Nothing -> Nothing
+                                Just m  -> if m == 0 then Nothing else Just (m * n)
 
 -- ----------------------------------------------------------------------------
 
@@ -163,3 +176,8 @@ g2bt' (NodeG a []) [] = NodeB EmptyB a EmptyB
 g2bt' (NodeG a (x:xs)) [] = NodeB (g2bt' x xs) a EmptyB
 g2bt' (NodeG a []) (y:ys) = NodeB EmptyB a (g2bt' y ys)
 g2bt' (NodeG a (x:xs)) (y:ys) = NodeB (g2bt' x xs) a (g2bt' y ys)
+
+-- ----------------------------------------------------------------------------
+
+-- Ej 7:
+

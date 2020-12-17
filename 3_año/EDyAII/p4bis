@@ -1,0 +1,242 @@
+-- Ej 1:
+tad Lista (A : Set) where
+  import Bool
+  nil : Lista A
+  cons : A -> Lista A -> Lista A
+  null : Lista A -> Bool
+  head : Lista A -> A
+  tail : Lista A -> Lista A
+
+-- a
+null nil = True
+null (cons x xs) = False
+head (cons x xs) = x
+tail (cons x xs) = xs
+
+-- b
+null <x_1, ..., x_n> = True si n = 0
+null <x_1, ..., x_n> = False en otro caso
+head <x_1, ..., x_n> = x_1
+tail <x_1, x_2, ..., x_n> = <x_2, ..., x_n>
+
+-- c
+inL : Lista A -> A -> Bool
+inL nil x = False
+inL (cons y ys) x = if x == y then True else inl ys x
+
+-- d
+delete : Lista A -> A -> Lista A
+delete nil x = False
+delete (cons y ys) x = if y == x then delete ys x else (cons y (delete ys x))
+
+-- ----------------------------------------------------------------------------
+
+-- Ej 2:
+
+tad Pila (A : Set) where
+  import Bool
+  empty : Pila A
+  push : Pila A 
+  isEmpty : Pila A 
+  top : Pila A
+  pop : Pila A
+
+-- Especificación algebraica
+isEmpty empty = True
+isEmpty (push x p) = False
+top (push x p) = x
+pop (push x p) = p
+
+-- Especificación tomando como modelo las secuencias
+isEmpty <x_1, ..., x_n> = True si n = 0
+isEmpty <x_1, ..., x_n> = False en otro caso
+top <x_1, ..., x_n> = x_1
+pop <x_1, x_2, ..., x_n> = <x_2, ..., x_n>
+
+-- ----------------------------------------------------------------------------
+
+-- Ej 3:
+
+tad Conjunto (A : Set) where
+  import Bool
+  vacio : Conjunto A 
+  insertar : A -> Conjunto A -> Conjunto A
+  borrar : A -> Conjunto A -> Conjunto A
+  esVacio : Conjunto A -> Bool
+  union : Conjunto A -> Conjunto A -> Conjunto A
+  interseccion : Conjunto A -> Conjunto A -> Conjunto A
+  resta : Conjunto A -> Conjunto A -> Conjunto A
+
+-- Especificación algebraica
+insertar x (insertar x c) = insertar x c
+insertar x (insertar y c) = insertar y (insertar x c)
+borrar x vacio = vacio
+borrar x (insertar y c) = if x == y then c else insertar y (borrar x c)
+esVacio vacio = True
+esVacio (insertar x c) = False
+union (insertar x c) vacio = insertar x c
+union c (insertar x d) = union (insertar x c) d
+in x vacio = False
+in x (insertar y c) = if x == y then True else in x c
+interseccion c vacio = vacio
+interseccion c (insertar x d) = if in x c then insertar x (interseccion c d) 
+                                          else interseccion c d
+resta c vacio = c
+resta c (insertar x d) resta (borrar x c) d
+
+-- ----------------------------------------------------------------------------
+
+-- Ej 4:
+
+tad PQueue (A : Set) where
+  import Bool, Nat
+  vacia : PQueue a
+  poner : A ->  Nat -> PQueue A -> PQueue A
+  primero : PQueue A -> A 
+  sacar : PQueue A -> PQueue A 
+  esVacia : PQueue A -> Bool
+  union : PQueue A -> PQueue A -> PQueue A
+
+
+-- Especificación algebraica
+poner x p (poner y p c) = poner x p c
+poner x p (poner y q c) = poner y q (poner x p c)
+primero (poner x p vacia) = x
+primero (poner x p (poner y q c)) = if p > q then primero (poner x p c)
+                                             else primero (poner y q c)
+sacar (poner x p vacia) = vacia
+sacar (poner x p (poner y q c)) = if p > q then poner y q (sacar (poner x p c))
+                                           else poner x p (sacar (poner y q c))
+esVacia vacia = True
+esVacia (poner x p c) = False
+union c vacia = c
+union c (poner x p d) = union (poner x p c) delete
+
+-- Especificación tomando como modelo los conjuntos
+vacia = {}
+poner x p vacia = {(x, p)}
+poner x p C = {(x, p)} U {(y, q) \in C / p /= q}
+primero C = {(x_1, p_1), ..., (x_n, p_n)}  = x_i donde x_i \in {(x_i, p_i) / p_i = max{x_n, ... p_n}}
+sacar C = {(x_1, p_1), ..., (x_n, p_n)}  = {(x_i, p_i) / p_i /= max{x_n, ... p_n}}
+sacar C = {(x_1, p_1), ..., (x_n, p_n)} D = C U {(y_i, q_i) \in D / q_i \notin {p_1, ..., p_n}}
+
+-- ----------------------------------------------------------------------------
+
+-- Ej 5:
+
+tad BalT (A : Ordered Set) where
+  import Maybe
+  empty : BalT A
+  join : BalT A -> Maybe A -> BalT A -> BalT A
+  size : BalT A -> N
+  expose : BalT A -> Maybe (BalT A, A, BalT A)
+
+size empty = 0
+size (join l Nothing r) = size l + size r
+size (join l (Just x) r) = 1 + size l + size r
+expose t = case expose t of
+            Nothing -> t = empty
+            Just (l, x, r) -> t = (join l (Just x) r)
+
+-- ----------------------------------------------------------------------------
+
+-- Ej 6:
+
+Demostrar que (uncurry zip) . unzip = id, siendo:
+
+uncurry :: (a -> b -> c) -> ((a, b) -> c)
+uncurry f p = f (fst p) (snd p)
+
+zip :: [a] -> [b] -> [(a, b)]
+zip [] ys = []
+zip (x:xs) [] = []
+zip (x:xs) (y:ys) = (x, y) : zip xs ys
+
+unzip :: [(a,b)] -> ([a], [b])
+unzip [] = ([], [])
+unzip ((x, y) : ps) = (x : xs, y : ys) where (xs, ys) = unzip ps
+
+(.) :: (b -> c) -> (a -> b) -> a -> c
+(.) f g = (\x -> f (g x))
+
+Tipo de datos de listas definido en el preludio:
+data [] a = [] | a : [a]
+
+Voy a demostrar por inducción estructural sobre listas, defino el principio:
+Dada una propiedad P sobre [], para probar ∀ xs :: [a]. P(xs):
+
+- Probamos P([])
+- Probamos que si P(xs) entonces P(x : xs)
+
+Y sea la propiedad P(xs): ((uncurry zip) . unzip) xs = id xs
+
+- Caso base []:
+
+((uncurry zip) . unzip) []
+= { def . }
+(\x -> uncurry zip (unzip x)) []
+= { resuelvo la función anónima }
+uncurry zip (unzip [])
+= { unzip.1 }
+uncurry zip ([], [])
+= { uncurry.1 }
+zip (fst ([], [])) (snd ([], []))
+= { defs fst y snd }
+zip [] []
+= { zip.1 }
+[]
+= { def id }
+id []
+
+- Caso recursivo ((x, y) : ps)
+(HI) Hipótesis inductiva: Vale P(ps)
+((uncurry zip) . unzip) ps = id ps
+
+- ¿Vale para ((x, y) : ps)
+((uncurry zip) . unzip) ((x, y) : ps)
+= { def . }
+(\x -> uncurry zip (unzip x)) ((x, y) : ps)
+= { resuelvo la función anónima }
+uncurry zip (unzip ((x, y) : ps))
+= { unzip.2 }
+uncurry zip (x : xs, y : ys) where (xs, ys) = unzip ps
+= { uncurry.1 }
+zip (fst (x : xs, y : ys)) (snd (x : xs, y : ys)) where (xs, ys) = unzip ps
+= { def fst y snd }
+zip (x : xs) (y : ys) where (xs, ys) = unzip ps
+= { zip.3 }
+(x, y) : zip xs ys where (xs, ys) = unzip ps
+= { def fst y snd }
+(x, y) : zip (fst (xs, ys)) (snd (xs, ys)) where (xs, ys) = unzip ps
+= { def where }
+(x, y) : zip (fst unzip ps) (snd unzip ps)
+= { uncurry.1 }
+(x, y) : uncurry zip (unzip ps)
+= { def .}
+(x, y) : ((uncurry zip). unzip) ps
+= { HI }
+(x, y) : id ps
+= { def id }
+(x, y) : ps
+= { def id }
+id (x, y) : ps
+
+-- ----------------------------------------------------------------------------
+
+-- Ej 8:
+
+data AGTree a = Node a [AGTree a]
+ponerProfs n (Node x xs) = Node n (map (ponerProfs (n + 1)) xs)
+
+-- a)
+alturaAGT :: AGTree a -> Int
+alturaAGT (Node x []) = 1
+alturaAGT (Node x xs) = 1 + maximum (map alturaAGT xs)
+
+-- b)
+maxAGT :: Ord a => AGTree a -> a
+maxAGT (Node x []) = x
+maxAGT (Node x xs) = maximum $ x:(map maxAGT xs)
+
+-- c)
+Que lo demuestre dios

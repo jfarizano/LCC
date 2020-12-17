@@ -191,7 +191,7 @@ smallest = \x y z -> if x <= y && x <= z then x
                         else z
 
 -- b)
--- second  :: ¿?
+second :: a -> b -> b
 second = \x -> (\x -> x)
 
 -- c)
@@ -199,7 +199,7 @@ andThen :: Bool -> Bool -> Bool
 andThen = \x y -> if x then y else x
 
 -- d)
--- twice :: ¿?
+twice :: (a -> a) -> a -> a
 twice = \f x -> f (f x)
 
 -- e)
@@ -321,7 +321,7 @@ divisors x | x < 0 = []
 
 -- b)
 matches :: (Num a, Eq a) => a -> [a] -> [a]
-matches x l = filter(== x) l
+matches x l = filter (== x) l
 
 -- c)
 cuadruplas :: (Num a, Eq a, Enum a) => a -> [(a, a, a, a)]
