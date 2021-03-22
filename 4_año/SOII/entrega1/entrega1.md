@@ -4,13 +4,17 @@
 
 ### Ejercicio 1
 
-1. abstraccion 
-2. abstraccion/aislamiento/administración
+1. Abstracción: 
+2. Abstracción/aislamiento/administración
 3. abstraccion/administracion?
+   **Abstracción:** el SO no nos muestra detalles sobre cómo hace la asignación de memoria que nos da, simplemente nos provee el mecanismo y nosotros como programadores no tenemos que preocuparnos por cómo lo hace.
+   Administración: la memoria es un recurso, por lo tanto el Sistema Operativo tiene la responsabilidad de administrarla y asignarla de forma correcta.
 4. administracion
 5. aislamiento/administración
-6. administracion
-7. abstracción
+    **Aislamiento:** permite dar al usuario la idea de que él es el único que está trabajando en la PC con el mecanismo de gestión de usuarios.
+    **Administración:** debe designar de forma correcta a qué cosas tienen acceso determinados usuarios. No todos los usuarios pueden estar autorizados para ver todo.
+6. **Administracion:**
+7. **Abstracción:** permite abstraer al usuario de los detalles de cómo realmente están almacenados los archivos, brindando una interfaz más abstracta y simple que permite ver cómo está organizada la estructura de los archivos.
 
 ### Ejercicio 2
 
