@@ -5,12 +5,14 @@
 ### Ejercicio 1
 
 1. Abstracción: los sockets nos proveen un mecanismo mediante el cual dos procesos pueden intercambiar información. El Sistema Operativo nos provee este mecanismo sin que nosotros tengamos la necesidad de saber cómo funciona a nivel de hardware, es decir, nos abstrae de la implementación.
-2. **Abstracción:** 
-   **Aislamiento:**
+2. **Abstracción: xd** 
+
+   **Aislamiento: xd**
+   
    **Administración:** se relaciona con la administración por lo que es la memoria virtual en sí: es una técnica de gestión de memoria que permite disponer de más memoria de la que realmente hay físicamente.
 3. **Abstracción:** el SO no nos muestra detalles sobre cómo hace la asignación de memoria que nos da, simplemente nos provee el mecanismo y nosotros como programadores no tenemos que preocuparnos por cómo lo hace.
    **Administración:** la memoria es un recurso, por lo tanto el Sistema Operativo tiene la responsabilidad de administrarla y asignarla de forma correcta.
-4. **Administracion**
+4. **Administracion:** 
 5.  **Aislamiento:** permite dar al usuario la idea de que él es el único que está trabajando en la PC con el mecanismo de gestión de usuarios.
     **Administración:** debe designar de forma correcta a qué cosas tienen acceso determinados usuarios. No todos los usuarios pueden estar autorizados para ver todo.
 6. **Administracion:**
