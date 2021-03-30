@@ -28,7 +28,10 @@
 
 \begin{enumerate}[1)]
   \section*{Historia}
-  \item  
+%==============================================================================
+% Ejercicio 1
+%==============================================================================
+  \item[\textbf{1)}]  
     \begin{itemize}
       \item \textbf{Multitarea, pero monocontexto:}
         Con la introducción de sistemas con capacidades multitareas los usuarios
@@ -57,6 +60,7 @@
       Este modelo de autorización y distribución de software rompe con lo que Jonathan Zittrain
       define como la \emph{generatividad} de los equipos de cómputo y de la red en general.
     \end{itemize}
+%==============================================================================
     \begin{enumerate}[(a)]
       \item \textbf{Falso.} La mayor parte de los sistemas operativos históricamente
             han sido \emph{monolíticos.}
@@ -78,25 +82,50 @@
             de procesos pueden tener distinto nivel de importancia, esto requiere
             la implementación de diversas prioridades para cada uno de éstos.
     \end{enumerate}
-  \item Cuadro: \\
-      \begin{tabular}{| c | c | c |}
-      \hline
-      \textbf{Uso} & \textbf{Arquitectura} & \textbf{SO} \\ \hline
-      \textbf{Equipos servidores} & Intel & Diferentes Unixes \\ \hline
-      \textbf{Propósito general} & Intel & Varía según el uso, yendo mayoritariamente hacia Windows \\ \hline
-      \textbf{Dispositivos móviles} & ARM & Versiones específicas de SOs Unix y Windows (en ese orden). \\ \hline
-      \end{tabular}
-    
+%==============================================================================
+% Ejercicio 2
+%==============================================================================
+  \item[\textbf{2)}] Indicamos cuáles arquitecturas y cuáles sistemas operativos 
+  se utilizan mayoritariamente para ciertos usos en el siguiente cuadro: 
+  \begin{figure}[h!]
+    \begin{center}
+      \includegraphics[width=0.85\linewidth]{unknown.png}
+    \end{center}
+  \end{figure}
+      % \begin{tabular}{| c | c | c |}
+      % \hline
+      % \textbf{Uso} & \textbf{Arquitectura} & \textbf{SO} \\ \hline
+      % \textbf{Equipos servidores} & Intel & Diferentes Unixes \\ \hline
+      % \textbf{Propósito general} & Intel & Varía según el uso, yendo mayoritariamente hacia Windows\\ \hline
+      % \textbf{Dispositivos móviles} & ARM & Versiones específicas de SOs Unix y Windows (en ese orden).\\ \hline
+      % \end{tabular}
+%==============================================================================
+% Ejercicio 3
+%==============================================================================
     \section*{Procesos}
-    \item 
+    \item[\textbf{3)}]   
       \begin{enumerate}[(a)]
-        \item \textbf{Verdadero.}
-        \item \textbf{Falso.}
+        \item \textbf{Verdadero.} Basta con ejecutar un programa más de una vez,
+              por cada vez que se ejecuta se crea un proceso nuevo relacionado
+              al mismo programa.
+        \item \textbf{Falso.} Cada proceso está asociado a un sólo programa, ya que
+              por definición de proceso éste es la imagen en memoria de un programa
+              en ejecución.
         \item \textbf{Falso.} Un programa es un conjunto de instrucciones, es decir,
               el código fuente en sí. En cambio, una tarea o proceso es el programa
               cargado en memoria y en ejecución.
       \end{enumerate}
-    \item
+%==============================================================================
+% Ejercicio 4 
+%==============================================================================
+    \item[\textbf{4)}]
+    Como ahora en los sistemas operativos se usan las multitareas apropiativas, la velocidad
+    de cambio entre una tarea y otra es mucho más rapida ya que con el objetivo de dar la
+    ilusión de uso exclusivo de la computadora, el hardware emite periódicamente al sistema
+    operativo interrupciones (señales) que le indican que cambie el proceso activo.
+    De esta forma, al usuario le parece que las tareas se están ejecutando simultáneamente
+    cuando en verdad solo es ejecutada una al mismo tiempo durante un periodo
+    de tiempo muy corto antes de pasar a la siguiente.
 \end{enumerate}
 
 \end{document}

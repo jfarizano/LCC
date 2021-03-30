@@ -1,0 +1,149 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper, margin=2.54cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish, mexico]{babel}
+\usepackage[spanish]{layout}
+\usepackage[article]{ragged2e}
+\usepackage{czt}
+
+\begin{document}
+  \begin{enumerate}
+    \item 
+    Defino el tipo MENSAJES.
+    \begin{zed}
+      MENSAJES ::= ok | numeroClienteEnUso | clienteInexistente | montoNulo \\
+                      | montoIncorrecto | noPoseeSaldoSuficiente | superaLimite
+    \end{zed}
+    \item No thanks
+    \item x2
+    \item
+    \begin{schema}{DepositarOk}
+      \Delta Banco \\
+      d? : DNI \\
+      m? : DINERO \\
+      rep! : MENSAJES
+
+      \where
+      d? \in \dom ca \\
+      200 \leq m? \\
+      ca' = ca \oplus \{d? \mapsto (ca \; d?) + m?\} \\
+      rep! = ok
+    \end{schema}
+
+    \begin{schema}{MontoIncorrecto}
+      \Xi Banco \\
+      m? : DINERO \\
+      rep! : MENSAJES
+      \where
+      m? < 200 \\
+      rep! = montoNulo
+    \end{schema}
+    \item xd
+    \item 
+    \begin{axdef}
+      limiteExtrCA : \nat
+      \where
+      limiteExtrCA = 1000
+    \end{axdef}
+
+    \begin{schema}{ExtraerCAOk}
+      \Delta Banco \\
+      d? : DNI \\
+      m? : DINERO \\
+      rep! : MENSAJES 
+      \where
+      d? \in \dom ca \\
+      0 < m?\\
+      m? \leq min \{ca \; d?, \; limiteExtrCA\}\\
+      ca' = ca \oplus \{d? \mapsto (ca \; d?) - m?\} \\
+      rep! = ok
+    \end{schema}
+    
+    \begin{schema}{ClienteInexistente}
+      \Xi Banco \\
+      d? : DNI \\
+      rep! : MENSAJES
+      \where
+      d? \notin \dom ca \\
+      rep! = clienteInexistente
+    \end{schema}
+
+    \begin{schema}{MontoIncorrectoCA}
+      \Xi Banco \\
+      m? : DINERO \\
+      rep! : MENSAJES
+      \where
+      m? < 0 \\
+      rep! = montoNulo
+    \end{schema} 
+
+    \begin{schema}{SaldoInsuficiente}
+      \Xi Banco \\
+      d? : DNI \\
+      m?: DINERO \\
+      rep! : MENSAJES
+      \where
+      m? > ca \; d? \\
+      d? \in \dom ca \\
+      rep! = noPoseeSaldoSuficiente
+    \end{schema}
+
+    \begin{schema}{SuperaLimite}
+      \Xi Banco \\
+      m? : DINERO \\
+      rep! : MENSAJES
+      \where
+      m? > limiteExtrCA \\
+      rep! = superaLimite
+    \end{schema}
+
+
+    \begin{zed}
+      ExtraerCAE == ClienteInexistente  \lor MontoIncorrectoCA \lor SaldoInsuficiente
+      \lor SuperaLimite \\
+      ExtraerCA = ExtraerCAOk \lor ExtraerCAE 
+    \end{zed}
+
+    \item Debería volver a usarse el esquema Extraer
+    \item Modificamos ExtraerCAOk y SaldoInsuficiente
+    \begin{schema}{ExtraerCAOk}
+      \Delta Banco \\
+      d? : DNI \\
+      m? : DINERO \\
+      rep! : MENSAJES 
+      \where
+      d? \in \dom ca \\
+      0 < m?\\
+      m? \leq min \{0.5 * ca \; d?, \; limiteExtrCA\}\\
+      ca' = ca \oplus \{d? \mapsto (ca \; d?) - m?\} \\
+      rep! = ok
+    \end{schema}
+
+    \begin{schema}{SaldoInsuficiente}
+      \Xi Banco \\
+      d? : DNI \\
+      m?: DINERO \\
+      rep! : MENSAJES
+      \where
+      m? > 0.5 * ca \; d? \\
+      d? \in \dom ca \\
+      rep! = noPoseeSaldoSuficiente
+    \end{schema}
+
+    \item
+    \begin{schema}{PedirSaldoOk}
+      \Xi Banco \\
+      d? : DNI \\
+      saldo! : DINERO \\
+      rep! : MENSAJES
+      \where
+      d? \in \dom ca \\
+      saldo! = ca \; d? \\
+      rep! = ok
+    \end{schema}
+
+    \begin{zed}
+      PedirSaldo == PedirSaldoOk \lor ClienteInexistente
+    \end{zed}
+  \end{enumerate}
+\end{document}
