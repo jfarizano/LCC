@@ -1,0 +1,34 @@
+1.  En un sistema interactivo, los procesos t ́ıpicamente est ́an en ejecuci ́on un largo periodo
+(entre minutos y d ́ıas), sin embargo, en el transcurso del cap ́ıtulo 24 del libro estosfueron casi 
+siempre tratados comoprocesos cortos. ¿Qu ́e significa esto? ¿Cu ́al ser ́ıa unejemplo deproceso largo?
+
+--------------------------------------------------------------------------------------------------------------
+Como ya se ha visto, los procesos típicamente alternan entreráfagas(pe-riodos, en inglésbursts) 
+en que realizan principalmente cómputo interno(estánlimitados porCPU,CPU-bound) y otras, en que 
+la atención está puestaen  transmitir  los  datos  desde  o  hacia  dispositivos  externos  
+(estánlimita-dos por entrada-salida,I/O-bound). 
+
+Procesos largos: aquellos que por mucho tiempo han estado listos o en ejecución, esto es, procesos que están
+en una larga ráfaga limitada por la cpu 
+
+Los procesos cortos son los que estan en una ráfaga limitada por entrada/salida y requieren
+atención ocasional del procesador.
+----------------------------------------------------------------------------------------------------------------
+Respuesta:
+
+Los procesos alternan entre ráfagas (o bursts) en las que realizan cómputo interno
+y otras, en donde están limitados por operaciones de entrada/salida (I/O bound). 
+En estos últimos la atención del planificador desaparece ya que el proceso deja de
+estar 'listo' y pasa a estar bloqueado.
+
+Entonces, si bien los procesos están en ejecución un largo período de tiempo estos
+son tratados como procesos cortos porque al estar en una ráfaga de I/O, tienden
+a estar bloqueados esperando a eventos (como los procesos interactivos) y en consecuencia,
+requieren atención meramente ocasional del procesador permitiendo que mientras estos
+procesos estén bloqueados se puedan ejecutar otros. --> (responde a que significa esto)
+
+Un proceso largo es aquel que por mucho tiempo ha estado 'listo' o 'en ejecución', es decir,
+un proceso que está en una larga ráfaga limitada por la CPU.
+
+Ejemplo de proceso largo ????? ni idea
+cualquier otro proceso que no sea interactivo. la verda no se me ocurre nada bro
