@@ -52,8 +52,8 @@ Utilizando la heurística h(n) = $\| 7 - n \|$ busco una solución al problema
 mediante el algoritmo $A^*$, dibujo el árbol de búsqueda:
 
 \begin{center}
-\begin{tikzpicture}[->,>=stealth',level/.style={sibling distance = 3cm/#1,
-  level distance = 1.5cm}] 
+\begin{tikzpicture}[->,>=stealth',level/.style={sibling distance = 3.5cm/#1,
+  level distance = 1.7cm}] 
 \node [circle, draw] {1}
   child { node[circle, draw, red] {1}
   }
@@ -75,6 +75,7 @@ mediante el algoritmo $A^*$, dibujo el árbol de búsqueda:
                   }
                   child[missing]
                   child[missing]
+                %   child[missing]
                   child { node[circle, draw] {5}
                           child {node[circle, draw, red] {1}
                           }
@@ -88,27 +89,21 @@ mediante el algoritmo $A^*$, dibujo el árbol de búsqueda:
                   child { node[circle, draw, red] {3}
                   }
           }
-          child [missing]
-          child [missing]
+        %   child [missing]
           child [missing]
           child { node[circle, draw] {3}
+                  child [missing]
                   child { node[circle, draw, red] {1}
-                  }
-                  child { node[circle, draw] {6}
-                          child { node [circle, draw,red] {3}}
-                  }
-                  child { node[circle, draw, red] {4}
-                  }
-                  child { node[circle, draw, red] {2}
-                  }
+                  }   
           }
           child { node[circle, draw, red] {1}
           }
   }
-  child[missing]
+  %   child[missing]
   child { node[circle, draw, red] {2}
   }
   child { node[circle, draw] {0}
+%     child [missing]
     child { node[circle, draw, red] {1}
     }
     child { node[circle, draw, red] {0}
@@ -123,6 +118,13 @@ mediante el algoritmo $A^*$, dibujo el árbol de búsqueda:
 \end{tikzpicture}
 \end{center}
 
+Para evitar estados repetidos, descarto los n que ya fueron encontrados, ya que
+ya fueron recorridos con menor o igual costo anteriormente, estos son los nodos
+coloreados en rojo. El estado meta es el nodo coloreado en verde.
+En la siguiente tabla muestro los costos obtenidos en el recorrido, donde cada
+estado fue agregado en el orden en que fue recorrido, y en el caso de tener
+dos nodos con el mismo valor de f, recorro el que fue agregado primero.
+
 \begin{center}
   \begin{tabular}{| c | c | c | c |}
   \hline
@@ -132,11 +134,10 @@ mediante el algoritmo $A^*$, dibujo el árbol de búsqueda:
   0 & 1 & 7 & 8 \\ \hline
   4 & 3 & 3 & 6 \\ \hline
   3 & 2 & 4 & 6 \\ \hline
-  6 & 5 & 1 & 6 \\ \hline
   8 & 7 & 1 & 8 \\ \hline
   5 & 4 & 3 & 7 \\ \hline
-  -1 & 2 & 8 & 10 \\ \hline
   10 & 9 & 3 & 12 \\ \hline
+  -1 & 2 & 8 & 10 \\ \hline
   16 & 15 & 9 & 24 \\ \hline
   9 & 8 & 2 & 10 \\ \hline
   7 & 8 & 0 & 8 \\ \hline
