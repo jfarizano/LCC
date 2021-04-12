@@ -56,26 +56,13 @@ haciendo que esta actúe como la cola de \emph{procesos aceptados}.
 
 \section*{Ejercicio 2}
 
-perdon tuve que inventar cosas \\
-% no me sale sta verga queda muy largo manejalo xd
-% \begin{center}
-%     \begin{tabular}{|c|c|c|}
-%         \hline
-%         & Aging & Retroalimentación Inversa \\
-%         \hline
-%         Ventajas & Procesos cortos pueden terminar \newline su ejecución sin ser degradados & xd \\
-%         \hline
-%         Desventajas & xd & xd \\
-%         \hline
-%     \end{tabular}
-% \end{center}
-
 \textbf{Aging:}
 
 \begin{itemize}
     \item \textbf{Ventajas:} resulta favorecedor para los procesos cortos ya que
           pueden terminar sus tareas sin ser degradados.
-    \item \textbf{Desventajas:} los procesos más largos son castigados e incluso podría llegar
+    \item \textbf{Desventajas:} los únicos procesos beneficiados son los recién llegados,
+          mientras que los procesos más largos son castigados e incluso podrían llegar
           a sufrir inanición.
 \end{itemize}
 
@@ -84,12 +71,21 @@ perdon tuve que inventar cosas \\
 \begin{itemize}
     \item \textbf{Ventajas:} el promover un proceso a una cola de más alta prioridad
           permite evitar que dicho proceso sufra inanición.
-    \item \textbf{Desventajas:} el promover varios procesos podría llegar a causar
-          que la cola de prioridad más alta tenga más cantidad de procesos en ella
-          haciendo que el tiempo que tarde cada uno sea más alto. NO SEEEEEE NO HAY
-          UNA PORONGA EN EL LIBRO.
+    \item \textbf{Desventajas:} si la degradación es menor a la retroalimentación inversa,
+          de cierta forma se favorecen a aquellos procesos que acaparan el procesador por 
+          mucho tiempo.
 \end{itemize}
 
 \section*{Ejercicio 3}
+
+\begin{verbatim}
+      Command being timed: "make"
+            User time (seconds): 6.41
+            System time (seconds): 1.91
+            Percent of CPU this job got: 99%
+            Elapsed (wall clock) time (h:mm:ss or m:ss): 0:08.32
+            Voluntary context switches: 5319
+            Involuntary context switches: 1655
+\end{verbatim}
 
 \end{document}
