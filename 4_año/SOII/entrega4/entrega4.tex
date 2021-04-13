@@ -78,14 +78,36 @@ haciendo que esta actúe como la cola de \emph{procesos aceptados}.
 
 \section*{Ejercicio 3}
 
+Ejecutamos el comando time utilizando el simulador del Juego de la Vida de Conway
+realizado en Sistemas Operativos I como trabajo práctico.
+
 \begin{verbatim}
-      Command being timed: "make"
-            User time (seconds): 6.41
-            System time (seconds): 1.91
-            Percent of CPU this job got: 99%
-            Elapsed (wall clock) time (h:mm:ss or m:ss): 0:08.32
-            Voluntary context switches: 5319
-            Involuntary context switches: 1655
+>> time ./simulador entrada.game
+
+real    1m7,990s
+user    1m7,642s
+sys     0m0,144s
 \end{verbatim}
 
+Podemos ver que el tiempo de uso del procesador es de 1m7,786s que provienen
+de sumar el tiempo de usuario y el tiempo de sistema. A partir de estos tiempos,
+podemos calcular que el porcentaje de utilización del CPU de este proceso
+fue aproximadamente de 99.69\%.
+
+El tiempo desocupado es nulo ya que un proceso se está ejecutando y el procesador
+nunca se encuentra desocupado en el periodo de tiempo medido. Por lo tanto,
+al restar el tiempo de uso del procesador del tiempo real obtenemos el tiempo
+de núcleo, que resultar ser de 0.204s.
+
+Los tiempos pueden variar según la cantidad de procesos que tienen que ejecutarse
+cuando corremos nuestro programa. Si la cantidad es baja o nula, nuestro programa
+podrá acaparar por más tiempo el procesador, de esta forma el porcentaje de utilización
+aumenta llegando casi al 100\% como se ve en nuestro ejemplo, por lo tanto
+no son necesarios muchos cambios de contexto y el tiempo de núcleo disminuye
+y el tiempo desocupado resulta ser nulo.
+Si tenemos una mayor cantidad de procesos que necesitan utilizar el procesador,
+el porcentaje de utilización para nuestro proceso disminuirá, el tiempo de uso
+será el mismo pero el tiempo real será mayor, a su vez, al tener que realizarse
+una mayor cantidad de cambios de contexto el tiempo de núcleo aumentará, el
+tiempo desocupado seguirá siendo nulo ya que hay procesos para ejecutar.
 \end{document}
