@@ -31,6 +31,14 @@
 Los objetivos que contradice son:
 
 \begin{itemize} 
+    \item \textbf{Ser predecible:} Un mismo trabajo debe tomar aproximadamente la misma
+          cantidad de tiempo en completarse independientemente de la carga
+          del sistema.
+
+    \item \textbf{Equilibrar el uso de recursos:} Favorecer a los procesos que empleen recur-
+           sos subutilizados, penalizar a los que peleen por un recurso sobreuti-
+           lizado causando contención en el sistema.
+
     \item \textbf{Favorecer el uso esperado del sistema:} en un sistema con usuarios interactivos
           se maximiza la prioridad de los procesos que sirvan a solicitudes iniciadas por éste.
 
@@ -53,8 +61,6 @@ el principio de equidad que se plantea en CFS.
 Similarmente al viejo O(1) scheduler, en CFS las tareas interactivas reciben un
 priority bonus basado en un cálculo del tiempo promedio dormido (average sleep
 time) lo cual les permite obtener un buen tiempo de CPU cuando lo necesitan.
-
-% https://en.wikipedia.org/wiki/Completely_Fair_Scheduler 
 
 \section*{Ejercicio 3}
 
