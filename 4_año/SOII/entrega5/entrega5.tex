@@ -1,5 +1,5 @@
 \documentclass[11pt]{article}
-\usepackage[a4paper, margin=1.5cm]{geometry}
+\usepackage[a4paper, margin=1cm]{geometry}
 \usepackage[utf8]{inputenc}
 \usepackage{babel}
 \usepackage[spanish]{layout}
@@ -12,6 +12,8 @@
 \usepackage{enumerate}
 \usepackage{graphicx}
 \usepackage{multirow}
+\usepackage{caption}
+\usepackage{subcaption}
 
 \setlength{\parindent}{0pt}
 
@@ -62,6 +64,69 @@ Similarmente al viejo O(1) scheduler, en CFS las tareas interactivas reciben un
 priority bonus basado en un cálculo del tiempo promedio dormido (average sleep
 time) lo cual les permite obtener un buen tiempo de CPU cuando lo necesitan.
 
+\newpage
 \section*{Ejercicio 3}
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[width=\linewidth]{procesos.pdf}
+  \end{center}
+\end{figure}
+
+\begin{table}[h!]
+\begin{center}
+      \begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+          \hline
+          Proceso & Prioridad & Llegada & $t$ & Inicio & Fin & T & E & P \\
+          \hline
+          A & 1 & 0 & 8 & 0 & 10 & 10 & 2 & 1.25 \\
+          \hline
+          B & 2 & 2 & 13 & 17 & 30 & 13 & 0 & 1 \\
+          \hline
+          C & 1 & 4 & 3 & 14 & 17 & 3 & 0 & 1 \\
+          \hline
+          D & 0 & 4 & 6 & 6 & 14 & 8 & 2 & 1.3 \\
+          \hline
+      \end{tabular}
+      \caption{Análisis despachador punto a)}
+\end{center}
+\end{table}
+
+\begin{table}[h!]
+\begin{center}
+      \begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+            \hline
+            Proceso & Prioridad & Llegada & $t$ & Inicio & Fin & T & E & P \\
+            \hline
+            A & 1 & 0 & 8 & 0 & 10 & 10 & 2 & 1.25 \\
+            \hline
+            B & 2 & 2 & 13 & 17 & 30 & 13 & 0 & 1 \\
+            \hline
+            C & 1 & 4 & 3 & 14 & 17 & 3 & 0 & 1 \\
+            \hline
+            D & 0 & 4 & 6 & 6 & 14 & 8 & 2 & 1.3 \\
+            \hline
+        \end{tabular}
+      \caption{Análisis despachador punto b)}
+\end{center}
+\end{table}
+
+\begin{table}[h!]
+\begin{center}
+      \begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+          \hline
+          Proceso & Prioridad & Llegada & $t$ & Inicio & Fin & T & E & P \\
+          \hline
+          A & 1 & 0 & 8 & 0 & 16 & 16 & 8 & 2 \\
+          \hline
+          B & 2 & 2 & 13 & 17 & 30 & 13 & 0 & 1 \\
+          \hline
+          C & 1 & 4 & 3 & 10 & 17 & 7 & 4 & 2.3 \\
+          \hline
+          D & 0 & 4 & 6 & 4 & 14 & 10 & 4 & 1.6 \\
+          \hline
+      \end{tabular}
+      \caption{Análisis despachador punto c)}
+\end{center}
+\end{table}
 
 \end{document}

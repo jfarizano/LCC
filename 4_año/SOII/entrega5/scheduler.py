@@ -103,6 +103,7 @@ def multiQueue(procesos, quantums, retro):
         print("No se ejecutó ningún proceso, aumentando un tick")
         tick = tick + 1
     else:
+      print("No queda nada para ejecutar, terminando")
       break
 
     
