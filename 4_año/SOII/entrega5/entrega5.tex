@@ -78,13 +78,15 @@ time) lo cual les permite obtener un buen tiempo de CPU cuando lo necesitan.
           \hline
           Proceso & Prioridad & Llegada & $t$ & Inicio & Fin & T & E & P \\
           \hline
-          A & 1 & 0 & 8 & 0 & 10 & 10 & 2 & 1.25 \\
+          A & 1 & 0 & 8 & 0 & 16 & 16 & 8 & 2 \\
           \hline
-          B & 2 & 2 & 13 & 17 & 30 & 13 & 0 & 1 \\
+          B & 2 & 2 & 13 & 17 & 30 & 28 & 15 & 2.15 \\
           \hline
-          C & 1 & 4 & 3 & 14 & 17 & 3 & 0 & 1 \\
+          C & 1 & 4 & 3 & 12 & 17 & 13 & 10 & 4.3 \\
           \hline
-          D & 0 & 4 & 6 & 6 & 14 & 8 & 2 & 1.3 \\
+          D & 0 & 4 & 6 & 4 & 10 & 6 & 0 & 1 \\
+          \hline
+          Promedio & & & 7.5 & & & 15.75 & 8.25 & 2.36 \\
           \hline
       \end{tabular}
       \caption{Análisis despachador punto a)}
@@ -97,18 +99,22 @@ time) lo cual les permite obtener un buen tiempo de CPU cuando lo necesitan.
             \hline
             Proceso & Prioridad & Llegada & $t$ & Inicio & Fin & T & E & P \\
             \hline
-            A & 1 & 0 & 8 & 0 & 10 & 10 & 2 & 1.25 \\
+            A & 1 & 0 & 8 & 0 & 14 & 14 & 6 & 1.75 \\
             \hline
-            B & 2 & 2 & 13 & 17 & 30 & 13 & 0 & 1 \\
+            B & 2 & 2 & 13 & 17 & 30 & 28 & 26 & 2.15 \\
             \hline
-            C & 1 & 4 & 3 & 14 & 17 & 3 & 0 & 1 \\
+            C & 1 & 4 & 3 & 14 & 17 & 13 & 10 & 4.3 \\
             \hline
-            D & 0 & 4 & 6 & 6 & 14 & 8 & 2 & 1.3 \\
+            D & 0 & 4 & 6 & 4 & 12 & 8 & 2 & 1.3 \\
+            \hline
+            Promedio & & & 7.5 & & & 15.75 & 11 & 2.37 \\
             \hline
         \end{tabular}
       \caption{Análisis despachador punto b)}
 \end{center}
 \end{table}
+
+\newpage
 
 \begin{table}[h!]
 \begin{center}
@@ -116,13 +122,15 @@ time) lo cual les permite obtener un buen tiempo de CPU cuando lo necesitan.
           \hline
           Proceso & Prioridad & Llegada & $t$ & Inicio & Fin & T & E & P \\
           \hline
-          A & 1 & 0 & 8 & 0 & 16 & 16 & 8 & 2 \\
+          A & 1 & 0 & 8 & 0 & 21 & 21 & 13 & 2.62 \\
           \hline
-          B & 2 & 2 & 13 & 17 & 30 & 13 & 0 & 1 \\
+          B & 2 & 2 & 13 & 13 & 30 & 28 & 15 & 2.15 \\
           \hline
-          C & 1 & 4 & 3 & 10 & 17 & 7 & 4 & 2.3 \\
+          C & 1 & 4 & 3 & 8 & 13 & 9 & 6 & 3 \\
           \hline
-          D & 0 & 4 & 6 & 4 & 14 & 10 & 4 & 1.6 \\
+          D & 0 & 4 & 6 & 4 & 12 & 8 & 2 & 1.3 \\
+          \hline
+          Promedio & & & 7.5 & & & 16.5 & 9 & 2.26 \\
           \hline
       \end{tabular}
       \caption{Análisis despachador punto c)}

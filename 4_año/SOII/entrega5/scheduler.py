@@ -109,7 +109,7 @@ def multiQueue(procesos, quantums, retro):
     
 
 def main():
-  procesos = [("A", 0, 8, 0, 0),
+  procesos = [("A", 0, 8, 1, 0),
               ("B", 2, 13, 2, 0),
               ("C", 4, 3, 1, 0),
               ("D", 4, 6, 0, 0)]
