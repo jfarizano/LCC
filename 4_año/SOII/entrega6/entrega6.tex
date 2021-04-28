@@ -44,8 +44,8 @@
   \item \textbf{Falso:} \texttt{signal} no envía señales. Esta función toma una señal
         y un handler (función) como argumento. Cuando esa señal es interceptada, invoca
         al handler pasándole esa señal como argumento.
-  \item \textbf{Verdadero:} Por definición, esta señal es enviada cuando ocurre
-        una violación de segmento o referencia inválida a memoria virtual.
+  \item \textbf{Falso:} puede ocurrir que la señal sea enviada utilizando \texttt{kill} y no
+        necesariamente por el sistema operativo al ocurrir una violación de segmento.
 \end{enumerate}
 
 \section*{Ejercicio 2}
