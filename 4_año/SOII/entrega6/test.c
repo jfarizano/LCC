@@ -8,14 +8,17 @@ int i = 0;
 
 void handler(int signal) {
   printf("Recibí la señal %d\n", signal);
-  printf("Modifiqué %d \n", hola[0]);
+  // printf("Modifiqué %d \n", hola[0]);
   return;
 }
 
 int main() {
   signal(SIGSEGV, handler);
 
-  printf("Me voy a romper: %d \n", hola[0]);
+  while(1);
+  sleep(1);
+
+  // printf("Me voy a romper: %d \n", hola[0]);
 
   return 0;
 }
