@@ -1,0 +1,30 @@
+\documentclass{article}
+\usepackage{czt}
+
+\begin{document}
+
+\begin{zed}
+	ESTADOLAMPARA ::= prendida | apagada
+\end{zed}
+
+\begin{schema}{Sistema}
+	lampara : ESTADOLAMPARA
+\end{schema}
+
+\begin{schema}{SistemaInicial}
+Sistema
+\where
+lampara = apagada
+\end{schema}
+
+\begin{schema}{AlternarEstadoBoton1}
+\Delta Sistema
+\where
+lampara' \neq lampara
+\end{schema}
+
+\begin{zed}
+AlternarEstadoBoton2 == AlternarEstadoBoton1
+\end{zed}
+
+\end{document}

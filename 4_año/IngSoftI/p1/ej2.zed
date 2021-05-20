@@ -1,0 +1,111 @@
+\documentclass{article}
+\usepackage{czt}
+
+\begin{document}
+
+\begin{zed}
+	[MENSAJES] \\
+	REPS ::= ok | paridadIncorrecta | bufferLleno | bufferVaciandose \\
+	POSIBLESESTADOS ::= llenandose | vaciandose
+\end{zed}
+
+\begin{schema}{Despachante}
+buffer : \seq{MENSAJES} \\
+estado : POSIBLESESTADOS
+\end{schema}
+
+\begin{schema}{DespachanteInicial}
+Despachante
+\where
+buffer = \emptyset \\
+estado = llenandose
+\end{schema}
+
+\begin{axdef} 
+CapacidadMaximaBuffer : \nat
+\where
+CapacidadMaximaBuffer = 10
+\end{axdef}
+
+\begin{axdef}
+ParidadOk : \power MENSAJES
+\where
+ParidadOk \neq \emptyset
+\end{axdef}
+
+\begin{schema}{RecibirMensajeOk}
+\Delta Despachante \\
+m? : MENSAJES \\
+r! : REPS
+\where
+estado = llenandose \\
+\# buffer < CapacidadMaximaBuffer \\
+m? \in ParidadOk \\
+buffer' = buffer \cat \langle m? \rangle \\
+estado' = estado \\
+r! = ok
+\end{schema}
+
+\begin{schema}{EBufferVaciandose}
+\Xi Despachante \\
+r! : REPS
+\where
+estado = vaciandose \\
+r! = bufferVaciandose
+\end{schema}
+
+\begin{schema}{EBufferLleno}
+\Delta Despachante \\
+r! : REPS 
+\where
+\# buffer = CapacidadMaximaBuffer \\
+buffer' = buffer \\
+estado' = vaciandose \\
+r! = bufferLleno
+\end{schema}
+
+\begin{schema}{EParidadIncorrecta}
+\Xi Despachante \\
+m? : MENSAJES \\
+r! : REPS
+\where
+m? \notin ParidadOk \\
+r! = paridadIncorrecta
+\end{schema}
+
+\begin{zed}
+RecibirMensajeError == EBufferVaciandose \lor EBufferLleno \lor EParidadIncorrecta \\
+RecibirMensaje == RecibirMensajeOk \lor RecibirMensajeError
+\end{zed}
+
+\begin{schema}{VaciandoBuffer}
+\Delta Despachante \\
+r! : MENSAJES
+\where
+\# buffer > 0 \\
+estado = vaciandose \\
+buffer' = tail~buffer \\
+r! = head~buffer \\
+estado' = estado 
+\end{schema}
+
+\begin{schema}{NoVaciarBuffer}
+\Xi Despachante \\
+\where
+estado = llenandose
+\end{schema}
+
+\begin{schema}{BufferVaciado}
+\Delta Despachante \\
+\where
+estado = vaciandose \\
+\# buffer = 0 \\
+buffer' = buffer \\
+estado' = llenandose
+\end{schema}
+
+\begin{zed}
+VaciarBuffer == VaciandoBuffer \lor NoVaciarBuffer \lor BufferVaciado
+\end{zed}
+
+\end{document}

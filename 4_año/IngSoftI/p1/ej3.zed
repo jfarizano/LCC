@@ -1,0 +1,118 @@
+\documentclass{article}
+\usepackage{czt}
+
+\begin{document}
+
+\begin{zed}
+ [PELICULA, GUIONISTA, DIRECTOR] \\
+ REPS ::= ok | noEncontrado | peliculaYaExiste
+\end{zed}
+
+\begin{schema}{BDCine}
+dir : DIRECTOR \rel PELICULA \\
+gui : GUIONISTA \rel PELICULA
+\end{schema}
+
+\begin{schema}{BDCineInicial}
+BDCine
+\where
+dir = \emptyset \\
+gui = \emptyset
+\end{schema}
+
+\begin{schema}{DirigidasPor}
+\Xi BDCine \\
+d? : DIRECTOR \\
+p! : \power PELICULA
+\where
+p! = \ran (\{d?\} \dres dir)
+\end{schema}
+
+\begin{schema}{GuionadasPor}
+\Xi BDCine \\
+g? : GUIONISTA \\
+p! : \power PELICULA
+\where
+p! = \ran (\{g?\} \dres gui)
+\end{schema}
+
+\begin{schema}{ModificarDirectorOk}
+\Delta BDCine \\
+d? : DIRECTOR \\
+nd? : DIRECTOR \\
+p? : PELICULA \\
+r! : REPS 
+\where
+(d?, p?) \in dir \\
+dir' = (dir \setminus \{(d?, p?)\}) \cup \{(nd?, p?)\} \\
+gui' = gui \\
+r! = ok
+\end{schema}
+
+\begin{schema}{NoEncontrado}
+\Xi BDCine \\
+d? : DIRECTOR \\
+p? : PELICULA \\
+r!: REPS
+\where
+(d?, p?) \notin dir \\
+r! = noEncontrado
+\end{schema}
+
+\begin{zed}
+ModificarDirector == ModificarDirectorOk \lor NoEncontrado
+\end{zed}
+
+\begin{schema}{AltaPeliOk}
+\Delta BDCine \\
+d? : \power DIRECTOR \\
+g? : \power GUIONISTA \\
+p? : PELICULA \\
+r! : REPS
+\where
+p? \notin (\ran dir) \\
+p? \notin (\ran gui) \\
+dir' = dir \cup (d? \cross \{p?\}) \\
+gui' = gui \cup (g? \cross \{p?\}) \\
+r! = ok
+\end{schema}
+
+\begin{schema}{PeliYaExiste}
+\Xi BDCine \\
+p? : PELICULA \\
+r! : REPS
+\where
+(p? \in (\ran dir)) \lor (p? \in (\ran gui)) \\
+r! = peliculaYaExiste
+\end{schema}
+
+\begin{zed}
+AltaPeli == AltaPeliOk \lor PeliYaExiste
+\end{zed}
+
+\begin{schema}{BajaPeliOk}
+\Delta BDCine \\
+p? : PELICULA \\
+r! : REPS
+\where
+p? \in (\ran dir) \\
+p? \in (\ran gui) \\
+dir' = dir \nrres \{ p? \} \\
+gui' = gui \nrres \{ p? \} \\
+r! = ok
+\end{schema}
+
+\begin{schema}{PeliNoExiste}
+\Xi BDCine \\
+p? : PELICULA \\
+r! : REPS
+\where
+(p? \notin (\ran dir)) \lor (p? \notin (\ran gui)) \\
+r! = noEncontrado
+\end{schema}
+
+\begin{zed}
+BajaPeli == BajaPeliOk \lor PeliNoExiste
+\end{zed}
+
+\end{document}
