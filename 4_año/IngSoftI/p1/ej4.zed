@@ -1,0 +1,145 @@
+\documentclass{article}
+\usepackage{czt}
+
+\begin{document}
+
+\begin{zed}
+[USUARIO, CONTRASENA, NOMBREARCHIVO, ARCHIVO] \\
+REPS ::= ok | usuarioNoEncontrado | usuarioYaConectado | contrasenaIncorrecta | usuarioNoConectado
+			| archivoNoEncontrado | archivoYaExiste
+\end{zed}
+
+\begin{schema}{ServidorFTP}
+logins : USUARIO \pfun CONTRASENA \\ 
+usuariosConectados : \power USUARIO \\
+archivosSubidos : NOMBREARCHIVO \pfun ARCHIVO
+\end{schema}
+
+\begin{schema}{connectOk}
+\Delta ServidorFTP \\
+usuario? : USUARIO \\
+contrasena? : CONTRASENA \\
+r! : REPS
+\where
+usuario? \in (\dom logins) \\
+usuario? \notin usuariosConectados \\
+contrasena? = logins \; usuario? \\
+usuariosConectados' = usuariosConectados \cup \{ usuario? \} \\
+r! = ok
+\end{schema}
+
+\begin{schema}{EUsuarioNoEncontrado}
+\Xi ServidorFTP \\
+usuario? : USUARIO \\
+r! : REPS
+\where
+usuario? \notin (\dom logins) \\
+r! = usuarioNoEncontrado
+\end{schema}
+
+\begin{schema}{EUsuarioYaConectado}
+\Xi ServidorFTP \\
+usuario? : USUARIO \\
+r! : REPS
+\where
+usuario? \in (\dom logins) \\
+usuario? \in usuariosConectados \\
+r! = usuarioNoEncontrado
+\end{schema}
+
+\begin{schema}{EContrasenaIncorrecta}
+\Xi ServidorFTP \\
+usuario? : USUARIO \\
+contrasena? : CONTRASENA \\
+r! : REPS
+\where
+usuario? \in (\dom logins) \\
+contrasena? \neq logins \; usuario? \\
+r! = usuarioNoEncontrado
+\end{schema}
+
+\begin{zed}
+connectE == EUsuarioNoEncontrado \lor EUsuarioYaConectado \lor EContrasenaIncorrecta \\
+connect == connectOk \lor connectE
+\end{zed}
+
+\begin{schema}{getOk}
+\Xi ServidorFTP \\
+usuario? : USUARIO  \\
+narchivo? : NOMBREARCHIVO \\
+archivo! : ARCHIVO \\
+r! : REPS
+\where
+usuario? \in usuariosConectados \\
+narchivo? \in (\dom archivosSubidos) \\
+archivo! = archivosSubidos \; narchivo? \\
+r! = ok
+\end{schema}
+
+\begin{schema}{EUsuarioNoConectado}
+\Xi ServidorFTP \\
+usuario? : USUARIO \\
+r! : REPS
+\where
+usuario? \notin usuariosConectados \\
+r! = usuarioNoConectado
+\end{schema}
+
+\begin{schema}{EArchivoNoEncontrado}
+\Xi ServidorFTP \\
+narchivo? : NOMBREARCHIVO \\
+r! : REPS
+\where
+narchivo? \notin (\dom archivosSubidos) \\
+r! = archivoNoEncontrado
+\end{schema}
+
+\begin{zed}
+getE == EUsuarioNoConectado \lor EArchivoNoEncontrado \\
+get == getOk \lor getE
+\end{zed}
+
+\begin{schema}{putOk}
+\Delta ServidorFTP \\
+usuario? : USUARIO \\
+narchivo? : NOMBREARCHIVO \\
+archivo? : ARCHIVO \\
+r! : REPS
+\where
+usuario? \in usuariosConectados \\
+narchivo? \notin (\dom archivosSubidos) \\
+archivosSubidos' = archivosSubidos \cup \{ (narchivo?, archivo?) \} \\
+r! = ok
+\end{schema}
+
+\begin{schema}{EArchivoYaExiste}
+\Xi ServidorFTP \\
+narchivo? : NOMBREARCHIVO \\
+r! : REPS
+\where
+narchivo? \in (\dom archivosSubidos) \\
+r! = archivoYaExiste
+\end{schema}
+
+\begin{zed}
+putE == EUsuarioNoConectado \lor EArchivoYaExiste \\
+put == putOk \lor putE
+\end{zed}
+
+\begin{schema}{closeOk}
+\Delta ServidorFTP \\
+usuario? : USUARIO \\
+r! : REPS
+\where
+usuario? \in usuariosConectados \\
+usuariosConectados' = usuariosConectados \setminus \{ usuario? \} \\
+r! = ok
+\end{schema}
+
+\begin{zed}
+closeE == EUsuarioNoConectado \\
+close == closeOk \lor closeE
+\end{zed}
+
+
+\end{document}

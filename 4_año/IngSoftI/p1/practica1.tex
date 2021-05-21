@@ -1,0 +1,398 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper, margin=1.5cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish, mexico]{babel}
+\usepackage[spanish]{layout}
+\usepackage[article]{ragged2e}
+\usepackage{czt}
+
+\begin{document}
+
+\section*{Ejercicio 1}
+
+\begin{zed}
+	ESTADOLAMPARA ::= prendida | apagada
+\end{zed}
+
+\begin{schema}{Sistema}
+	lampara : ESTADOLAMPARA
+\end{schema}
+
+\begin{schema}{SistemaInicial}
+Sistema
+\where
+lampara = apagada
+\end{schema}
+
+\begin{schema}{AlternarEstadoBoton1}
+\Delta Sistema
+\where
+lampara' \neq lampara
+\end{schema}
+
+\begin{zed}
+AlternarEstadoBoton2 == AlternarEstadoBoton1
+\end{zed}
+
+\section*{Ejercicio 2}
+
+\begin{zed}
+	[MENSAJES] \\
+	REPS ::= ok | paridadIncorrecta | bufferLleno | bufferVaciandose \\
+	POSIBLESESTADOS ::= llenandose | vaciandose
+\end{zed}
+
+\begin{schema}{Despachante}
+buffer : \seq{MENSAJES} \\
+estado : POSIBLESESTADOS
+\end{schema}
+
+\begin{schema}{DespachanteInicial}
+Despachante
+\where
+buffer = \emptyset \\
+estado = llenandose
+\end{schema}
+
+\begin{axdef} 
+CapacidadMaximaBuffer : \nat
+\where
+CapacidadMaximaBuffer = 10
+\end{axdef}
+
+\begin{axdef}
+ParidadOk : \power MENSAJES
+\where
+ParidadOk \neq \emptyset
+\end{axdef}
+
+\begin{schema}{RecibirMensajeOk}
+\Delta Despachante \\
+m? : MENSAJES \\
+r! : REPS
+\where
+estado = llenandose \\
+\# buffer < CapacidadMaximaBuffer \\
+m? \in ParidadOk \\
+buffer' = buffer \cat \langle m? \rangle \\
+estado' = estado \\
+r! = ok
+\end{schema}
+
+\begin{schema}{EBufferVaciandose}
+\Xi Despachante \\
+r! : REPS
+\where
+estado = vaciandose \\
+r! = bufferVaciandose
+\end{schema}
+
+\begin{schema}{EBufferLleno}
+\Delta Despachante \\
+r! : REPS 
+\where
+\# buffer = CapacidadMaximaBuffer \\
+buffer' = buffer \\
+estado' = vaciandose \\
+r! = bufferLleno
+\end{schema}
+
+\begin{schema}{EParidadIncorrecta}
+\Xi Despachante \\
+m? : MENSAJES \\
+r! : REPS
+\where
+m? \notin ParidadOk \\
+r! = paridadIncorrecta
+\end{schema}
+
+\begin{zed}
+RecibirMensajeError == EBufferVaciandose \lor EBufferLleno \lor EParidadIncorrecta \\
+RecibirMensaje == RecibirMensajeOk \lor RecibirMensajeError
+\end{zed}
+
+\begin{schema}{VaciandoBuffer}
+\Delta Despachante \\
+r! : MENSAJES
+\where
+\# buffer > 0 \\
+estado = vaciandose \\
+buffer' = tail~buffer \\
+r! = head~buffer \\
+estado' = estado 
+\end{schema}
+
+\begin{schema}{NoVaciarBuffer}
+\Xi Despachante \\
+\where
+estado = llenandose
+\end{schema}
+
+\begin{schema}{BufferVaciado}
+\Delta Despachante \\
+\where
+estado = vaciandose \\
+\# buffer = 0 \\
+buffer' = buffer \\
+estado' = llenandose
+\end{schema}
+
+\begin{zed}
+VaciarBuffer == VaciandoBuffer \lor NoVaciarBuffer \lor BufferVaciado
+\end{zed}
+
+\section*{Ejercicio 3}
+
+\begin{zed}
+  [PELICULA, GUIONISTA, DIRECTOR] \\
+  REPS ::= ok | noEncontrado | peliculaYaExiste
+ \end{zed}
+ 
+ \begin{schema}{BDCine}
+ dir : DIRECTOR \rel PELICULA \\
+ gui : GUIONISTA \rel PELICULA
+ \end{schema}
+ 
+ \begin{schema}{BDCineInicial}
+ BDCine
+ \where
+ dir = \emptyset \\
+ gui = \emptyset
+ \end{schema}
+ 
+ \begin{schema}{DirigidasPor}
+ \Xi BDCine \\
+ d? : DIRECTOR \\
+ p! : \power PELICULA
+ \where
+ p! = \ran (\{d?\} \dres dir)
+ \end{schema}
+ 
+ \begin{schema}{GuionadasPor}
+ \Xi BDCine \\
+ g? : GUIONISTA \\
+ p! : \power PELICULA
+ \where
+ p! = \ran (\{g?\} \dres gui)
+ \end{schema}
+ 
+ \begin{schema}{ModificarDirectorOk}
+ \Delta BDCine \\
+ d? : DIRECTOR \\
+ nd? : DIRECTOR \\
+ p? : PELICULA \\
+ r! : REPS 
+ \where
+ (d?, p?) \in dir \\
+ dir' = (dir \setminus \{(d?, p?)\}) \cup \{(nd?, p?)\} \\
+ gui' = gui \\
+ r! = ok
+ \end{schema}
+ 
+ \begin{schema}{NoEncontrado}
+ \Xi BDCine \\
+ d? : DIRECTOR \\
+ p? : PELICULA \\
+ r!: REPS
+ \where
+ (d?, p?) \notin dir \\
+ r! = noEncontrado
+ \end{schema}
+ 
+ \begin{zed}
+ ModificarDirector == ModificarDirectorOk \lor NoEncontrado
+ \end{zed}
+ 
+ \begin{schema}{AltaPeliOk}
+ \Delta BDCine \\
+ d? : \power DIRECTOR \\
+ g? : \power GUIONISTA \\
+ p? : PELICULA \\
+ r! : REPS
+ \where
+ p? \notin (\ran dir) \\
+ p? \notin (\ran gui) \\
+ dir' = dir \cup (d? \cross \{p?\}) \\
+ gui' = gui \cup (g? \cross \{p?\}) \\
+ r! = ok
+ \end{schema}
+ 
+ \begin{schema}{PeliYaExiste}
+ \Xi BDCine \\
+ p? : PELICULA \\
+ r! : REPS
+ \where
+ (p? \in (\ran dir)) \lor (p? \in (\ran gui)) \\
+ r! = peliculaYaExiste
+ \end{schema}
+ 
+ \begin{zed}
+ AltaPeli == AltaPeliOk \lor PeliYaExiste
+ \end{zed}
+ 
+ \begin{schema}{BajaPeliOk}
+ \Delta BDCine \\
+ p? : PELICULA \\
+ r! : REPS
+ \where
+ p? \in (\ran dir) \\
+ p? \in (\ran gui) \\
+ dir' = dir \nrres \{ p? \} \\
+ gui' = gui \nrres \{ p? \} \\
+ r! = ok
+ \end{schema}
+ 
+ \begin{schema}{PeliNoExiste}
+ \Xi BDCine \\
+ p? : PELICULA \\
+ r! : REPS
+ \where
+ (p? \notin (\ran dir)) \lor (p? \notin (\ran gui)) \\
+ r! = noEncontrado
+ \end{schema}
+ 
+ \begin{zed}
+ BajaPeli == BajaPeliOk \lor PeliNoExiste
+ \end{zed}
+
+\section*{Ejercicio 4}
+
+\begin{zed}
+  [USUARIO, CONTRASENA, NOMBREARCHIVO, ARCHIVO] \\
+  REPS ::= ok | usuarioNoEncontrado | usuarioYaConectado | contrasenaIncorrecta | usuarioNoConectado \\
+        | archivoNoEncontrado | archivoYaExiste
+  \end{zed}
+  
+  \begin{schema}{ServidorFTP}
+  logins : USUARIO \pfun CONTRASENA \\ 
+  usuariosConectados : \power USUARIO \\
+  archivosSubidos : NOMBREARCHIVO \pfun ARCHIVO
+  \end{schema}
+  
+  \begin{schema}{connectOk}
+  \Delta ServidorFTP \\
+  usuario? : USUARIO \\
+  contrasena? : CONTRASENA \\
+  r! : REPS
+  \where
+  usuario? \in (\dom logins) \\
+  usuario? \notin usuariosConectados \\
+  contrasena? = logins \; usuario? \\
+  usuariosConectados' = usuariosConectados \cup \{ usuario? \} \\
+  r! = ok
+  \end{schema}
+  
+  \begin{schema}{EUsuarioNoEncontrado}
+  \Xi ServidorFTP \\
+  usuario? : USUARIO \\
+  r! : REPS
+  \where
+  usuario? \notin (\dom logins) \\
+  r! = usuarioNoEncontrado
+  \end{schema}
+  
+  \begin{schema}{EUsuarioYaConectado}
+  \Xi ServidorFTP \\
+  usuario? : USUARIO \\
+  r! : REPS
+  \where
+  usuario? \in (\dom logins) \\
+  usuario? \in usuariosConectados \\
+  r! = usuarioNoEncontrado
+  \end{schema}
+  
+  \begin{schema}{EContrasenaIncorrecta}
+  \Xi ServidorFTP \\
+  usuario? : USUARIO \\
+  contrasena? : CONTRASENA \\
+  r! : REPS
+  \where
+  usuario? \in (\dom logins) \\
+  contrasena? \neq logins \; usuario? \\
+  r! = usuarioNoEncontrado
+  \end{schema}
+  
+  \begin{zed}
+  connectE == EUsuarioNoEncontrado \lor EUsuarioYaConectado \lor EContrasenaIncorrecta \\
+  connect == connectOk \lor connectE
+  \end{zed}
+  
+  \begin{schema}{getOk}
+  \Xi ServidorFTP \\
+  usuario? : USUARIO  \\
+  narchivo? : NOMBREARCHIVO \\
+  archivo! : ARCHIVO \\
+  r! : REPS
+  \where
+  usuario? \in usuariosConectados \\
+  narchivo? \in (\dom archivosSubidos) \\
+  archivo! = archivosSubidos \; narchivo? \\
+  r! = ok
+  \end{schema}
+  
+  \begin{schema}{EUsuarioNoConectado}
+  \Xi ServidorFTP \\
+  usuario? : USUARIO \\
+  r! : REPS
+  \where
+  usuario? \notin usuariosConectados \\
+  r! = usuarioNoConectado
+  \end{schema}
+  
+  \begin{schema}{EArchivoNoEncontrado}
+  \Xi ServidorFTP \\
+  narchivo? : NOMBREARCHIVO \\
+  r! : REPS
+  \where
+  narchivo? \notin (\dom archivosSubidos) \\
+  r! = archivoNoEncontrado
+  \end{schema}
+  
+  \begin{zed}
+  getE == EUsuarioNoConectado \lor EArchivoNoEncontrado \\
+  get == getOk \lor getE
+  \end{zed}
+  
+  \begin{schema}{putOk}
+  \Delta ServidorFTP \\
+  usuario? : USUARIO \\
+  narchivo? : NOMBREARCHIVO \\
+  archivo? : ARCHIVO \\
+  r! : REPS
+  \where
+  usuario? \in usuariosConectados \\
+  narchivo? \notin (\dom archivosSubidos) \\
+  archivosSubidos' = archivosSubidos \cup \{ (narchivo?, archivo?) \} \\
+  r! = ok
+  \end{schema}
+  
+  \begin{schema}{EArchivoYaExiste}
+  \Xi ServidorFTP \\
+  narchivo? : NOMBREARCHIVO \\
+  r! : REPS
+  \where
+  narchivo? \in (\dom archivosSubidos) \\
+  r! = archivoYaExiste
+  \end{schema}
+  
+  \begin{zed}
+  putE == EUsuarioNoConectado \lor EArchivoYaExiste \\
+  put == putOk \lor putE
+  \end{zed}
+  
+  \begin{schema}{closeOk}
+  \Delta ServidorFTP \\
+  usuario? : USUARIO \\
+  r! : REPS
+  \where
+  usuario? \in usuariosConectados \\
+  usuariosConectados' = usuariosConectados \setminus \{ usuario? \} \\
+  r! = ok
+  \end{schema}
+  
+  \begin{zed}
+  closeE == EUsuarioNoConectado \\
+  close == closeOk \lor closeE
+  \end{zed}
+
+\end{document}
