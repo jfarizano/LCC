@@ -395,4 +395,235 @@ VaciarBuffer == VaciandoBuffer \lor NoVaciarBuffer \lor BufferVaciado
   close == closeOk \lor closeE
   \end{zed}
 
+
+\section*{Ejercicio 6}
+
+\begin{zed}
+  [USUARIO, NOMBREPROGRAMA, ENCABEZADO, CUERPO] \\
+  ESTADOEDIT ::= siendoEditado | disponible \\
+  REPS ::= ok | programaNoExiste | operacionNoPermitida | programaSiendoEditado \\ 
+  | programaNoSiendoEditado | userNoEstabaEditando
+  \end{zed}
+  
+  \begin{schema}{Commit}
+  encabezado: ENCABEZADO \\
+  cuerpo: CUERPO
+  \end{schema}
+  
+  \begin{schema}{Programa}
+  historial : \seq Commit \\
+  estado : ESTADOEDIT \\
+  siendoEditadoPor : \power USUARIO
+  \end{schema}
+  
+  \begin{schema}{ProgramaInicial}
+  Programa
+  \where
+  historial = \emptyset \\
+  estado = disponible \\
+  siendoEditadoPor = \emptyset
+  \end{schema}
+  
+  \begin{schema}{CVS}
+  lineaBase : NOMBREPROGRAMA \pfun Programa \\
+  lectores : \power USUARIO \\
+  editores : \power USUARIO \\
+  autores : \power USUARIO 
+  \where
+  autores \subseteq editores \\
+  editores \subseteq lectores
+  \end{schema}
+  
+  \begin{schema}{CVSInicial}
+  CVS
+  \where
+  lineaBase = \emptyset \\
+  lectores = \emptyset \\
+  editores = \emptyset \\
+  autores = \emptyset
+  \end{schema}
+  
+  \begin{schema}{ProgramaACVS}
+  \Delta CVS \\
+  nprograma? : NOMBREPROGRAMA
+  \where
+  nprograma? \in (\dom lineaBase) \\
+  lineaBase \; nprograma? = \theta Programa \\
+  lineaBase' = lineaBase \oplus \{ nprograma? \mapsto \theta Programa' \} \\
+  lectores' = lectores \\
+  editores' = editores \\
+  autores' = autores
+  \end{schema}
+  
+  \begin{schema}{EProgramaNoExiste}
+  \Xi CVS \\
+  nprograma? : NOMBREPROGRAMA \\
+  r! : REPS
+  \where
+  nprograma? \notin (\dom lineaBase) \\
+  r! = programaNoExiste
+  \end{schema}
+  
+  \begin{schema}{EUsuarioNoAutor}
+  \Xi CVS \\
+  user? : USUARIO \\
+  r! : REPS
+  \where
+  user? \notin autores \\
+  r! = operacionNoPermitida
+  \end{schema}
+  
+  \begin{schema}{EUsuarioNoEditor}
+  \Xi CVS \\
+  user? : USUARIO \\
+  r! : REPS
+  \where
+  user? \notin editores \\
+  r! = operacionNoPermitida
+  \end{schema}
+  
+  \begin{schema}{EUsuarioNoLector}
+  \Xi CVS \\
+  user? : USUARIO \\
+  r! : REPS
+  \where
+  user? \notin lectores \\
+  r! = operacionNoPermitida
+  \end{schema}
+  
+  \begin{schema}{EProgSiendoEditado}
+  \Xi CVS \\
+  nprograma? : NOMBREPROGRAMA \\
+  r! : REPS
+  \where
+  nprograma? \in (\dom lineaBase) \\
+  (lineaBase \; nprograma?).estado = siendoEditado \\
+  r! = programaSiendoEditado
+  \end{schema}
+  
+  \begin{schema}{CreateOk}
+  \Delta CVS \\
+  nprograma? : NOMBREPROGRAMA \\
+  user? : USUARIO \\
+  r! : REPS
+  \where
+  (nprograma? \notin (\dom lineaBase)) \lor \\
+  \; \; (nprograma? \in (\dom lineaBase) \land (lineaBase \; nprograma?).estado = disponible) \\
+  user? \in autores \\
+  lineaBase' = \\
+  \; \; lineaBase \oplus \{ nprograma? \mapsto \lblot historial == \emptyset , estado == disponible , siendoEditadoPor == \emptyset \rblot \} \\
+  r! = ok
+  \end{schema}
+  
+  \begin{zed}
+    Create == CreateOk \lor EProgSiendoEditado \lor EUsuarioNoAutor
+  \end{zed}
+  
+  \begin{schema}{ProgGetOk}
+  \Xi Programa \\
+  prog! : Commit \\
+  r! : REPS
+  \where
+  prog! = last~historial \\
+  r! = ok
+  \end{schema}
+  
+  \begin{zed}
+  Get == ([ProgramaACVS ; user? : USUARIO | user? \in lectores] \land ProgGetOk) \\
+  \lor (EUsuarioNoLector \lor EProgramaNoExiste)
+  \end{zed}
+  
+  \begin{schema}{ProgEditOk}
+  \Delta Programa \\
+  user? : USUARIO \\
+  prog! : Commit \\
+  r! : REPS
+  \where
+  estado = disponible \\
+  historial' = historial \\
+  estado' = siendoEditado \\
+  siendoEditadoPor' = \{ user? \} \\
+  prog! = last~historial \\
+  r! = ok
+  \end{schema}
+  
+  \begin{zed}
+  Edit == ([ProgramaACVS ; user? : USUARIO | user? \in editores] \land ProgEditOk) \lor \\
+  (EUsuarioNoEditor \lor EProgramaNoExiste \lor EProgSiendoEditado)
+  \end{zed}
+  
+  \begin{schema}{ProgDeltaOkDiff}
+  \Delta Programa \\
+  user? : USUARIO \\
+  prog? : Commit \\
+  r! : REPS 
+  \where
+  estado = siendoEditado \\
+  siendoEditadoPor = \{ user? \} \\
+  prog? \neq last~historial \\
+  historial' = historial \cat \langle prog? \rangle \\
+  estado' = disponible \\
+  siendoEditadoPor' = \emptyset \\
+  r! = ok
+  \end{schema}
+  
+  \begin{schema}{ProgDeltaOkSame}
+  \Delta Programa \\
+  user? : USUARIO \\
+  prog? : Commit \\
+  r! : REPS 
+  \where
+  estado = siendoEditado \\
+  siendoEditadoPor = \{ user? \} \\
+  prog? = last~historial \\
+  historial' = historial \\
+  estado' = disponible \\
+  siendoEditadoPor' = \emptyset \\
+  r! = ok
+  \end{schema}
+  
+  \begin{schema}{EProgNoSiendoEditado}
+  \Xi Programa \\
+  r! : REPS
+  \where
+  estado = disponible \\
+  r! = programaNoSiendoEditado
+  \end{schema}
+  
+  \begin{schema}{EUserNoEstabaEditando}
+  \Xi Programa \\
+  user? : USUARIO \\
+  r! : REPS
+  \where
+  estado = siendoEditado \\
+  siendoEditadoPor \neq \{ user? \} \\
+  r! = userNoEstabaEditando
+  \end{schema}
+  
+  \begin{zed}
+  ProgDeltaOk == ProgDeltaOkDiff \lor ProgDeltaOkSame \\
+  ProgDelta == ProgDeltaOk \lor EProgNoSiendoEditado \lor EUserNoEstabaEditando \\
+  Delta == ([ProgramaACVS ; user? : USUARIO | user? \in editores] \land ProgDelta) \lor \\
+  (EUsuarioNoEditor \lor EProgramaNoExiste)
+  \end{zed}
+  
+  \begin{schema}{DeleteOk}
+  \Delta CVS \\
+  nprograma? : NOMBREPROGRAMA \\
+  user? : USUARIO \\
+  r! : REPS
+  \where
+  nprograma? \in (\dom lineaBase) \\
+  user? \in autores \\
+  lineaBase' =  \{ nprograma? \} \ndres lineaBase  \\
+  lectores' = lectores \\
+  editores' = editores \\
+  autores' = autores \\
+  r! = ok
+  \end{schema}
+  
+  \begin{zed}
+  Delete == DeleteOk \lor EUsuarioNoAutor \lor EProgramaNoExiste
+  \end{zed}
+
 \end{document}
