@@ -1,0 +1,303 @@
+\documentclass{article}
+\usepackage{czt}
+
+\begin{document}
+
+\begin{zed}
+[NOMBREPRODUCTO, CORREOELECTRONICO] \\
+CANTIDAD == \nat \\
+REPS ::= ok | productoNoEncontrado | stockInsuficiente | carritoNoEncontrado | carritoYaIniciado | cantidadNoPositiva | cantidadNegativa | productoYaAgregado | productoNoAgregado | compraVacia \\
+\end{zed}
+
+\begin{schema}{Carrito}
+pedidos : NOMBREPRODUCTO \pfun CANTIDAD
+\end{schema}
+
+\begin{schema}{CarritoInicial}
+Carrito
+\where
+pedidos = \emptyset
+\end{schema}
+
+\begin{schema}{Comercio}
+stocks : NOMBREPRODUCTO \pfun CANTIDAD \\
+carritos : CORREOELECTRONICO \pfun Carrito
+\end{schema}
+
+\begin{schema}{CarritoAComercio}
+\Delta Comercio \\
+\Delta Carrito \\
+correo? : CORREOELECTRONICO
+\where
+correo? \in (\dom carritos) \\
+carritos \; correo? = \theta Carrito \\
+carritos' = carritos \oplus \{ correo? \mapsto \theta Carrito\ ' \} \\
+stocks' = stocks
+\end{schema}
+
+\begin{schema}{ECarritoNoEncontrado}
+\Xi Comercio \\
+correo? : CORREOELECTRONICO \\
+rep! : REPS
+\where
+correo? \notin (\dom carritos) \\
+rep! = carritoNoEncontrado
+\end{schema}
+
+\begin{schema}{AgregarStockAComercioOk}
+\Delta Comercio \\
+nproducto? : NOMBREPRODUCTO \\
+cant? : CANTIDAD
+\where
+cant? > 0 \\
+nproducto? \in (\dom stocks) \\
+stocks' = stocks \oplus \{ nproducto? \mapsto (stocks \; nproducto?) + cant? \} \\
+carritos' = carritos
+\end{schema}
+
+\begin{schema}{EProductoNoEncontrado}
+\Xi Comercio \\
+nproducto? : NOMBREPRODUCTO \\
+rep! : REPS
+\where
+nproducto? \notin (\dom stocks) \\
+rep! = productoNoEncontrado
+\end{schema}
+
+%% No reviso datos internos de un esquema, se puede usar en comercio o carrito
+\begin{schema}{ECantidadNoPositiva}
+cant? : CANTIDAD \\
+rep! : REPS
+\where
+cant? \leq 0 \\
+rep! = cantidadNoPositiva
+\end{schema}
+
+\begin{zed}
+AgregarStockAComercioE == EProductoNoEncontrado \lor ECantidadNoPositiva \\
+AgregarStockAComercio == AgregarStockAComercioOk \lor AgregarStockAComercioE
+\end{zed}
+
+\begin{schema}{RestarStockAComercioOk}
+\Delta Comercio \\
+nproducto? : NOMBREPRODUCTO \\
+cant? : CANTIDAD
+\where
+nproducto? \in (\dom stocks) \\
+cant? \leq (stocks \; nproducto?) \\
+stocks' = stocks \oplus \{ nproducto? \mapsto (stocks \; nproducto?) - cant? \} \\
+carritos' = carritos
+\end{schema}
+
+\begin{schema}{EStockInsuficiente}
+\Xi Comercio \\
+nproducto? : NOMBREPRODUCTO \\
+cant? : CANTIDAD
+\where
+nproducto? \in (\dom stocks) \\
+cant? > (stocks \; nproducto?) \\
+\end{schema}
+
+\begin{zed}
+RestarStockAComercioE == EProductoNoEncontrado \lor EStockInsuficiente \\
+RestarStockAComercio == RestarStockAComercioOk \lor RestarStockAComercioE
+\end{zed}
+
+%% =====================================================================================
+%% OPERACION 1
+%% =====================================================================================
+
+\begin{schema}{CaAgregarProductoOk}
+\Delta Carrito \\
+nproducto? : NOMBREPRODUCTO \\
+cant? : CANTIDAD \\
+rep! : REPS
+\where
+nproducto? \notin (\dom pedidos) \\
+cant? > 0 \\
+pedidos' = pedidos \cup \{ nproducto? \mapsto cant? \} \\
+rep! = ok
+\end{schema}
+
+\begin{schema}{EProductoYaAgregado}
+\Xi Carrito \\
+nproducto? : NOMBREPRODUCTO \\
+rep! : REPS
+\where
+nproducto? \in (\dom pedidos) \\
+rep! = productoYaAgregado
+\end{schema}
+
+\begin{zed}
+CaAgregarProductoE == ECantidadNoPositiva \lor EProductoYaAgregado \\
+AgregarProductoE == ECarritoNoEncontrado \lor EProductoNoEncontrado \lor CaAgregarProductoE \\
+AgregarProductoOk == (CarritoAComercio \land CaAgregarProductoOk) \semi RestarStockAComercio\\
+AgregarProducto == AgregarProductoOk \lor AgregarProductoE
+\end{zed}
+
+%% =====================================================================================
+%% OPERACION 2
+%% =====================================================================================
+
+\begin{schema}{CaEliminarProductoOk}
+\Delta Carrito \\
+nproducto? : NOMBREPRODUCTO \\
+cant! : CANTIDAD \\
+rep! : REPS
+\where
+nproducto? \in (\dom pedidos) \\
+cant! = pedidos \; nproducto? \\
+pedidos' = \{ nproducto? \} \ndres pedidos \\
+rep! = ok
+\end{schema}
+
+\begin{schema}{EProductoNoAgregado}
+\Xi Carrito \\
+nproducto? : NOMBREPRODUCTO \\
+rep! : REPS
+\where
+nproducto? \notin (\dom pedidos) \\
+rep! = productoNoAgregado
+\end{schema}
+
+\begin{zed}
+CaEliminarProductoE == EProductoNoAgregado \\
+EliminarProductoE == ECarritoNoEncontrado \lor EProductoNoEncontrado \lor CaEliminarProductoE \\
+EliminarProductoOk == (CarritoAComercio \land CaEliminarProductoOk)[cant? / cant!] \semi AgregarStockAComercio \\
+EliminarProducto == EliminarProductoOk \lor EliminarProductoE
+\end{zed}
+
+%% =====================================================================================
+%% OPERACION 3
+%% =====================================================================================
+
+\begin{schema}{CaModificarProductoMayorOk}
+\Delta Carrito \\
+nproducto? : NOMBREPRODUCTO \\
+nuevaCant? : CANTIDAD \\
+restarAStock! : CANTIDAD \\
+rep! : REPS
+\where
+nproducto? \in (\dom pedidos) \\
+nuevaCant? > 0 \\
+nuevaCant? > (pedidos \; nproducto?) \\
+pedidos' = pedidos \oplus \{ nproducto? \mapsto nuevaCant? \} \\
+restarAStock! = nuevaCant? - (pedidos \; nproducto?) \\
+rep! = ok
+\end{schema}
+
+
+\begin{schema}{CaModificarProductoMenorOk}
+\Delta Carrito \\
+nproducto? : NOMBREPRODUCTO \\
+nuevaCant? : CANTIDAD \\
+sumarAStock! : CANTIDAD \\
+rep! : REPS
+\where
+nproducto? \in (\dom pedidos) \\
+nuevaCant? > 0 \\
+nuevaCant? < (pedidos \; nproducto?) \\
+pedidos' = pedidos \oplus \{ nproducto? \mapsto nuevaCant? \} \\
+sumarAStock! = (pedidos \; nproducto?) - nuevaCant? \\
+rep! = ok
+\end{schema}
+
+\begin{schema}{CaModificarProductoCeroOk}
+\Delta Carrito \\
+nproducto? : NOMBREPRODUCTO \\
+nuevaCant? : CANTIDAD \\
+sumarAStock! : CANTIDAD \\
+rep! : REPS
+\where
+nproducto? \in (\dom pedidos) \\
+nuevaCant? = 0 \\
+pedidos' = \{ nproducto? \} \ndres pedidos \\
+sumarAStock! = pedidos \; nproducto?\\
+rep! = ok
+\end{schema}
+
+\begin{schema}{ECantidadNegativa}
+\Xi Carrito \\
+nproducto? : NOMBREPRODUCTO \\
+nuevaCant?: CANTIDAD \\
+rep! : REPS
+\where
+nproducto? \in (\dom pedidos) \\
+nuevaCant? < 0 \\
+rep! = cantidadNegativa
+\end{schema}
+
+\begin{zed}
+CaModificarProductoE == ECantidadNegativa \lor EProductoNoAgregado \\
+ModificarProductoE == ECarritoNoEncontrado \lor EProductoNoEncontrado \lor CaModificarProductoE  \\
+ModificarProductoMayor == (CarritoAComercio \land CaModificarProductoMayorOk)[cant? / restarAStock!] \semi RestarStockAComercio \\
+ModificarProductoMenorOCero == (CarritoAComercio \land (CaModificarProductoMenorOk \lor CaModificarProductoCeroOk))[cant? / sumarAStock!] \semi AgregarStockAComercio \\
+ModificarProductoOk == ModificarProductoMayor \lor ModificarProductoMenorOCero \\
+ModificarProducto == ModificarProductoOk \lor ModificarProductoE
+\end{zed}
+
+%% =====================================================================================
+%% OPERACION 4
+%% =====================================================================================
+
+\begin{schema}{IniciarCarritoOk}
+\Delta Comercio \\
+correo? : CORREOELECTRONICO \\
+rep! : REPS \\
+CarritoInicial
+\where
+correo? \notin (\dom carritos) \\
+carritos' = carritos \cup \{ correo? \mapsto \theta Carrito \} \\
+stocks' = stocks \\
+rep! = ok
+\end{schema}
+
+\begin{schema}{ECarritoYaIniciado}
+\Xi Comercio \\
+correo? : CORREOELECTRONICO \\
+rep! : REPS \\
+CarritoInicial
+\where
+correo? \in (\dom carritos) \\
+rep! = carritoYaIniciado
+\end{schema}
+
+\begin{zed}
+IniciarCarritoE == ECarritoYaIniciado \\
+IniciarCarrito == IniciarCarritoOk \lor IniciarCarritoE
+\end{zed}
+
+%% =====================================================================================
+%% OPERACION 6
+%% =====================================================================================
+
+\begin{schema}{FinalizarCompraOk}
+\Delta Comercio \\
+correo? : CORREOELECTRONICO \\
+orden! : NOMBREPRODUCTO \pfun CANTIDAD \\
+rep! : REPS
+\where
+correo? \in (\dom carritos) \\
+(carritos \; correo?).pedidos \neq \emptyset \\
+orden! = (carritos \; correo?).pedidos \\
+carritos' = \{ correo? \} \ndres carritos \\
+stocks' = stocks \\
+rep! = ok
+\end{schema}
+
+\begin{schema}{ECompraVacia}
+\Xi Comercio \\
+correo? : CORREOELECTRONICO \\
+rep! : REPS
+\where
+correo? \notin (\dom carritos) \\
+(carritos \; correo?).pedidos = \emptyset \\
+rep! = compraVacia
+\end{schema}
+
+\begin{zed}
+FinalizarCompraE == ECarritoNoEncontrado \lor ECompraVacia \\
+FinalizarCompra == FinalizarCompraOk \lor FinalizarCompraE
+\end{zed}
+
+\end{document}

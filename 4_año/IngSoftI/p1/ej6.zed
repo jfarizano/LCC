@@ -6,8 +6,12 @@
 \begin{zed}
 [USUARIO, NOMBREPROGRAMA, ENCABEZADO, CUERPO] \\
 ESTADOEDIT ::= siendoEditado | disponible \\
-REPS ::= ok | programaNoExiste | operacionNoPermitida | programaSiendoEditado | programaNoSiendoEditado | userNoEstabaEditando
+REPS ::= ok | nombreVacio | programaNoExiste | operacionNoPermitida | programaSiendoEditado | programaNoSiendoEditado | userNoEstabaEditando
 \end{zed}
+
+\begin{axdef}
+NombreVacio : NOMBREPROGRAMA
+\end{axdef}
 
 \begin{schema}{Commit}
 encabezado: ENCABEZADO \\
@@ -33,9 +37,6 @@ lineaBase : NOMBREPROGRAMA \pfun Programa \\
 lectores : \power USUARIO \\
 editores : \power USUARIO \\
 autores : \power USUARIO
-\where
-autores \subseteq editores \\
-editores \subseteq lectores
 \end{schema}
 
 \begin{schema}{CVSInicial}
@@ -49,14 +50,24 @@ autores = \emptyset
 
 \begin{schema}{ProgramaACVS}
 \Delta CVS \\
+\Delta Programa \\
 nprograma? : NOMBREPROGRAMA
 \where
 nprograma? \in (\dom lineaBase) \\
 lineaBase \; nprograma? = \theta Programa \\
-lineaBase' = lineaBase \oplus \{ nprograma? \mapsto \theta Programa' \} \\
+lineaBase' = lineaBase \oplus \{ nprograma? \mapsto \theta Programa\ ' \} \\
 lectores' = lectores \\
 editores' = editores \\
 autores' = autores
+\end{schema}
+
+\begin{schema}{ENombreVacio}
+\Xi CVS \\
+nprograma? : NOMBREPROGRAMA \\
+r! : REPS
+\where
+nprograma? = NombreVacio \\
+r! = nombreVacio
 \end{schema}
 
 \begin{schema}{EProgramaNoExiste}
@@ -82,7 +93,7 @@ r! = operacionNoPermitida
 user? : USUARIO \\
 r! : REPS
 \where
-user? \notin editores \\
+user? \notin (editores \cup autores) \\
 r! = operacionNoPermitida
 \end{schema}
 
@@ -91,7 +102,7 @@ r! = operacionNoPermitida
 user? : USUARIO \\
 r! : REPS
 \where
-user? \notin lectores \\
+user? \notin (lectores \cup editores \cup autores) \\
 r! = operacionNoPermitida
 \end{schema}
 
@@ -109,16 +120,19 @@ r! = programaSiendoEditado
 \Delta CVS \\
 nprograma? : NOMBREPROGRAMA \\
 user? : USUARIO \\
-r! : REPS
+r! : REPS \\
+ProgramaInicial
 \where
+nprograma? \neq NombreVacio \\
 (nprograma? \notin (\dom lineaBase)) \lor (nprograma? \in (\dom lineaBase) \land (lineaBase \; nprograma?).estado = disponible) \\
 user? \in autores \\
-lineaBase' = lineaBase \oplus \{ nprograma? \mapsto \lblot historial == \emptyset , estado == disponible , siendoEditadoPor == \emptyset \rblot \} \\
+lineaBase' = lineaBase \oplus \{ nprograma? \mapsto \theta Programa \} \\
 r! = ok
 \end{schema}
 
 \begin{zed}
-	Create == CreateOk \lor EProgSiendoEditado \lor EUsuarioNoAutor
+	CreateE == EProgSiendoEditado \lor EUsuarioNoAutor \lor ENombreVacio \\
+	Create == CreateOk \lor CreateE
 \end{zed}
 
 \begin{schema}{ProgGetOk}
@@ -131,7 +145,9 @@ r! = ok
 \end{schema}
 
 \begin{zed}
-Get == ([ProgramaACVS ; user? : USUARIO | user? \in lectores] \land ProgGetOk) \lor (EUsuarioNoLector \lor EProgramaNoExiste)
+	GetE == EUsuarioNoLector \lor EProgramaNoExiste \\
+	GetOk == [ProgramaACVS ; user? : USUARIO | user? \in lectores] \land ProgGetOk \\
+	Get == GetOk \lor GetE
 \end{zed}
 
 \begin{schema}{ProgEditOk}
@@ -149,7 +165,9 @@ r! = ok
 \end{schema}
 
 \begin{zed}
-Edit == ([ProgramaACVS ; user? : USUARIO | user? \in editores] \land ProgEditOk) \lor (EUsuarioNoEditor \lor EProgramaNoExiste \lor EProgSiendoEditado)
+	EditE == EUsuarioNoEditor \lor EProgramaNoExiste \lor EProgSiendoEditado \\
+	EditOk == [ProgramaACVS ; ProgEditOk | user? \in editores] \\
+	Edit ==  EditOk \lor EditE
 \end{zed}
 
 \begin{schema}{ProgDeltaOkDiff}
@@ -203,7 +221,8 @@ r! = userNoEstabaEditando
 \begin{zed}
 ProgDeltaOk == ProgDeltaOkDiff \lor ProgDeltaOkSame \\
 ProgDelta == ProgDeltaOk \lor EProgNoSiendoEditado \lor EUserNoEstabaEditando \\
-Delta == ([ProgramaACVS ; user? : USUARIO | user? \in editores] \land ProgDelta) \lor (EUsuarioNoEditor \lor EProgramaNoExiste)
+DeltaE == EUsuarioNoEditor \lor EProgramaNoExiste \\
+Delta == [ProgramaACVS ; ProgDelta | user? \in editores] \lor DeltaE
 \end{zed}
 
 \begin{schema}{DeleteOk}
@@ -222,7 +241,8 @@ r! = ok
 \end{schema}
 
 \begin{zed}
-Delete == DeleteOk \lor EUsuarioNoAutor \lor EProgramaNoExiste
+	DeleteE == EUsuarioNoAutor \lor EProgramaNoExiste \\
+	Delete == DeleteOk \lor DeleteE
 \end{zed}
 
 \end{document}

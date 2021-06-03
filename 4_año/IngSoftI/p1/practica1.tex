@@ -401,8 +401,8 @@ VaciarBuffer == VaciandoBuffer \lor NoVaciarBuffer \lor BufferVaciado
 \begin{zed}
   [USUARIO, NOMBREPROGRAMA, ENCABEZADO, CUERPO] \\
   ESTADOEDIT ::= siendoEditado | disponible \\
-  REPS ::= ok | programaNoExiste | operacionNoPermitida | programaSiendoEditado \\ 
-  | programaNoSiendoEditado | userNoEstabaEditando
+  REPS ::= ok | programaNoExiste | operacionNoPermitida | programaSiendoEditado | \\
+  \; \; programaNoSiendoEditado | userNoEstabaEditando
   \end{zed}
   
   \begin{schema}{Commit}
@@ -428,10 +428,7 @@ VaciarBuffer == VaciandoBuffer \lor NoVaciarBuffer \lor BufferVaciado
   lineaBase : NOMBREPROGRAMA \pfun Programa \\
   lectores : \power USUARIO \\
   editores : \power USUARIO \\
-  autores : \power USUARIO 
-  \where
-  autores \subseteq editores \\
-  editores \subseteq lectores
+  autores : \power USUARIO
   \end{schema}
   
   \begin{schema}{CVSInicial}
@@ -445,11 +442,12 @@ VaciarBuffer == VaciandoBuffer \lor NoVaciarBuffer \lor BufferVaciado
   
   \begin{schema}{ProgramaACVS}
   \Delta CVS \\
+  \Delta Programa \\
   nprograma? : NOMBREPROGRAMA
   \where
   nprograma? \in (\dom lineaBase) \\
   lineaBase \; nprograma? = \theta Programa \\
-  lineaBase' = lineaBase \oplus \{ nprograma? \mapsto \theta Programa' \} \\
+  lineaBase' = lineaBase \oplus \{ nprograma? \mapsto \theta Programa\ ' \} \\
   lectores' = lectores \\
   editores' = editores \\
   autores' = autores
@@ -478,7 +476,7 @@ VaciarBuffer == VaciandoBuffer \lor NoVaciarBuffer \lor BufferVaciado
   user? : USUARIO \\
   r! : REPS
   \where
-  user? \notin editores \\
+  user? \notin (editores \cup autores) \\
   r! = operacionNoPermitida
   \end{schema}
   
@@ -487,7 +485,7 @@ VaciarBuffer == VaciandoBuffer \lor NoVaciarBuffer \lor BufferVaciado
   user? : USUARIO \\
   r! : REPS
   \where
-  user? \notin lectores \\
+  user? \notin (lectores \cup editores \cup autores) \\
   r! = operacionNoPermitida
   \end{schema}
   
@@ -505,13 +503,12 @@ VaciarBuffer == VaciandoBuffer \lor NoVaciarBuffer \lor BufferVaciado
   \Delta CVS \\
   nprograma? : NOMBREPROGRAMA \\
   user? : USUARIO \\
-  r! : REPS
+  r! : REPS \\
+  ProgramaInicial
   \where
-  (nprograma? \notin (\dom lineaBase)) \lor \\
-  \; \; (nprograma? \in (\dom lineaBase) \land (lineaBase \; nprograma?).estado = disponible) \\
+  (nprograma? \notin (\dom lineaBase)) \lor (nprograma? \in (\dom lineaBase) \land (lineaBase \; nprograma?).estado = disponible) \\
   user? \in autores \\
-  lineaBase' = \\
-  \; \; lineaBase \oplus \{ nprograma? \mapsto \lblot historial == \emptyset , estado == disponible , siendoEditadoPor == \emptyset \rblot \} \\
+  lineaBase' = lineaBase \oplus \{ nprograma? \mapsto \theta Programa \} \\
   r! = ok
   \end{schema}
   
@@ -529,8 +526,7 @@ VaciarBuffer == VaciandoBuffer \lor NoVaciarBuffer \lor BufferVaciado
   \end{schema}
   
   \begin{zed}
-  Get == ([ProgramaACVS ; user? : USUARIO | user? \in lectores] \land ProgGetOk) \\
-  \lor (EUsuarioNoLector \lor EProgramaNoExiste)
+  Get == ([ProgramaACVS ; user? : USUARIO | user? \in lectores] \land ProgGetOk) \lor (EUsuarioNoLector \lor EProgramaNoExiste)
   \end{zed}
   
   \begin{schema}{ProgEditOk}
@@ -548,8 +544,7 @@ VaciarBuffer == VaciandoBuffer \lor NoVaciarBuffer \lor BufferVaciado
   \end{schema}
   
   \begin{zed}
-  Edit == ([ProgramaACVS ; user? : USUARIO | user? \in editores] \land ProgEditOk) \lor \\
-  (EUsuarioNoEditor \lor EProgramaNoExiste \lor EProgSiendoEditado)
+  Edit == [ProgramaACVS ; ProgEditOk | user? \in editores] \lor (EUsuarioNoEditor \lor EProgramaNoExiste \lor EProgSiendoEditado)
   \end{zed}
   
   \begin{schema}{ProgDeltaOkDiff}
@@ -603,8 +598,7 @@ VaciarBuffer == VaciandoBuffer \lor NoVaciarBuffer \lor BufferVaciado
   \begin{zed}
   ProgDeltaOk == ProgDeltaOkDiff \lor ProgDeltaOkSame \\
   ProgDelta == ProgDeltaOk \lor EProgNoSiendoEditado \lor EUserNoEstabaEditando \\
-  Delta == ([ProgramaACVS ; user? : USUARIO | user? \in editores] \land ProgDelta) \lor \\
-  (EUsuarioNoEditor \lor EProgramaNoExiste)
+  Delta == [ProgramaACVS ; ProgDelta | user? \in editores] \lor (EUsuarioNoEditor \lor EProgramaNoExiste)
   \end{zed}
   
   \begin{schema}{DeleteOk}
