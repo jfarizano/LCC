@@ -1,0 +1,37 @@
+[System]
+Name='test'
+Ninputs=1
+Noutputs=1
+Nrules=3
+Nexceptions=0
+Conjunction='min'
+MissingValues='random'
+
+[Input1]
+Active='yes'
+Name='Temperatura'
+Range=[       0.000 ,      40.000 ]
+NMFs=3
+MF1='Caliente','SemiTrapezoidalSup',[      20.000 ,      40.000 ,      40.000 ]
+MF2='Fría','SemiTrapezoidalInf',[       0.000 ,       0.000 ,      20.000 ]
+MF3='Templada','triangular',[       0.000 ,      20.000 ,      40.000 ]
+
+[Output1]
+Nature='fuzzy'
+Defuzzification='MeanMax'
+Disjunction='sum'
+DefaultValue=      -1.000 
+Classif='no' 
+Active='yes'
+Name='Apertura'
+Range=[       0.000 ,       1.000 ]
+NMFs=2
+MF1='Pequeña','SemiTrapezoidalInf',[      -0.300 ,       0.300 ,       1.000 ]
+MF2='Grande','SemiTrapezoidalSup',[       0.300 ,       1.000 ,       1.000 ]
+
+[Rules]
+2,        2.000 ,
+3,        1.000 ,
+1,        2.000 ,
+
+[Exceptions]

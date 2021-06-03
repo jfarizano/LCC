@@ -1,0 +1,110 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper, margin=2cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{babel}
+\usepackage[spanish]{layout}
+\usepackage[article]{ragged2e}
+\usepackage{textcomp}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{proof}
+\usepackage{enumerate}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{caption}
+\usepackage{subcaption}
+
+\setlength{\parindent}{0pt}
+
+\title{
+    Entrega 10 \\
+    \large Sistemas Operativos II}
+\author{Mellino, Natalia \and Farizano, Juan Ignacio}
+
+\date{}
+
+\begin{document}
+\maketitle
+
+\noindent\rule{\textwidth}{1pt}
+
+\section*{Ejercicio 1}
+
+\begin{itemize}
+
+\item \textbf{Extensión:} \\
+  ¿Cómo abrirlo? el nombre de cada archivo se divide en dos secciones separadas
+  por un punto: el nombre en sí y su extensión. El sistema mantiene una lista de
+  extensiones conocidas para las cuales sabe cómo actuar y se propaga este diseño
+  a las aplicaciones que sólo abrirían aquellos archivos cuyas extensiones
+  supieran manejar.
+  
+  ¿El tipo de archivo forma parte de los datos o metadatos? En este caso el tipo
+  de archivo forma parte de los metadatos, ya que el nombre del archivo forma
+  parte de la metadata que guarda el sistema sobre el archivo.
+  
+\item \textbf{Números mágicos:} \\
+  ¿Cómo abrirlo? El sistema mantiene una lista compilada de las huellas digitales
+  de los principales formatos que debe manejar, para así poder reconocer el tipo
+  de un archivo basado en sus primeros bytes.
+  
+  ¿El tipo de archivo forma parte de los datos o metadatos? El tipo de archivo en 
+  este caso forma parte de los datos, ya que estos números mágicos se encuentran
+  dentro del archivo.
+  
+\item \textbf{Metadatos externos:} \\
+  ¿Cómo abrirlo? Se separa el sistema de archivos en dos divisiones (forks):
+  la data fork (los datos que propiamente constituyen a los archivos) y la resource fork
+  (información acerca de los archivos), almacenada en una estructura independiente.
+  
+  ¿El tipo de archivo forma parte de los datos o metadatos? Forma parte de los
+  metadatos, ya que se encuentran en la resource fork.
+
+\end{itemize}
+
+\section*{Ejercicio 2}
+
+Los sistemas basados en Windows también soportan una estructura de directorios
+basada en grafos y si bien los dos tipos de liga son válidos, es más común emplear los
+accesos directos en vez de los mecanismos de liga. Estos accesos directos se
+identifican por la extensión .lnk y fue creado principalmente para poder apuntar
+a los archivos desde el escritorio y los menúes; si un proceso solicita al
+sistema abrir el acceso directo, no obtendrá al archivo destino, sino al
+acceso directo del mismo.
+
+\section*{Ejercicio 3}
+
+\begin{itemize}
+\item \textbf{Oculto:} En Unix no se presenta como atributo en sí, si no que
+      por convención un archivo o una carpeta es oculta y no es mostrada al usuario
+      en el listado de directorio si su nombre empieza con un punto.
+\item \textbf{Sólo lectura:} No se encuentra como un solo atributo, si no como una
+      combinación de varios atributos. Un archivo es sólo lectura para un usuario si solo
+      tiene el permiso r ('read') y no los permisos w ('write') y x ('execute')
+      que se encuentran como atributos de archivo en Unix.
+\item \textbf{Sistema:} No presenta equivalente en Unix.
+\item \textbf{Archivado:} No presenta equivalente en Unix.
+\end{itemize}
+
+\section*{Ejercicio 4}
+
+Sabemos que el primer sector del archivo se encuentra en el sector 4 del disco,
+de esta forma el bit 4 del mapa de bits estará en 1. Como no tenemos más información
+sobre cómo se encuentra el disco y la ubicación de los restantes 2 sectores (es decir,
+si el archivo fue fragmentado o los sectores ocupados son contiguos), no
+podemos asegurar qué otros bits estarán encendidos.
+
+\section*{Ejercicio 5}
+
+Como la FAT es una lista enlazada de clusters, podemos ver cuál archivo empieza 
+en este cluster o ver cuál otro cluster apunta al 10, e ir rastreando para atrás
+sucesivamente hasta encontrar el primer cluster al cual un archivo apunte. De 
+esta forma podemos obtener el tamaño del archivo en bytes (que se encuentra como
+un metadato en el catálogo raíz), luego contar
+la cantidad clusters usados y multiplicarla por el tamaño del cluster (que es
+fijo e igual para todos). Si es menor al tamaño del archivo entonces
+el 5 es el valor válido y el archivo continúa, en caso contrario el archivo entero
+ya fue leído y es válido el -1. 
+
+\end{document}
