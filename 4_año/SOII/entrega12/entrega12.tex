@@ -1,0 +1,59 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper, margin=2cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{babel}
+\usepackage[spanish]{layout}
+\usepackage[article]{ragged2e}
+\usepackage{textcomp}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{proof}
+\usepackage{enumerate}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{caption}
+\usepackage{subcaption}
+
+\setlength{\parindent}{0pt}
+
+\title{
+    Entrega 12 \\
+    \large Sistemas Operativos II}
+\author{Mellino, Natalia \and Farizano, Juan Ignacio}
+
+\date{}
+
+\begin{document}
+\maketitle
+
+\noindent\rule{\textwidth}{1pt}
+
+\section*{Ejercicio 1}
+Una solución posible es simplemente borrar ambos archivos. Este sería
+un método rápido y fácil de realizar, lleva la FAT a un estado consistente
+pero se pierde información. \\
+Otra posible solución sería hacer una copia de ambos archivos y borrar
+los originales. No se pierde información pero probablemente uno de los archivos
+esté corrupto. Además, esta solución es más lenta y ocupa más espacio en disco.
+
+\section*{Ejercicio 2}
+En UNIX no podrían ocurrir los \emph{cross-linked} files, ya que en este file system
+no se encuentran cadenas de clusters, si no que simplemente los sectores utilizados
+se marcan en el bitmap y luego en los \emph{inodos} se referencian todos los sectores
+en vez de solo el primero. \\
+
+Si la secuencia de pasos para crear un archivo es análoga al sistema FAT, entonces
+al marcar primero los bloques utilizados en el bitmap y luego crear el inodo no es
+posible que una entrada de directorio termine referenciando un bloque que ya está 
+referenciado por otra entrada. En caso contrario, no podemos asegurar lo mismo.
+
+\section*{Ejercicio 3}
+Algunas ventajas destacables del journaling, es que a diferencia de los sistemas de 
+archivos basados en logs, se necesita menos espacio para el journal y resulta ser más 
+rápido en operaciones aleatorias (tanto lectura como escritura).
+
+Por otro lado, una clara desventaja es que ante una falla abrupta no es posible
+recuperar los datos de un archivo (sí los metadatos).
+
+\end{document}

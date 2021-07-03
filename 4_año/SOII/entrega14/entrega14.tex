@@ -1,0 +1,54 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper, margin=2cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{babel}
+\usepackage[spanish]{layout}
+\usepackage[article]{ragged2e}
+\usepackage{textcomp}
+\usepackage{enumerate}
+
+
+\setlength{\parindent}{0pt}
+
+\title{
+    Entrega 14 \\
+    \large Sistemas Operativos II}
+\author{Mellino, Natalia \and Farizano, Juan Ignacio}
+
+\date{}
+
+\begin{document}
+\maketitle
+
+\noindent\rule{\textwidth}{1pt}
+
+\section*{Ejercicio 1}
+
+Sabemos que un proceso cuando quiere ingresar a una sección crítica construye un paquete
+que incluye, entre otras cosas, un timestamp con la hora actual. Entonces, cuando tenemos
+dos procesos que quieren acceder simultaneamente a la misma región crítica se compara el 
+timestamp de ambos procesos y gana el más bajo: si a uno de los procesos le llega el 
+mensaje del otro y su timestamp es más bajo, éste responde Ok (lo cual habilitará al
+otro proceso eventualmente). En caso contrario, la petición se encola, por lo que este
+proceso entrará antes a la sección crítica.
+
+\section*{Ejercicio 2}
+
+El núcleo de Nachos sigue una estructura monolítica, esto se puede ver ya que
+los diferentes subsistemas no corren en espacio de usuario. Para migrarlo a otra
+estructura, por ejemplo microkernel, a grandes rasgos lo que se debería hacer es
+mover los subsistemas que se puedan mover al espacio de usuario y extender la interfaz
+del sistema para que estos puedan funcionar.
+
+\section*{Ejercicio 3}
+
+La relación principal entre los sistemas microkernel y los distribuidos es que
+los primeros se prestan para el armado de los sistemas distribuidos. 
+
+Por otro lado, ambos se asemejan en que están conformados por 'piezas' (en el caso de los sistemas 
+microkernel) o 'nodos' (en el caso de los sistemas distribuidos), los cuales pueden ser reiniciados o
+reemplazados en caso de que alguno falle o se caiga sin afectar al resto. Además, los dos sistemas 
+resultan fáciles de extender: en el caso de los micronúcleos basta con agregar un proceso de usuario, y 
+en los sistemas distribuidos basta con agregar un nodo más. 
+
+\end{document}

@@ -1,0 +1,95 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper, margin=2.54cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish, mexico]{babel}
+\usepackage[spanish]{layout}
+\usepackage[article]{ragged2e}
+\usepackage{czt}
+\pagenumbering{gobble}
+
+
+\title{
+    Segundo Parcial \\
+    \large Ingeniería de Software I}
+\author{Farizano, Juan Ignacio. Legajo: F-3562/9}
+
+\date{}
+
+\begin{document}
+
+\maketitle
+\rule{\textwidth}{1pt}
+
+\section*{Designaciones}
+\begin{itemize}
+
+\item El cuadro de texto llamado NOMBRE es llenado $\approx$ SeLlenaNombre
+\item El cuadro de texto llamado NOMBRE es vaciado $\approx$ SeVacíaNombre
+\item Se debe mostrar en el área de FOTO la foto correspondiente al fondo elegido $\approx$ MostrarFoto
+\item Se debe mostrar en el área de FOTO una imagen en blanco $\approx$ FotoEnBlanco
+\item Se debe reproducir el sonido asociado a la imagen f con volumen v y tono grave $\approx$ ReproducirSGrave(v, f)
+\item Se debe reproducir el sonido asociado a la imagen f con volumen v y tono medio$\approx$ ReproducirSMedio(v, f)
+\item Se debe reproducir el sonido asociado a la imagen f con volumen v y tono bajo $\approx$ ReproducirSBajo(v, f)
+\item Se presiona el botón de DETALLES $\approx$ PresionaDetalles
+\item Se presiona el botón de SONIDO $\approx$ PresionaSonido
+\item Se selecciona la opción ROJO en COLORES $\approx$ PresionaCRojo
+\item Se selecciona la opción AZUL en COLORES $\approx$ PresionaCAzul
+\item Se selecciona la opción VERDE en COLORES $\approx$ PresionaCVerde
+\item Se selecciona la opción GRAVE en MODO $\approx$ PresionaMGrave
+\item Se selecciona la opción MEDIO en MODO $\approx$ PresionaMMedio
+\item Se selecciona la opción BAJO en MODO $\approx$ PresionaMBajo
+\item En la barra deslizable de VOLUMEN se selecciona la opción v $\approx$ SeleccionaVolumen(v)
+\item En la lista desplegable de FONDOS se selecciona la opción f (donde 0 es Sin imagen) $\approx$ SeleccionaFondo(f)
+\item Valor máximo de VOLUMEN $\approx$ Max
+\item Se activa DETALLES $\approx$ ActivarDetalles
+\item Se desactiva DETALLES $\approx$ DesactivarDetalles
+\item Si está activo COLORES se desactiva y viceversa $\approx$ AlternarColores
+\item Se desactiva COLORES $\approx$ DesactivarColores
+\item Se activa MODO $\approx$ ActivarModo
+\item Se desactiva MODO $\approx$ DesactivarModo
+\item Se activa SONIDO $\approx$ ActivarSonido
+\item Se desactiva SONIDO $\approx$ DesactivarSonido
+\item Se debe reproducir un sonido $\approx$ ReproducirSonido
+\end{itemize}
+\section*{Tabla de control y visibilidad}
+
+\begin{table}[h!]
+\begin{center}
+\begin{tabular}{|c|c|c|}
+    \hline
+    Evento & Control & Visibilidad \\ \hline
+    SeLlenaNombre       & EC & S \\ \hline
+    SeVacíaNombre       & EC & S \\ \hline
+    MostrarFoto         & MC & S \\ \hline
+    FotoEnBlanco        & MC & S \\ \hline
+    ReproducirSGrave    & MC & S \\ \hline
+    ReproducirSMedio    & MC & S \\ \hline
+    ReproducirSBajo     & MC & S \\ \hline
+    PresionaDetalles    & EC & S \\ \hline
+    PresionaSonido      & EC & S \\ \hline
+    PresionaCRojo       & EC & S \\ \hline
+    PresionaCAzul       & EC & S \\ \hline
+    PresionaCVerde      & EC & S \\ \hline
+    PresionaMGrave      & EC & S \\ \hline
+    PresionaMMedio      & EC & S \\ \hline
+    PresionaMBajo       & EC & S \\ \hline
+    SeleccionaVolumen   & EC & S \\ \hline
+    SeleccionaFondo     & EC & S \\ \hline
+    Max                 & EC & S \\ \hline
+    ActivarDetalles     & MC & S \\ \hline
+    DesactivarDetalles  & MC & S \\ \hline
+    AlternarColores     & MC & S \\ \hline
+    DesactivarColores   & MC & S \\ \hline
+    ActivarModo         & MC & S \\ \hline
+    DesactivarModo      & MC & S \\ \hline
+    ActivarSonido       & MC & S \\ \hline
+    DesactivarSonido    & MC & S \\ \hline
+    ReproducirSonido    & MC & U \\ \hline
+\end{tabular}
+\end{center}
+\end{table}
+
+\section*{Especificaciones}
+
+
+\end{document}
