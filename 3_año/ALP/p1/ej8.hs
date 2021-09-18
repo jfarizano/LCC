@@ -7,7 +7,7 @@ import Control.Applicative hiding (many)
 -- ----------------------------------------------------------------------------
 
 expr :: Parser Int
-expr = do t <- ter  m
+expr = do t <- term
           expr' t
 
 expr' :: Int -> Parser Int
