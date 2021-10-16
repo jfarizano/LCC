@@ -1,0 +1,141 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper, margin=1cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{babel}
+\usepackage[spanish]{layout}
+\usepackage[article]{ragged2e}
+\usepackage{textcomp}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{proof}
+\usepackage{enumerate}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{amsthm}
+\usepackage{zed-csp}
+\usepackage[pdftex,colorlinks,linkcolor=blue]{hyperref}
+\usepackage[cm]{fullpage}
+% \newtheorem{defi}{Definición}
+% \newtheorem*{prin}{Principio de Diseño}
+% \theoremstyle{definition}
+
+% \newenvironment{scaption}[1]{\caption{{\small #1}}}{}
+
+% \newenvironment{desig}{\begin{list}{}{\setlength{\labelsep}{0cm}\setlength{\labelwidth}{0cm}\setlength{\listparindent}{0cm}\setlength{\rightmargin}{\leftmargin}}}{\end{list}}
+
+\input{2mil-apunte.sty}
+
+\setlength{\parindent}{0pt}
+
+\title{Práctica 1 - Canal de navegación}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Enunciado}
+Acceso a un canal de navegación. Se trata de un software que deber´a controlar el acceso de barcos a una exclusa que comunica el mar con un canal. El software puede controlar la llegada de embarcaciones desde ambos extremos, puede abrir y cerrar ambas puertas, puede encender y apagar bombas hidráulicas para llenar y vaciar la exclusa. Además hay sensores que reportan la profundidad de la exclusa y de los cursos de agua a ambos lados. Excepto los sensores que comunican la llegada de embarcaciones, todo los demás no emiten señales sino que el sistema debe consultarlos.
+
+\section{Items de cambio}
+
+\begin{itemize}
+    \item Sensor que comunica la llegada de embarcaciones. (activo)
+    \item Sensor de la profundidad de la exclusa. (pasivo)
+    \item Sensor de la profundidad de cursos de agua. (pasivo)
+    \item El control de apertura y cierre de las puertas.
+    \item El control que enciende y apaga las bombas hidraúlicas.
+    \item Control que llena y vacía la exclusa.
+    \item El control de llegada de embarcaciones.
+    \item El sistema principal.
+\end{itemize}
+
+\section{Módulos}
+
+Sensores
+
+\begin{module}{SensorEmbarcacion}
+\eproc
+\proc{inicializar()}
+\proc{sensoEmbarcacion(\eb{*F()})}
+
+\end{module}
+
+\begin{module}{SensorProfundidad}
+\imp{\mdr{Valor}}
+\eproc
+\proc{sensar() : Valor}
+
+\comm{Valor es un módulo genérico que representa el valor devuelto por el sensor.}
+\end{module}
+
+\begin{hmodule}{SensorProfundidadExclusa}{SensorProfundidad}
+\end{hmodule}
+
+\begin{hmodule}{SensorProfundidadCursoAgua}{SensorProfundidad}
+\end{hmodule}
+
+Puertas
+
+\begin{module}{Puerta}
+\eproc
+\proc{abrir()}
+\proc{cerrar()}
+\end{module}
+
+Bomba hidráulica
+
+\begin{module}{BombaHidraulica}
+\eproc
+\proc{encender(\eb{Bool})}
+\proc{apagar()}
+
+\comm{El bool es True si se quiere llenar, y False si se quiere vaciar}
+
+\end{module}
+
+Llenado y vaciado de la exclusa
+
+\begin{module}{ControlAguaExclusa}
+\imp{\mdr{BombaHidraulica},\mdr{SensorProfundidadExclusa}}
+\eproc
+\proc{vaciarExclusa(\e{Valor})}
+\proc{llenarExclusa(\e{Valor})} 
+\end{module}
+
+\begin{module}{ControlNivelacionAgua}
+\imp{\mdr{ControlAguaExclusa}, \mdr{SensorProfundidadCursoAgua}}
+\eproc
+\proc{nivelarAgua(\e{SensorProfundidadCursoAgua})}
+\comm{Se nivela la profundidad del agua a la profundidad que sense el (rendundantemente) sensor
+que mide la profundidad del curso del agua}
+\end{module}
+
+Control de la puerta
+
+\begin{module}{ControlPuerta}
+\imp{\mdr{ControlNivelacionAgua}, \mdr{SensorEmbarcacion},\mdr{Puerta}}
+\eproc
+\proc{abrirPuerta(\e{Puerta})}
+\proc{cerrarPuerta(\e{Puerta})}
+\proc{seSensoEmbarcacion()}
+\end{module}
+
+Sistema general
+
+\begin{module}{Sistema}
+\imp{\mdr{ControlPuerta}}
+
+\eproc
+\proc{iniciar()}
+\proc{frenar()}
+
+\end{module}
+
+\section*{Guía de módulos}
+
+
+\end{document}

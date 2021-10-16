@@ -1,0 +1,91 @@
+\documentclass[12pt,a4paper,fleqn]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish, mexico]{babel}
+\usepackage[spanish]{layout}
+\usepackage[article]{ragged2e}
+\usepackage[pdftex]{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{zed-csp}
+\usepackage[pdftex,colorlinks,linkcolor=blue]{hyperref}
+\usepackage[cm]{fullpage}
+
+\input{2mil-apunte.sty}
+
+\begin{document}
+
+\section{Items de cambio}
+\begin{itemize}
+  \item Hardware varillas horizontales
+  \item Hardware elevación persiana
+  \item Manejo de ventanas (varilla o persiana)
+  \item Hardware iluminación artificial
+  \item Sensores pasivos de luz por obra
+  \item Prioridad de cada método de iluminación
+  \item Criterios de iluminación
+  \item Sistema de control
+\end{itemize}
+
+\section{Especificación de interfaces}
+
+\begin{module}{Varilla\_Horizontal}
+\eproc
+\proc{inicializar\_varillas()}
+\proc{cerrar\_varillas():Bool}
+\proc{abrir\_varillas():Bool}
+\end{module}
+
+\begin{module}{Motor\_Altura\_Persiana}
+\eproc
+\proc{inicializar\_altura()}
+\proc{bajar\_altura():Bool}
+\proc{subir\_altura():Bool}
+\end{module}
+
+\begin{module}{Ventana}
+\imp{\mdr{Varilla\_Horizontal}, \mdr{Motor\_Altura\_Persiana}}
+\eproc
+\proc{inicializar\_ventana()}
+\proc{disminuir\_luz():Bool}
+\proc{aumentar\_luz():Bool}
+\end{module}
+
+\begin{module}{Artefacto\_Iluminación}
+\eproc
+\proc{inicializar\_artefacto()}
+\proc{disminuir\_intensidad()}
+\proc{aumentar\_intensidad()}
+\end{module}
+
+\begin{module}{Sensor\_Luz\_Obra}
+\imp{\mdr{Valor}}
+\eproc
+\proc{sensar\_luz()}
+\end{module}
+
+\begin{module}{Control\_Intensidad\_Iluminación}
+\imp{\mdr{Ventana}, \mdr{Artefacto\_Iluminación}}
+\eproc
+\proc{inicializar\_iluminación()}
+\proc{disminuir\_iluminación()}
+\proc{aumentar\_iluminación()}
+\end{module}
+
+\begin{module}{Medición\_Iluminación}
+\imp{\mdr{Valor}, \mdr{Sensor\_Luz\_Obra}}
+\eproc
+\proc{revisar\_cantidad\_iluminación():Valor}
+\comm{Valor sería una variación de iluminación que hay que cumplir?}
+\end{module}
+
+\begin{module}{Sistema}
+\imp{\mdr{Control\_Intensidad\_Iluminación}, \mdr{Medición\_Iluminación}}
+\eproc
+\proc{iniciar()}
+\proc{parar()}
+\end{module}
+
+\section{Guía de módulos}
+
+\end{document}

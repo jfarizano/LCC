@@ -1,0 +1,449 @@
+\documentclass[12pt,a4paper,fleqn]{article}
+\usepackage[spanish]{babel}
+\usepackage[pdftex]{graphicx}
+\usepackage[latin1]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{zed-csp}
+\usepackage[pdftex,colorlinks,linkcolor=blue]{hyperref}
+\usepackage[cm]{fullpage}
+
+\newtheorem{defi}{Definición}
+\newtheorem*{prin}{Principio de Diseño}
+\theoremstyle{definition}
+
+\newenvironment{scaption}[1]{\caption{{\small #1}}}{}
+
+\newenvironment{desig}{\begin{list}{}{\setlength{\labelsep}{0cm}\setlength{\labelwidth}{0cm}\setlength{\listparindent}{0cm}\setlength{\rightmargin}{\leftmargin}}}{\end{list}}
+
+\input{2mil-apunte.sty}
+
+\begin{document}
+
+\tableofcontents
+
+\section{Estructura de Módulos}
+
+El criterio aplicado para definir la estructura de módulos es el sugerido por Parnas. Documentamos la Estructura de Módulos usando 2MIL.
+
+\begin{module}{EstacionPeaje}
+\compr
+\subm{Hardware}
+\subm{MediosPago}
+\subm{ControlCarril}
+\end{module}
+
+\begin{module}{Hardware}
+\compr
+\subm{Barrera}
+\subm{BarreraACME}
+\subm{BarreraEMCA}
+\subm{Impresora}
+\eproc
+\proc{Barrera, Impresora}
+\end{module}
+
+{\bf Hardware} exporta {\bf Barrera} para reforzar el hecho de que los clientes deben utilizar únicamente ese módulo y no sus herederos. Notar que esto no significa que no se puedan definir variables de los subtipos de {\bf Barrera} en el código presente fuera del módulo {\bf Hardware}.
+
+De todo lo concerniente a los medios de pago, el resto del sistema sólo precisa acceder a {\bf RecepcionPago} y {\bf Ticket}.
+
+\begin{module}{MediosPago}
+\compr
+\subm{HardwareMediosPago}
+\subm{SoftwareMediosPago}
+\subm{TablaPrecios}
+\subm{Ticket}
+\eproc
+\proc{RecepcionPago, Ticket}
+\end{module}
+
+Los dos módulos lógicos que siguen se definen a la espera de otros medios de pago.
+
+\begin{module}{HardwareMediosPago}
+\compr
+\subm{MaquinaMB}
+\end{module}
+
+\begin{module}{SoftwareMediosPago}
+\compr
+\subm{PagoEfectivo}
+\subm{RecepcionPago}
+\eproc
+\proc{RecepcionPago}
+\end{module}
+
+\begin{module}{ControlCarril}
+\compr
+\subm{Control}
+\subm{CondicionBajarBarrera}
+\end{module}
+
+
+\section{\label{interfaces}Especificación de Intefaces}
+
+\begin{module}{BarreraCarrilNorte}
+
+\eproc
+\proc{subir()}
+\proc{bajar()}
+\proc{inicializar()}
+
+\comm{subir(), sube la barrera; bajar(), baja la barrera; inicializar(),
+pone la barrera en un estado inicial conocido.}
+
+\end{module}
+
+\begin{module}{ImpresoraCarrilNorte}
+\imp{\mdr{Ticket}}
+\eproc
+\proc{imprimir(\e{Ticket})}
+\proc{inicializar()}
+\proc{retiro():Bool}
+
+\comm{retiro() debe ser llamada para saber si el conductor retiró el
+ticket; inicialmente retorna false, cuando es invocada y retorna true,
+a la llamada siguiente retorna false.}
+
+\end{module}
+
+\begin{module}{MaquinaMBCarrilNorte}
+
+\imp{\mdr{Valor}}
+\eproc
+\proc{nuevaMB(\e *F)}
+\proc{denominacion():\mdr{Valor}}
+\proc{cilindroVacio(\e *F(\e{Valor}))}
+\proc{capacidadCilindro(\e{Valor}):Int}
+\proc{bandejaRetirada(\e *F)}
+\proc{bandejaInsertada(\e *F)}
+\proc{entregarMoneda(\e{Valor})}
+\proc{inicializar()}
+\end{module}
+
+\begin{module}{PagoEfectivoCarrilNorte}
+
+\imp{\mdr{Valor}, \mdr{MaquinaMBCarrilNorte}, \mdr{Ticket}, \mdr{TablaPreciosCarrilNorte}, \mdr{Monto}}
+\eproc
+\proc{hayNuevaMB()}
+\proc{noHayCambioDe(\e{Valor})}
+\proc{noHayCambio()}
+\proc{hayCambio()}
+\proc{pagoEfectivo():\mdr{Monto}}
+\proc{ticket():\mdr{Ticket}}
+\proc{inicializar()}
+\comm{pagoEfectivo() retorna un Monto inválido en tanto no ha finalizado el pago en efectivo y retorna el Monto pagado una vez que se considera que el conductor no entrega más dinero; una vez que retorna un Monto válido a la siguiente invocación retorna uno inválido.
+
+Faltan controles para hacer algo útil en caso de que no se pueda dar
+vuelto y para determinar cuál fue la última moneda o billete
+insertado.}
+\end{module}
+
+\begin{module}{Ticket}
+\eproc
+\proc{agregarAtributo(\eb String)}
+\proc{agregarValor(\eb String)}
+\proc{primero()}
+\proc{siguiente()}
+\proc{hayMas():Bool}
+\proc{atributo():String}
+\proc{valor():String}
+\proc{eliminar()}
+\comm{eliminar() borrar el par apuntado en ese momento.}
+\end{module}
+
+\begin{module}{TablaPreciosCarrilNorte}
+\imp{\mdr{Monto}}
+\eproc
+\proc{debePagar():\mdr{Monto}}
+\comm{El módulo debería tener una interfaz más completa para alterar
+la tabla de valores.}
+\end{module}
+
+\begin{module}{RecepcionPagoCarrilNorte}
+
+\imp{\mdr{Monto}, \mdr{PagoEfectivoCarrilNorte}}
+\eproc
+\proc{pago()}
+\proc{ticket():\mdr{Ticket}}
+\proc{inicializar()}
+\priv
+\proc{pagoConEfectivo():Bool}
+\proc{pagoConTarjetaCredito():Bool}
+\proc{pagoConTarjetaDebito():Bool}
+\comm{Para hacer más interesante esta parte del problema suponemos que se han habilitado más de un medio de pago.}
+\end{module}
+
+\begin{module}{ControlCarrilNorte}
+
+\imp{\mdr{Ticket}, \mdr{Monto}, \mdr{BarreraCarrilNorte}, \mdr{ImpresoraCarrilNorte}, ...}
+\eproc
+\proc{iniciarControl()}
+\proc{inicializar()}
+\comm{inicializar() llama a las subrutinas de inicialización de otros
+módulos.}
+\end{module}
+
+\subsection{Herencia}
+
+\begin{hmodule}{BarreraACME}{Barrera}
+\end{hmodule}
+
+\begin{hmodule}{BarreraEMCA}{Barrera}
+\end{hmodule}
+
+\subsection{Módulos genéricos}
+
+\begin{gmodule}{Lista}{X}
+
+\imp{X}
+\eproc 
+\proc{add(\e X)} 
+\proc{head(): X}
+\proc{next(): X}
+\proc{more(): Bool}
+\proc{$\dots$}
+
+\end{gmodule}
+
+A partir de un modulo genérico pueden crearse módulos (no son instancias, son módulos), como se muestra a continuación:
+
+\cmodule{ListaEmp}{Lista}{Empleado}
+
+\begin{gmodule}{Tubo}{X}
+
+\eproc
+\proc{read():X}
+\proc{write(\e X)}
+\comm{X puede reemplazarse por array(X) si se quiere una lectura/escritura de mayor longitud.}
+
+\end{gmodule}
+
+\subsection{Patrones de diseño}
+
+\begin{pattern}{EstructuraDocumento}
+
+\based{Composite}
+
+\dueto{
+
+\begin{description}
+
+\item[Cambios previstos:] implementación de los distintos elementos que componen un documento, estructura del documento, aparición de nuevos elementos, desaparición de elementos existentes.
+
+\item[Funcionalidad:] representar la estructura del documento preservando la disposición del texto y los gráficos según los ingresó el usuario, generar y representar visualmente el documento, mantener la relación entre poisiciones en la pantalla y elementos de la estructura.
+
+\item[Restricciones de diseño:] el resto de la aplicación debe acceder a los elementos compuestos (como fila o dibujo) de la misma forma que accede a los elementos simples (como caracter o línea) y lo mismo para los elementos visibles como no visibles.
+
+\end{description}}
+
+\assigns
+\is{Componente}{Glifo}
+\is{Compuesto}{Fila}
+\is{Hoja}{Caracter}
+\is{Hoja}{Rectangulo}
+\is{Hoja}{Poligono}
+\is{operacion()}{dibujar()}
+\is{operacion()}{interseca()}
+\is{operacion()}{limites()}
+\is{anadir()}{insertar()}
+
+
+\is{eliminar()}{borrar()}
+\is{obtenerHijo()}{hijo()}
+\is{obtenerPadre()}{padre()}
+\is{hijos}{hijos}
+
+\comm{
+
+\begin{itemize}
+
+\item obtenerPadre() se menciona implícitamente en la página 154 en el punto 1 de la sección Implementación.
+
+\end{itemize}}
+
+\end{pattern}
+
+\subsubsection{Si es muy largo\dots}
+Si la documentación del patrón de diseño sobrepasa el largo de la hoja se puede dividir en secciones como sigue.
+
+\begin{ipattern}{EstructuraDocumento}
+
+\based{Composite}
+
+\dueto{
+
+\begin{description}
+
+\item[Cambios previstos:] implementación de los distintos elementos que componen un documento, estructura del documento, aparición de nuevos elementos, desaparición de elementos existentes.
+
+\item[Funcionalidad:] representar la estructura del documento preservando la disposición del texto y los gráficos según los ingresó el usuario, generar y representar visualmente el documento, mantener la relación entre poisiciones en la pantalla y elementos de la estructura.
+
+\item[Restricciones de diseño:] el resto de la aplicación debe acceder a los elementos compuestos (como fila o dibujo) de la misma forma que accede a los elementos simples (como caracter o línea) y lo mismo para los elementos visibles como no visibles.
+
+\end{description}}
+
+\end{ipattern}
+
+\begin{fpattern}
+
+\assigns
+\is{Componente}{Glifo}
+\is{Compuesto}{Fila}
+\is{Hoja}{Caracter}
+\is{Hoja}{Rectangulo}
+\is{Hoja}{Poligono}
+\is{operacion()}{dibujar()}
+\is{operacion()}{interseca()}
+\is{operacion()}{limites()}
+\is{anadir()}{insertar()}
+
+
+\is{eliminar()}{borrar()}
+\is{obtenerHijo()}{hijo()}
+\is{obtenerPadre()}{padre()}
+\is{hijos}{hijos}
+
+\comm{
+
+\begin{itemize}
+
+\item obtenerPadre() se menciona implícitamente en la página 154 en el punto 1 de la sección Implementación.
+
+\end{itemize}}
+
+\end{fpattern}
+
+
+\subsection{Invocación implícita}
+
+\begin{module}{Ejemplo}
+\eproc
+\proc{f(\e Int)}
+\ann
+\proc{e}
+\proc{eventWithParameters a b c:Int}
+\coe
+\call{evento}{sub()}
+\call{e a b}{g(b,1)}
+\end{module}
+
+
+\subsection{Tubos y filtros}
+
+\begin{module}{Receptor}
+\eproc
+\proc{tiempo(\e Int)}
+\inp
+\proc{datos,paquete:Char}
+\outp
+\proc{regla,contenido:Char}
+\proc{ip:Int}
+\end{module}
+
+\begin{module}{FiltrarRegla}
+\inp
+\proc{regla:Char}
+\outp
+\proc{regla:Char}
+\end{module}
+
+\begin{module}{Combinador}
+\eproc
+\proc{establecerCombinacion(\e TipoCombinacion)}
+\inp
+\proc{ip:Int}
+\proc{contenido:Char}
+\outp
+\proc{combinacion:Int}
+\end{module}
+
+\begin{cmodule}{TuboInt}{Tubo}{Int}
+
+\end{cmodule}
+
+\begin{cmodule}{TuboChar}{Tubo}{Char}
+
+\end{cmodule}
+
+\section{Guía de Módulos: EstacionPeaje}
+
+El sistema de software para control de la estación de peaje consiste de tres módulos que se describen a continuación.
+
+\subsection{Hardware}
+
+Este módulo contiene los módulos que deben ser modificados si se reemplaza algún dispositivo de hardware, excepto los relacionados con los medios de pago, por uno similar. Los submódulos de este módulo proveen al resto del sistema un hardware virtual. Los secretos ocultos en estos módulos son las diversas formas en que los dispositivos de hardware deben ser usados.
+
+\subsubsection{Barrera}
+
+Módulo abstracto que provee únicamente una interfaz para utilizar diferentes marcas o modelos de barreras.
+
+\subsubsection{BarreraACME}
+
+Oculta las interfaz hardware/software para interactuar con la barrera ACME UpDown 3000.
+
+\subsubsection{BarreraEMCA}
+
+Oculta las interfaz hardware/software para interactuar con la barrera EMCA DownUp 0003.
+
+\subsubsection{Impresora}
+
+Oculta la interfaz hardware/software para interactuar con la impresora ACME Jetprint 40. Además, oculta la forma en que se consulta el estado del tique para imprimirlo y el formato en que se lo imprime.
+
+\subsection{MediosPago}
+
+El módulo lógico {\bf MediosPago} agrupa todos los módulos relacionados con los medios de pago habilitados por la empresa para pagar el peaje. Incluye desde los módulos que ocultan el hardware del sistema hasta los que implementan la política de cobro con uno o más medios de pago. También se incluye la lista de precios y el módulo que implementa el tique que finalmente se le entrega al cliente.
+
+Si la empresa habilita nuevos medios de pago, los módulos que abstraigan esos requerimientos deben agregarse como submódulos de este módulo.
+
+Los secretos que oculta este módulo van desde las interfaces hardware/software con los dispositivos de hardware, hasta la política de cobro pasando por los criterios que se aplican para determinar cuándo ha finalizado el pago por algún medio de pago.
+
+\subsubsection{HardwareMediosPago}
+
+Aquí se agrupan los módulos que abstraen el hardware que se utiliza para que el conductor pague el peaje, tal como máquinas receptoras de dinero, lectores de tarjetas de crédito/débito, etc. Por el momento, el único módulo físico es el que oculta el hardware de la máquina receptora de dinero.
+
+\paragraph{MaquinaMB}
+
+Oculta las interfaz hardware/software para interactuar con la máquina receptora de dinero ACME CoinMachine.
+
+\subsubsection{SoftwareMediosPago}
+
+Este módulo lógico agrupa los módulos que implementan algún medio de pago por sobre los módulos que abstraen el hardware de los mismos. No incluye la lista de precios, ni el tique.
+
+Los secretos que oculta son las condiciones por las cuales se considera que el pago por cada medio de pago ha finalizado, cualquier devolución que deba hacerse al cliente, lo que se incluirá en el tique correspondiente, y la política de cobro (es decir si se permite pagar con varios medios de pago, descuentos, etc.).
+
+\paragraph{PagoEfectivo}
+
+Este módulo oculta las condiciones que determinan cuándo se considera que el conductor ha finalizado el pago en efectivo insertando monedas o billetes en la máquina correspondiente. También oculta cómo se entrega el vuelto.
+
+\paragraph{RecepcionPago}
+
+Oculta la política de cobro autorizada por la empresa. Actualmente la política permite pagar con un único medio de pago.
+
+\paragraph{TablaPrecios}
+
+Oculta las estructuras de datos y algoritmos que implementan la lista de precios así como su ubicación física.
+
+\paragraph{Ticket}
+
+Oculta las estructuras de datos y algoritmos que implementan el tique que se enviará a la impresora. Se espera que cada medio de pago utilizará este módulo para agregar los datos que sean pertinentes a ese medio de pago.
+
+\subsection{ControlCarril}
+
+Este módulo incluye los módulos que se encargan de llevar adelante el algoritmo general de procesamiento desde que el conductor se aproxima a la casilla de peaje hasta que se retira. Incluye los módulos que ocultan las distintas condiciones que deben darse para subir y bajar la barrera.
+
+\subsubsection{Control}
+
+Oculta el algoritmo general de procesamiento.
+
+\subsubsection{CondicionBajarBarrera}
+
+Este módulo oculta las condiciones (de negocio) para poder bajar la barrera.
+
+
+
+\section{Estructura de Herencia}
+
+Se documenta con 2MIL como se muestra en la Sección \ref{interfaces}.
+
+\end{document}

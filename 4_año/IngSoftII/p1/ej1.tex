@@ -1,0 +1,103 @@
+\documentclass[12pt,a4paper,fleqn]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish, mexico]{babel}
+\usepackage[spanish]{layout}
+\usepackage[article]{ragged2e}
+\usepackage[pdftex]{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{zed-csp}
+\usepackage[pdftex,colorlinks,linkcolor=blue]{hyperref}
+\usepackage[cm]{fullpage}
+
+\input{2mil-apunte.sty}
+
+\begin{document}
+
+\section{Items de cambio}
+
+\begin{itemize}
+  \item Hardware brazos del robot
+  \item Hardware cintas transportadoras
+  \item Hardware de manejo de la prensa
+  \item Sensor pasivo (Prensa libre o no)
+  \item Sensor activo (Prensa levantada)
+  \item Sistema que maneja todo
+\end{itemize}
+
+\section{Especificación de interfaces}
+
+\begin{module}{Hardware\_Brazo}
+\eproc
+\proc{mover(\eb{Int}, \eb{Int}, \eb{Int})}
+\proc{agarrar()}
+\proc{soltar()}
+\proc{inicializar()}
+\comm{En mover() se reciben 3 enteros que repreentan coordenadas absolutas x,y,z}
+\end{module}
+
+\begin{module}{Brazo}
+\imp{\mdr{Hardware\_Brazo}}
+\eproc
+\proc{mover\_a\_cinta()}
+\proc{mover\_a\_prensa()}
+\proc{tomar()}
+\proc{soltar()}
+\end{module}
+
+Ejemplo de herencia para diferentes cintas:
+
+\begin{hmodule}{Cinta\_ACME}{Cinta}
+\end{hmodule}
+
+\begin{module}{Cinta}
+\eproc
+\proc{arrancar()}
+\proc{frenar()}
+\end{module}
+
+\begin{module}{Prensa}
+\eproc
+\proc{prensar()}
+\proc{retirar()}
+\end{module}
+
+\begin{module}{Sensor\_Prensa\_Libre}
+\eproc
+\proc{sensar():Bool}
+\end{module}
+
+\begin{module}{Sensor\_Prensa\_Suelta}
+\eproc
+\proc{inicializar()}
+\proc{prensa\_solto(\e *F())}
+\end{module}
+
+\begin{module}{Control\_Brazo}
+\imp{\mdr{Brazo}, \mdr{Cinta}, \mdr{Sensor\_Prensa\_Libre}}
+\eproc
+\proc{arrancar()}
+\proc{frenar()}
+\end{module}
+
+\begin{module}{Control\_Prensa}
+\imp{\mdr{Cinta}, \mdr{Sensor\_Prensa\_Libre}, \mdr{Sensor\_Prensa\_Suelta}}
+\eproc
+\proc{arrancar()}
+\proc{frenar()}
+\priv
+\proc{se\_solto\_la\_prensa()}
+\end{module}
+
+\begin{module}{Control}
+\imp{\mdr{Control\_Brazo}, \mdr{Control\_Prensa}}
+\eproc
+\proc{arrancar()}
+\proc{frenar()}
+\end{module}
+
+\section{Guía de módulos}
+ahre
+
+\end{document}

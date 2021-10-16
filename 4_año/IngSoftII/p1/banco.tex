@@ -1,0 +1,178 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper, margin=1cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{babel}
+\usepackage[spanish]{layout}
+\usepackage[article]{ragged2e}
+\usepackage{textcomp}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{proof}
+\usepackage{enumerate}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{amsthm}
+\usepackage{zed-csp}
+\usepackage[pdftex,colorlinks,linkcolor=blue]{hyperref}
+\usepackage[cm]{fullpage}
+
+\input{2mil-apunte.sty}
+
+\setlength{\parindent}{0pt}
+
+\title{Práctica 1 - Banco}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Enunciado}
+
+Un banco posee varios tipos de clientes. Están aquellos que sólo poseen una o más cajas de ahorros en pesos, los que poseen además una o más cuentas corrientes y los que tienen uno o más depósitos a plazo fijo. Todo cliente debe consignar sus datos personales. Además a todo cliente que posea una caja de ahorros o una cuenta corriente el banco le envía por correo electrónico el resumen de todas sus cuentas. \\
+
+La diferencia entre una caja de ahorros y una cuenta corriente es que sobre esta última sus titulares pueden librar cheques y, acordándolo previamente con el banco, pueden tener saldo negativo. Las operaciones sobre cuentas son las típicas: apertura, depósito, extracción, solicitud de saldo, transferencia a otra cuenta, cierre. Un depósito a plazo fijo tiene un monto inicial, una fecha de depósito, otra de vencimiento y un monto a pagar por el banco a sus titulares el día del vencimiento.
+
+
+\section{Items de cambio}
+
+\begin{itemize}
+    \item Caja de ahorro.
+    \item Cuenta corriente.
+    \item Plazo fijo.
+    \item Datos guardados por clientes.
+    \item El envío de resumen por correo electrónico.
+    \item Manejo de cuentas por cliente.
+    \item ...
+\end{itemize}
+
+\section{Especificación de interfaces}
+
+\begin{module}{CuentaBancaria}
+\imp{\mdr{Monto}}
+
+\eproc
+\proc{depositar(\e{Monto})}
+\proc{extraer(\e{Monto})}
+\proc{consultarSaldo() : Monto}
+
+\end{module}
+
+\begin{hmodule}{CajaAhorro}{CuentaBancaria}
+\end{hmodule}
+
+\begin{hmodule}{CuentaCorriente}{CuentaBancaria}
+\eproc
+\proc{librarCheque(\e{Monto})}
+\end{hmodule}
+
+
+\begin{module}{PlazoFijo}
+\imp{\mdr{FechaHora}, \mdr{Monto}}
+\eproc
+\proc{setMontoInicial(\e{Monto})}
+\proc{getMontoInicial() : Monto}
+\proc{setFechaDeposito(\e{FechaHora})}
+\proc{getFechaDeposito() : FechaHora}
+\proc{setFechaVencimiento(\e{FechaHora})}
+\proc{getFechaVencimiento() : FechaHora}
+\proc{setMontoAPagar(\e{Monto})}
+\proc{getMontoAPagar() : Monto}
+\end{module}
+
+\begin{module}{DatosCliente}
+\imp{\mdr{DNI}}
+\eproc
+\proc{getNombre() : String}
+\proc{setNombre(\eb{String})}
+\proc{getDNI() : DNI}
+\proc{setDNI(\e{DNI})}
+\proc{getDomicilio() :String}
+\proc{setDomicilio(\e{String})}
+\proc{getCorreo() : String}
+\proc{setCorreo(\eb{String})}
+\end{module}
+
+\begin{gmodule}{Lista}{X}
+\imp{X}
+\eproc
+\proc{add(\eb{X})}
+\proc{head():X}
+\proc{next():X}
+\proc{more():Bool}
+\proc{delete()}
+\end{gmodule}
+
+\cmodule{ListaCA}{Lista}{CajaAhorro}
+
+\cmodule{ListaCC}{Lista}{CuentaCorriente}
+
+\cmodule{ListaPF}{Lista}{PlazoFijo}
+
+\begin{module}{Cliente}
+\imp{\mdr{DatosCliente}, \mdr{CuentaCorriente}, \mdr{CajaAhorro}, \mdr{PlazoFijo}, \mdr{ListaCA}, \mdr{ListaCC}, \mdr{ListaPF}}
+\eproc
+\proc{Cliente(\e{DatosCliente})}
+\proc{nuevaCC()}
+\proc{nuevaCA()}
+\proc{nuevoPF()}
+\proc{getDatosCliente() : DatosCliente}
+\proc{getCuentasCorrientes() : ListaCC}
+\proc{getCajasAhorro() : ListaCA}
+\proc{getPlazosFijos() : ListaPF}
+\end{module}
+
+
+% % \begin{gmodule}{Tuple}{X, Y}
+% % \imp{X, Y}
+% % \eproc
+% % \proc{Tuple(\e{X}, \e{Y})}
+% % \proc{first(): X}
+% % \proc{second() : Y}
+% % \end{gmodule}
+
+% \cmodule{DatoResumen}{Tuple}{String, String}
+
+% \cmodule{Resumen}{Lista}{DatoResumen}
+
+\begin{module}{ResumenDeCuenta}
+\eproc
+\proc{getAtributo():String}
+\proc{setAtributo(\eb String)}
+\proc{getValor():String}
+\proc{setValor(\eb String)}
+\proc{firstAtributo():String}
+\proc{nextAtributo()}
+\proc{mas():Bool}
+\proc{eliminar()}
+\end{module}
+
+\cmodule{ListaClientes}{Lista}{Cliente}
+
+\begin{module}{GestionResumen}
+\imp{\mdr{Cliente}, \mdr{CuentaBancaria}, \mdr{ResumenDeCuenta}}
+\eproc
+\proc{enviarResumen(\e{Cliente})}
+\priv
+\proc{obtenerResumen(\e{Cliente}) : ResumenDeCuenta}
+\end{module}
+
+\begin{module}{GestionClientes}
+\imp{\mdr{Cliente}, \mdr{ListaClientes}, \mdr{DatosCliente}, \mdr{CuentaCorriente}, \mdr{CajaAhorro}, \mdr{PlazoFijo}}
+\eproc
+\proc{nuevoCliente(\e{DatosCliente})}
+
+\end{module}
+
+\begin{module}{MasterModule}
+\imp{\mdr{GestionResumen}, \mdr{GestionClientes}}
+\eproc
+\proc{gestionar()}
+
+\end{module}
+
+
+\end{document}
