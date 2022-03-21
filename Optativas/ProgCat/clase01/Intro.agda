@@ -303,6 +303,10 @@ vector0 : {n : ℕ} → Vector n
 vector0 {zero} = []
 vector0 {suc i} = 0 ∷ vector0 {i}
 
+matrix0 : {m n : ℕ} → Matrix m n
+matrix0 {zero} {n} = []
+matrix0 {suc i} {n} = vector0 {n} ∷ matrix0 {i} {n} 
+
 {- Ej: multiplicación de un vector y una matriz -}
 _*vm_ : {m n : ℕ} → Vector m → Matrix m n → Vector n
 [] *vm [] = vector0
@@ -331,8 +335,12 @@ test4 : Matrix 3 3
 test4 = inv3 *mm inv3
 
 {- Ej: transposición de matrices -}
+-- transpose : {n m : ℕ} → Matrix m n → Matrix n m
+-- transpose {n} {m} mss = mapVec (λ i → mapVec (λ j → (mss !!' j) !!' i) (enum m)) (enum n)
 transpose : {n m : ℕ} → Matrix m n → Matrix n m
-transpose {n} {m} mss = mapVec (λ i → mapVec (λ j → (mss !!' j) !!' i) (enum m)) (enum n)
+transpose [] = matrix0
+transpose (x ∷ xs) = appV (mapVec _∷_ x) (transpose xs)
+
 
 ej5 : Matrix 3 3
 ej5 = ( 0 ∷ 1 ∷ 2 ∷ [])
