@@ -154,8 +154,6 @@ En EDyAII lo probaríamos por inducción sobre fs (por ejemplo).
 
 
 
-
-
 {- Definimos el tipo Maybe -}
 data Maybe (A : Set) : Set where
      nothing : Maybe A
@@ -166,16 +164,6 @@ _!!_ : {A : Set} → List A → ℕ → Maybe A
 [] !! n = nothing
 (x ∷ xs) !! zero = just  x
 (x ∷ xs) !! suc n = xs !! n
-
-
-
-
-
-
-
-
-
-
 
 
 {- 
@@ -268,25 +256,16 @@ inv (suc i) = emb (inv i)
 -----------------------------------------------------------
 
 
-
-
 {- proyección para vectores -}
 _!!'_ : {A : Set}{n : ℕ} → Vec A n → Fin n → A
 (x ∷ xs) !!' zero = x
 (x ∷ xs) !!' suc n = xs !!' n
 
 
-
-
-
 {- aplicación punto a punto para vectores -}
 appV : {A B : Set}{n : ℕ} → Vec (A → B) n → Vec A n → Vec B n
 appV [] [] = []
 appV (f ∷ fs) (x ∷ xs) = (f x) ∷ (appV fs xs)
-
-
-
-
 
 
 {- Estáticamente aseguramos que la proyección está bien definida -}
@@ -320,10 +299,14 @@ v2 = 2 ∷ 3 ∷ 0 ∷ []
 test2 : Vector 3
 test2 = v1 +v v2
 
+vector0 : {n : ℕ} → Vector n
+vector0 {zero} = []
+vector0 {suc i} = 0 ∷ vector0 {i}
+
 {- Ej: multiplicación de un vector y una matriz -}
 _*vm_ : {m n : ℕ} → Vector m → Matrix m n → Vector n
-[] *vm [] = {!  !}
-(m ∷ ms) *vm (ns ∷ nss) = {!   !}
+[] *vm [] = vector0
+(m ∷ ms) *vm (ns ∷ nss) = (m *v ns) +v (ms *vm nss)
 
 id3 : Matrix 3 3
 id3 = (1 ∷ 0 ∷ 0 ∷ []) 
@@ -336,7 +319,7 @@ test3 = v1 *vm id3
 
 {- Ej: multiplicación de matrices -}
 _*mm_ : {l m n : ℕ} → Matrix l m → Matrix m n → Matrix l n
-mss *mm nss = {!!}
+mss *mm nss = mapVec (λ ms → ms *vm nss) mss
 
 inv3 : Matrix 3 3
 inv3 = (0 ∷ 0 ∷ 1 ∷ []) 
@@ -349,7 +332,7 @@ test4 = inv3 *mm inv3
 
 {- Ej: transposición de matrices -}
 transpose : {n m : ℕ} → Matrix m n → Matrix n m
-transpose m = {!!}
+transpose {n} {m} mss = mapVec (λ i → mapVec (λ j → (mss !!' j) !!' i) (enum m)) (enum n)
 
 ej5 : Matrix 3 3
 ej5 = ( 0 ∷ 1 ∷ 2 ∷ [])
@@ -360,10 +343,16 @@ ej5 = ( 0 ∷ 1 ∷ 2 ∷ [])
 test5 : Matrix 3 3
 test5 = transpose ej5
 
+ej5t : Matrix 3 3
+ej5t = ( 0 ∷ 3 ∷ 6 ∷ [])
+     ∷ ( 1 ∷ 4 ∷ 7 ∷ [])
+     ∷ ( 2 ∷ 5 ∷ 8 ∷ [])
+     ∷ []
+
 --------------------------------------------------
 {-
 Bajar el archivo del repositorio y hacer los ejercicios.
  git clone https://github.com/mjaskelioff/progcat.git
 
 -}
-      
+       
