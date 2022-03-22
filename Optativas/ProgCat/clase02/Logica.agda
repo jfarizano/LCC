@@ -353,7 +353,7 @@ raa nnp = efq (nnp (λ x → nnp (λ x' → {!  !})))
 ­-}
 
 ¬¬terex : {P : prop} → ¬¬ (P ∨ ¬ P)
-¬¬terex = λ nponp → nponp (right (λ x → nponp (left x)))
+¬¬terex = λ nponp → nponp (right λ x → nponp (left x))
 
 TerEx : Set₁
 TerEx = {P : prop} → P ∨ ¬ P
@@ -363,44 +363,48 @@ RAA = {P : prop} → ¬¬ P → P
 
 -- (¬¬ P → P) -> (P ∨ ¬ P)
 RAA→TerEx : RAA → TerEx
-RAA→TerEx raa = left {!   !} 
+RAA→TerEx raa = raa λ f → f (right (λ x → f (left x)))
 
+{-
+-- (P ∨ ¬ P) -> (¬¬ P → P)
 TerEx→RND : TerEx → RAA
-TerEx→RND = {!!}
+TerEx→RND terex nnp = {!  !}
+-}
 
 ret¬¬ : {P : prop} → P → ¬¬ P
-ret¬¬ = {!!}
+ret¬¬ = λ p np → np p
 
 bind¬¬ : {P Q : prop} → ¬¬ P → (P → ¬¬ Q) → ¬¬ Q 
-bind¬¬ = {!!}
+bind¬¬ nnp pennq nq = nnp (λ p → pennq p nq)
 
 map¬¬ : {P Q : prop} → ¬¬ P → (P → Q) → ¬¬ Q
-map¬¬ = {!!}
+map¬¬ nnp peq nq = nnp (λ p → nq (peq p))
 
 app¬¬ : {P Q : prop} → ¬¬ (P → Q) → ¬¬ P → ¬¬ Q
-app¬¬ = {!!}
+app¬¬ nnpeq nnp nq = nnpeq (λ x → nnp λ z → nq (x z))
 
 ∧¬¬-1 : {P Q : prop} → ¬¬ (P ∧ Q) → ¬¬ P ∧ ¬¬ Q
-∧¬¬-1 = {!!}
+∧¬¬-1 nnpyq = (λ x → nnpyq (λ y → x (fst y))) , λ x → nnpyq (λ y → x (snd y))
 
 ∧¬¬-2 : {P Q : prop} → ¬¬ P ∧ ¬¬ Q → ¬¬ (P ∧ Q) 
-∧¬¬-2 = {!!}
+∧¬¬-2 (nnp , nnq) nnpyq = nnp (λ p → nnq (λ q → nnpyq (p , q)))
 
 ∧¬¬ : {P Q : prop} → ¬¬ (P ∧ Q) ⇔ ¬¬ P ∧ ¬¬ Q
-∧¬¬ = {!!}
+∧¬¬ = ∧¬¬-1 , ∧¬¬-2
 
-
+{-
 ∨¬¬-1 : {P Q : prop} → ¬¬ (P ∨ Q) → ¬¬ P ∨ ¬¬ Q
-∨¬¬-1 nnpq = {!!} 
+∨¬¬-1 nnpq = left (λ x → nnpq (λ y → x {!   !}))
+-}
 
 ∨¬¬-2 : {P Q : prop} → ¬¬ P ∨ ¬¬ Q → ¬¬ (P ∨ Q) 
-∨¬¬-2 nnp∨nnq = {!!}
+∨¬¬-2 (left nnp) = λ x → nnp (λ z → x (left z))
+∨¬¬-2 (right nnq) = λ x → nnq (λ z → x (right z))
 
-
-
+{-
 ∨¬¬ : {P Q : prop} → ¬¬ (P ∨ Q) ⇔ ¬¬ P ∨ ¬¬ Q
-∨¬¬ = {!!} , ∨¬¬-2 
+∨¬¬ = ∨¬¬-1 , ∨¬¬-2 
+-}
 
 ¬¬deMorgan¬∧ : {P Q : prop} → ¬ (P ∧ Q) → ¬¬ ((¬ P) ∨ (¬ Q))
-¬¬deMorgan¬∧ = {!!}
-     
+¬¬deMorgan¬∧ npyq nnponq = nnponq (left (λ x → nnponq (right (λ y → npyq (x , y)))))       
