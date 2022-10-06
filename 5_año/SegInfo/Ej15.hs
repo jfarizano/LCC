@@ -1,4 +1,4 @@
-module Ej5 where
+module Ej15 where
 
 import Data.Set ( Set , isSubsetOf )
 import qualified Data.Set as S
