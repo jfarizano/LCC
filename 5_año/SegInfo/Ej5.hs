@@ -12,7 +12,7 @@ import Data.Maybe
 type Category = String
 -- Identifico a los objetos por su nombre utilizando un string
 type Object = String
--- Los archivos y los subjetos son objetos
+-- Los archivos y los sujetos son objetos
 type File = Object  
 type Subject = Object 
 -- Represento a los niveles de seguridad con números naturales
@@ -32,11 +32,11 @@ data SecState = SecState {
   oobj :: Map Subject [(Object , AccessMode)] ,
   -- Conjunto de objetos
   ol :: Set Object ,
-  -- Conjunto de sujetos, usado para diferenciarlos de los objetos que no son
-  -- sujetos (archivos por ej.)
+  -- Conjunto de sujetos
   sl :: Set Subject
 } deriving Show
 
+-- Estado inicial del sistema
 initSecState :: SecState
 initSecState = SecState M.empty M.empty S.empty S.empty
 
@@ -53,13 +53,13 @@ grant :: SecState -> Subject -> File -> AccessMode -> (SecState , Bool)
 grant st u f Read = if and
                         -- u es un sujeto 
                        [u `S.member` sl st,
-                        -- u y o deben ser objetos existentes en el sistema
+                        -- u y f deben ser objetos existentes en el sistema
                         u `M.member` sc st && f `M.member` sc st,
-                        -- s no tiene abierto a o en modo de lectura
+                        -- s no tiene abierto a f en modo de lectura
                         case lookup f (fromJust $ (M.lookup u (oobj st))) of {Just Read -> False; _ -> True},
-                        -- la clase de acceso de u domina a la de o (no read-up)
+                        -- la clase de acceso de u domina a la de f (no read-up)
                         uk `dominates` fk,
-                        -- la clase de acceso de o está dominada por la clase de acceso
+                        -- la clase de acceso de f está dominada por la clase de acceso
                         -- de todos los objetos que s tiene abiertos en modo de escritura
                         and $ map (\f2 -> (fromJust $ M.lookup (fst f2) (sc st)) `dominates` fk) 
                                   (filter (\(_ , accm) -> accm == Write) uoo)]
@@ -76,13 +76,13 @@ grant st u f Read = if and
 grant st u f Write = if and
                         -- u es un sujeto 
                        [u `S.member` sl st,
-                        -- u y o deben ser objetos existentes en el sistema
+                        -- u y f deben ser objetos existentes en el sistema
                         u `M.member` sc st && f `M.member` sc st,
-                        -- s no tiene abierto a o en modo de escrita
+                        -- s no tiene abierto a f en modo de escrita
                         case lookup f (fromJust $ (M.lookup u (oobj st))) of {Just Write -> False; _ -> True},
                         -- la clase de acceso de u domina a la de o (no read-up)
-                        uk `dominates` fk,
-                        -- la clase de acceso de o domina a la clase de acceso
+                        uk == fk,
+                        -- la clase de acceso de f domina a la clase de acceso
                         -- de todos los objetos que s tiene abiertos en modo de lectura
                         and $ map (\f2 -> (fk `dominates` (fromJust $ M.lookup (fst f2) (sc st)))) 
                                   (filter (\(_ , accm) -> accm == Read) uoo)]
