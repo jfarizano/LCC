@@ -1,0 +1,20 @@
+En frame de main:
+
+---------------------------------------------
+En frame de bof:
+&str = 0xbfffeb97
+
+&buffer = 0xbfffeb38 = -32(%ebp)
+size de buffer: 24 bytes
+leido desde archivo: 517 bytes
+
+rango legal de buffer: 0xbfffeb38 - 0xbfffeb50
+direcciones de lo leido en buffer: 0xbfffeb38 - 0xbfffed3d
+rango ilegal: 0xbfffeb50 - 0xbfffed3d
+
+r.a. guardada en: 0xbfffeb5c = 4(%ebp) = &buffer + 36
+r.a. original: 0x8048574
+r.a. que le quiero dar: 0xbfffeb60 = &buffer + 40 
+
+no pasar carecteres nulos
+arquitectura little-endian -> cargar la dirección al revés
