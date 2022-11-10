@@ -111,6 +111,22 @@ la dirección donde va a estar guardada en la pila la dirección de retorno de b
     \end{center}
 \end{figure}
 
+Otra forma de conseguir la ubicación de buffer es viendo las instrucciones en
+ensamblador de bof, en este programa los argumentos para llamada a función
+se cargan en pila de derecha a izquierda, por lo que el último push contiene
+la dirección de buffer (es elprimer argumento pasado a strcpy),
+que se puede ver que se calcula relativamente a partir de ebp,
+en este caso buffer está 0x20 bytes (en hexadecimal) por debajo de ebp,
+o 32 bytes en decimal. Sumando los 4 bytes que ocupan el ebp de main guardado
+por el prólogo, puedo calcular que la dirección de retorno que quiero modificar
+está 36 bytes por encima del inicio de buffer.
+
+\begin{figure}[h!]
+    \begin{center}
+        \includegraphics[width=0.75\linewidth]{buffer.png}
+    \end{center}
+\end{figure}
+
 De esta forma puedo bosquejar cómo van a estar organizados los datos que me
 interesan en la pila durante la ejecución de bof.
 
@@ -120,13 +136,11 @@ interesan en la pila durante la ejecución de bof.
     \end{center}
 \end{figure}
 
+\newpage
 Se puede ver que buffer se encuentra por debajo de la return address que me interesa
 modificar, por lo que al hacer el strcpy y sobrepasarme de los límites del arreglo
 es posible poner otra dirección que apunte a un bloque de instrucciones que voy
 a cargar en memoria y se ejecutarán al retornar bof.
-También se puede ver que esta dirección de retorno está 36 bytes por encima
-de la dirección de buffer (24 bytes que ocupa buffer + 8 bytes entre buffer y
-el ebp guardado de main + 4 bytes que ocupa el ebp de main).
 
 \subsection*{Preparando el exploit}
 
